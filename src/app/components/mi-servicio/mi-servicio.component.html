@@ -1,0 +1,130 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" style="color: #FFCF00;"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Gestionar Servicio</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="service">
+
+
+  <ion-card class="photo-card custom-card">
+    <ion-card-header class="custom-card-header">
+      <ion-card-title class="custom-card-title">Actualizar Foto de Perfil del Servicio</ion-card-title>
+    </ion-card-header>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-justify-content-center">
+        <ion-col size="12" size-md="6" class="ion-text-center">
+          <ion-avatar class="logo" style="--size: 150px; margin: auto;">
+            <img [src]="service.imageUrl || 'assets/descargar.jpeg'" alt="{{ service.nombreEmpresa }}" style="width: 100%; height: 100%; object-fit: cover;" />
+          </ion-avatar>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-card-content class="custom-card-content">
+      <ion-item>
+        <ion-label position="stacked">Subir nueva foto de perfil del servicio</ion-label>
+        <input type="file" (change)="onFileSelected($event)">
+      </ion-item>
+      <ion-button (click)="uploadServiceImage()" expand="full" class="custom-button">Actualizar Foto de Perfil</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="info-card custom-card">
+    <ion-card-header class="custom-card-header">
+      <ion-card-subtitle class="custom-card-subtitle">Información del Servicio</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content class="custom-card-content">
+      <ion-item>
+        <ion-label position="floating">Nombre de la Empresa</ion-label>
+        <ion-input [(ngModel)]="service.nombreEmpresa"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Dirección</ion-label>
+        <ion-input [(ngModel)]="service.dirreccion"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Teléfono</ion-label>
+        <ion-input [(ngModel)]="service.telefono"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input [(ngModel)]="service.email"></ion-input>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="social-card custom-card">
+    <ion-card-header class="custom-card-header">
+      <ion-card-title class="custom-card-title">Agregar Redes Sociales</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="custom-card-content">
+      <ion-item>
+        <ion-icon name="logo-instagram" slot="start"></ion-icon>
+        <ion-label position="floating">Instagram</ion-label>
+        <ion-input [(ngModel)]="service.instagram" placeholder="https://instagram.com/usuario"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+        <ion-label position="floating">WhatsApp</ion-label>
+        <ion-input [(ngModel)]="service.whatsapp" placeholder="https://wa.me/numero"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="logo-facebook" slot="start"></ion-icon>
+        <ion-label position="floating">Facebook</ion-label>
+        <ion-input [(ngModel)]="service.facebook" placeholder="https://facebook.com/usuario"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="globe-outline" slot="start"></ion-icon>
+        <ion-label position="floating">Sitio Web</ion-label>
+        <ion-input [(ngModel)]="service.website" placeholder="https://www.sitio.com"></ion-input>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="horarios-card custom-card">
+    <ion-card-header class="custom-card-header">
+      <ion-card-title class="custom-card-title">Horario de atención</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="custom-card-content">
+      <ion-list lines="none">
+        <ion-item *ngFor="let horario of sortedHorarios">
+          <ion-label>{{ formatHorario(horario) }}</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="service-card custom-card">
+    <ion-card-header class="custom-card-header">
+      <ion-card-title class="custom-card-title">Servicios</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="custom-card-content">
+      <ion-item>
+        <ion-label position="floating">Servicio</ion-label>
+        <ion-textarea [(ngModel)]="service.servicio"></ion-textarea>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="about-card custom-card">
+    <ion-card-header class="custom-card-header">
+      <ion-card-title class="custom-card-title">Sobre nosotros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="custom-card-content">
+      <ion-item>
+        <ion-label position="floating">Descripción</ion-label>
+        <ion-textarea [(ngModel)]="service.description"></ion-textarea>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" class="save-button custom-button" (click)="updateService()">Guardar Cambios</ion-button>
+</ion-content>

@@ -1,0 +1,133 @@
+/* dashboard.component.scss */
+
+ion-content {
+  --background: #fff;
+}
+
+/* Estilos específicos para el dashboard */
+.info-card {
+  margin: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #244356; /* Fondo azul claro para las tarjetas */
+}
+
+.info-card-header {
+  padding: 16px;
+  background-color: #00243A; /* Color azul oscuro para los encabezados */
+  color: #FFF; /* Texto blanco */
+}
+
+.info-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #FFF; /* Nombre del usuario en blanco */
+  text-align: center;
+}
+
+.info-card-content {
+  padding: 16px;
+  color: #FFF; /* Letras en blanco */
+}
+
+ion-icon {
+  color: #FFCF00; /* Color amarillo para los iconos */
+}
+
+ion-toolbar {
+  --background: #00243A; /* Color azul oscuro para la barra de herramientas */
+}
+
+ion-title {
+  color: #FFF; /* Color blanco para el título */
+}
+
+ion-button {
+  --background: #00B1BF; /* Color turquesa para los botones */
+  --color: #FFF; /* Texto blanco para los botones */
+}
+
+ion-button[color="danger"] {
+  --background: #FFCF00; /* Color amarillo para el botón de logout */
+  --color: #00243A; /* Texto azul oscuro */
+}/* Estilos específicos para el dashboard */
+.custom-toolbar {
+  --background: #00243A;
+  color: #FFF;
+}
+
+.custom-title {
+  color: #FFF !important; /* Asegura que el color del título sea blanco */
+}
+
+ion-button {
+  --background: #00B1BF; /* Color turquesa para los botones */
+  --color: #FFF; /* Texto blanco para los botones */
+}
+
+ion-button[color="danger"] {
+  --background: #FFCF00; /* Color amarillo para el botón de logout */
+  --color: #00243A; /* Texto azul oscuro */
+}
+
+ion-label {
+  color: #FFF !important; /* Color blanco para las etiquetas */
+}
+
+ion-icon {
+  color: #FFCF00; /* Color amarillo para los iconos */
+}
+
+.info-card {
+  margin: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #244356; /* Fondo azul claro para las tarjetas */
+}
+
+.info-card-header {
+  padding: 16px;
+  background-color: #00243A; /* Color azul oscuro para los encabezados */
+  color: #FFF !important; /* Texto blanco */
+}
+
+.info-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #FFF !important; /* Texto blanco */
+  text-align: center;
+}
+
+.info-card-content {
+  padding: 16px;
+  color: #FFF; /* Letras en blanco para la información de contacto */
+}
+
+.custom-item {
+  --background: #244356; /* Fondo azul claro para los ítems */
+  --color: #FFF; /* Texto blanco */
+  --inner-background: #244356; /* Fondo interno azul claro */
+  --inner-color: #FFF; /* Texto interno blanco */
+  --label-color: #FFF; /* Color de las etiquetas */
+  --highlight-background: #FFCF00; /* Color de resalte amarillo */
+}
+
+ion-select {
+  --color: #FFF; /* Texto blanco */
+  --placeholder-color: #FFF; /* Texto de marcador de posición blanco */
+}
+
+ion-select-option {
+  --color: #00243A; /* Texto azul oscuro */
+}
+
+/* Estilo para hover de los botones */
+ion-button:hover {
+  filter: brightness(1.1); /* Hace el botón un poco más claro al pasar el mouse */
+}
+
+
+/* Estilo para hover de los botones */
+ion-button:hover {
+  filter: brightness(1.1); /* Hace el botón un poco más claro al pasar el mouse */
+}

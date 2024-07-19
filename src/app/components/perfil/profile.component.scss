@@ -1,0 +1,137 @@
+ion-content {
+  --background: #fff;
+}
+
+/* Estilos específicos para el componente */
+.custom-toolbar {
+  --background: #00243A;
+  color: #FFF;
+}
+
+.custom-title {
+  color: #FFF !important;
+}
+
+ion-button {
+  --background: #00B1BF;
+  --color: #FFF;
+}
+
+ion-button[color="danger"] {
+  --background: #FFCF00;
+  --color: #00243A;
+}
+
+ion-label {
+  color: #FFCF00 !important; /* Cambiamos el color de los labels a amarillo */
+}
+
+ion-icon {
+  color: #FFCF00;
+}
+
+.custom-card {
+  margin: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #244356;
+}
+
+.custom-card-header {
+  background-color: #00243A; /* Fondo azul oscuro */
+  // border-bottom: 1px solid #FFCF00;
+  text-align: center; /* Centramos el texto */
+}
+
+.custom-card-title {
+  font-size: 1.3em;
+  color: #FFF; /* Letras blancas */
+}
+
+.custom-card-subtitle {
+  font-size: 0.9em;
+  color: #FFF; /* Cambiamos el color de los subtítulos a blanco */
+  text-align: center; /* Centramos el texto */
+}
+
+.custom-card-content {
+  padding: 16px;
+  color: #FFF;
+}
+
+.logo {
+  width: 200px; /* Ajusta el ancho según tu preferencia */
+  height: 200px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Estilos para las tarjetas */
+.info-card, .service-card, .about-card {
+  margin: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-card-header, .service-card-header, .about-card-header {
+  padding: 16px;
+  background-color: #00243A; /* Fondo azul oscuro */
+  border-bottom: 1px solid #FFCF00;
+  text-align: center; /* Centramos el texto */
+}
+
+.info-card-title, .service-card-title, .about-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #FFF; /* Letras blancas */
+  text-align: center; /* Centramos el texto */
+}
+
+.info-card-subtitle {
+  font-size: 0.9em;
+  color: #FFF; /* Letras blancas */
+  text-align: center; /* Centramos el texto */
+}
+
+.info-card-content, .service-card-content, .about-card-content {
+  padding: 16px;
+  color: #FFF;
+}
+
+/* Estilos adicionales */
+ion-toolbar {
+  --background: #00243A; /* Color azul oscuro para la barra de herramientas */
+}
+
+ion-title {
+  color: #FFF; /* Color blanco para el título */
+}
+
+ion-button:hover {
+  filter: brightness(1.1);
+}
+
+ion-item {
+  --background: #244356;
+  --color: #FFF;
+  --inner-background: #244356;
+  --inner-color: #FFF;
+  --label-color: #FFCF00; /* Cambiamos el color de los labels a amarillo */
+  --highlight-background: #FFCF00;
+}
+
+ion-select {
+  --color: #FFF;
+  --placeholder-color: #FFF;
+}
+
+ion-select-option {
+  --color: #00243A;
+}

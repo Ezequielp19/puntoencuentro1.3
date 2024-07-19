@@ -1,0 +1,79 @@
+
+<ion-content [fullscreen]="true">
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Menú</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <!-- Dashboard: Solo para Proveedores -->
+          <ion-item *ngIf="user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/dashboard']" (click)="selectOption('dashboard')">
+            <ion-icon name="bar-chart-outline" slot="start"></ion-icon>
+            <ion-label>Dashboard</ion-label>
+          </ion-item>
+
+          <!-- Perfil: Para Cliente y Proveedor -->
+          <ion-item *ngIf="user?.tipo_usuario === 'cliente' || user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/perfilUsuario']" (click)="selectOption('perfilUsuario')">
+            <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+            <ion-label>Perfil</ion-label>
+          </ion-item>
+
+          <!-- Configurar Horario: Solo para Proveedores -->
+          <ion-item *ngIf="user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/horarios']" (click)="selectOption('horarios')">
+            <ion-icon name="time-outline" slot="start"></ion-icon>
+            <ion-label>Configurar Horario</ion-label>
+          </ion-item>
+
+          <!-- Historial de Citas: Para Cliente y Proveedor -->
+          <ion-item *ngIf="user?.tipo_usuario === 'cliente' || user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/historial-citas']" (click)="selectOption('historial-citas')">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            <ion-label>Historial de Citas</ion-label>
+          </ion-item>
+
+          <!-- Historial de Reseñas: Para Cliente y Proveedor -->
+          <ion-item *ngIf="user?.tipo_usuario === 'cliente' || user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/historial-resenas']" (click)="selectOption('historial-resenas')">
+            <ion-icon name="chatbox-ellipses-outline" slot="start"></ion-icon>
+            <ion-label>Historial de Reseñas</ion-label>
+          </ion-item>
+
+          <!-- Mi Servicio: Solo para Proveedores -->
+          <ion-item *ngIf="user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/miServicio']" (click)="selectOption('miServicio')">
+            <ion-icon name="business-outline" slot="start"></ion-icon>
+            <ion-label>Mi Servicio</ion-label>
+          </ion-item>
+
+          <!-- Crear Servicio: Solo para Proveedores -->
+          <ion-item *ngIf="user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/crearServicio']" (click)="selectOption('crearServicio')">
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            <ion-label>Crear Servicio</ion-label>
+          </ion-item>
+
+         <!-- Crear Categoria: Solo para Admin -->
+          <ion-item *ngIf="user?.tipo_usuario === 'admin'" [routerLink]="['/perfil/crearCategoria']" (click)="selectOption('crearCategoria')">
+            <ion-icon name="pricetags-outline" slot="start"></ion-icon>
+            <ion-label>Crear Categoria</ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user?.tipo_usuario === 'admin'" [routerLink]="['/perfil/verServicios']" (click)="selectOption('verServicios')">
+            <ion-icon name="briefcase" slot="start"></ion-icon>
+            <ion-label>Ver Servicios</ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user?.tipo_usuario === 'admin'" [routerLink]="['/perfil/userlist']" (click)="selectOption('userlist')">
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            <ion-label>Ver Usuarios</ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user?.tipo_usuario === 'cliente'" [routerLink]="['/homeCliente']" (click)="selectOption('homeCliente')">
+            <ion-icon name="search-outline" slot="start"></ion-icon>
+            <ion-label>Buscar Servicio</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-content>

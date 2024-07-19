@@ -1,0 +1,143 @@
+.custom-toolbar {
+  --background: #00243A;
+  color: #FFF;
+}
+
+.custom-title {
+  color: #FFF !important;
+}
+
+.custom-button {
+  --background: #00B1BF;
+  --color: #FFF;
+}
+
+.custom-button1 {
+  --background: #00243A;
+  --color: #FFF;
+}
+
+.custom-button-danger {
+  --background: #FFCF00;
+  --color: #00243A;
+}
+
+.custom-card {
+  margin: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #244356;
+}
+
+.custom-card-header {
+  background-color: #00243A;
+}
+
+.custom-card-title {
+  color: #FFF;
+}
+
+.custom-card-content {
+  padding: 16px;
+  color: #FFF;
+}
+
+.custom-item {
+  --background: #244356;
+  --color: #FFF;
+  --inner-background: #244356;
+  --inner-color: #FFF;
+  --label-color: #FFCF00;
+  --highlight-background: #FFCF00;
+}
+
+ion-label.custom-label {
+  color: #FFF !important;
+}
+
+ion-icon.custom-icon {
+  color: #FFCF00;
+}
+
+ion-select.custom-select {
+  --color: #FFF;
+  --placeholder-color: #FFF;
+}
+
+ion-select-option.custom-select-option {
+  --color: #00243A;
+}
+
+/* Aplica los estilos específicos del componente */
+ion-content {
+  --background: #fff;
+}
+
+ion-toolbar {
+  @extend .custom-toolbar;
+}
+
+ion-title {
+  @extend .custom-title;
+}
+
+ion-button {
+  @extend .custom-button;
+}
+
+ion-button[color="danger"] {
+  @extend .custom-button-danger;
+}
+
+/* Estilo personalizado para los botones */
+.custom-button {
+  // background-color: #003366; /* Azul oscuro */
+  color: #fff;
+}
+
+
+.custom-button[disabled] {
+  background-color: #7a7a7a; /* Gris para botones deshabilitados */
+}
+
+ion-card {
+  @extend .custom-card;
+}
+
+ion-card-header {
+  @extend .custom-card-header;
+}
+
+ion-card-title {
+  @extend .custom-card-title;
+}
+
+ion-card-content {
+  @extend .custom-card-content;
+}
+
+ion-item {
+  @extend .custom-item;
+}
+
+ion-label {
+  @extend .custom-label;
+}
+
+ion-icon {
+  @extend .custom-icon;
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.page-info {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+  color: #003366; /* Azul oscuro */
+  font-weight: bold;
+}

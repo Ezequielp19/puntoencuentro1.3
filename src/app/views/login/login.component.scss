@@ -1,0 +1,93 @@
+ion-content {
+  --background: #fff;
+}
+
+.custom-toolbar {
+  --background: #00243A; /* Mismo color que los demás toolbars */
+  color: #FFF;
+}
+
+.custom-title {
+  color: #FFF !important;
+}
+
+.login-container {
+  .login-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .logo-img {
+    height: 170px;
+  }
+
+  ion-item {
+    --background: #f9f9f9;
+    --border-radius: 8px;
+    margin-bottom: 15px;
+  }
+
+  ion-input {
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+
+  ion-button {
+    margin-top: 10px;
+  }
+
+  .google-button {
+    --background: #46c2a3;
+    color: white;
+    font-weight: bold;
+    ion-icon {
+      --color: white;
+    }
+  }
+
+  .facebook-button {
+    --background: #3b5998;
+    color: white;
+    font-weight: bold;
+    ion-icon {
+      --color: white;
+    }
+  }
+
+  a {
+    color: #3880ff;
+    text-decoration: none;
+  }
+
+  .icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+}
+
+.google-button {
+  --background: #46c2a3;
+  color: white;
+  font-weight: bold;
+}
+
+.facebook-button {
+  --background: #3b5998;
+  color: white;
+  font-weight: bold;
+}
+
+ion-modal {
+  --width: 90%;
+  --height: 80%;
+  --border-radius: 10px;
+  --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+ion-content p {
+  color: black;
+}
+
+

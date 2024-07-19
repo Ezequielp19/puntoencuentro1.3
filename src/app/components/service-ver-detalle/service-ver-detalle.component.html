@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button style="color: #FFCF00;" autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="custom-title">Lista de usuarios</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="logout()" class="custom-button-danger">
+        <ion-icon name="log-out-outline" class="custom-icon"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <p class="page-info">Total de usuarios: {{ userCount }}</p>
+
+  <ion-card *ngFor="let user of displayedUsers" class="custom-card">
+    <ion-card-header class="custom-card-header">
+      <ion-card-title class="custom-card-title">{{ user.nombre }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="custom-card-content">
+      <p>Email: {{ user.correo }}</p>
+      <p>Tipo de usuario: {{ user.tipo_usuario }}</p>
+      <!-- <ion-buttons slot="end">
+        <ion-button (click)="editUser(user)" class="custom-button1">
+          <ion-icon slot="icon-only" name="create" class="custom-icon"></ion-icon>
+        </ion-button>
+        <ion-button (click)="deleteUser(user)" class="custom-button1">
+          <ion-icon slot="icon-only" name="trash" class="custom-icon"></ion-icon>
+        </ion-button>
+      </ion-buttons> -->
+    </ion-card-content>
+  </ion-card>
+
+  <div class="pagination-buttons">
+    <ion-button (click)="previousPage()" [disabled]="currentPage === 1" class="custom-button">
+      Anterior
+    </ion-button>
+    <ion-button (click)="nextPage()" [disabled]="currentPage === totalPages" class="custom-button">
+      Siguiente
+    </ion-button>
+  </div>
+
+    <div class="page-info">
+      Página {{ currentPage }} de {{ totalPages }}
+    </div>
+</ion-content>

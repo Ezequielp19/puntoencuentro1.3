@@ -1,0 +1,276 @@
+.logo {
+  width: 200px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+}
+
+ion-icon {
+  color: gold;
+}
+
+.main-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.info-card, .service-card, .about-card, .review-card {
+  margin: 16px;
+  border-radius: 10px;
+}
+
+.info-card-header, .service-card-header, .about-card-header, .review-card-header {
+  padding: 16px;
+  background-color: #34a1cc;
+}
+
+.info-card-title, .service-card-title, .about-card-title, .review-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.info-card-subtitle {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.info-card-content, .service-card-content, .about-card-content, .review-card-content {
+  padding: 16px;
+}
+
+ion-list {
+  background: transparent;
+}
+
+ion-item {
+  --padding-start: 0;
+}
+
+.book-button {
+  margin: 16px;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.review-card {
+  border: 2px solid #34a1cc;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-card-content {
+background-color: #244356;
+}
+
+
+.review-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.review-card-content p {
+  font-size: 1.1em;
+}
+
+.pagination-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.pagination-controls p {
+  margin: 8px 0;
+  padding: 0;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-button {
+  margin: 8px;
+}
+
+ion-button[expand="block"] {
+  width: calc(100% - 32px);
+  margin: 0 auto 16px auto;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+}
+
+ion-icon {
+  color: gold;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ion-icon {
+    font-size: 2em;
+    cursor: pointer;
+  }
+  .selected {
+    color: gold;
+  }
+}
+
+.average-rating {
+  display: flex;
+  align-items: center;
+  ion-icon {
+    font-size: 1.5em;
+    color: gold;
+  }
+  span {
+    margin-left: 8px;
+    font-size: 1.2em;
+    color: white;
+  }
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.star-rating ion-icon {
+  font-size: 2em;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+star-rating ion-icon.selected {
+  color: gold;
+}
+ion-content {
+  --background: #fff;
+}
+
+/* Estilos específicos para el componente */
+.custom-toolbar {
+  --background: #00243A;
+  color: #FFF;
+}
+
+.custom-title {
+  color: #FFF !important;
+}
+
+ion-button {
+  --background: #00B1BF;
+  --color: #FFF;
+}
+
+ion-button[color="danger"] {
+  --background: #FFCF00;
+  --color: #00243A;
+}
+
+ion-label {
+  color: #FFF !important; /* Cambiamos el color de los labels a amarillo */
+}
+
+ion-icon {
+  color: #FFCF00;
+}
+
+.info-card, .social-card, .horarios-card, .service-card, .about-card, .photo-card {
+  margin: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #244356;
+}
+
+.custom-card-header {
+  padding: 16px;
+  background-color: #00243A;
+  color: #FFF !important;
+}
+
+.custom-card-title, .custom-card-subtitle {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #FFF !important;
+  text-align: center;
+}
+
+.custom-card-content {
+  padding: 16px;
+  color: #FFF;
+}
+
+ion-item {
+  --background: #244356;
+  --color: #FFF;
+  --inner-background: #244356;
+  --inner-color: #FFF;
+  --label-color: #FFCF00; /* Cambiamos el color de los labels a amarillo */
+  --highlight-background: #FFCF00;
+}
+
+ion-select {
+  --color: #FFF;
+  --placeholder-color: #FFF;
+}
+
+ion-select-option {
+  --color: #00243A;
+}
+
+ion-button:hover {
+  filter: brightness(1.1);
+}
+
+.logo {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.pagination-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.page-info {
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 1.1em;
+  color: #FFF;
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+ion-button.custom-button {
+  --background: #00B1BF;
+  --color: #FFF;
+}
+
+ion-button.custom-button[disabled] {
+  --background: #A9A9A9; /* Color de fondo para botón deshabilitado */
+}

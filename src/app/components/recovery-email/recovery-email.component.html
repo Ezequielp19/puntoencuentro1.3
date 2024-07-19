@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+  <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" style="color: #FFCF00;"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Recuperar Correo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="floating">Nombre de Usuario</ion-label>
+    <ion-input [(ngModel)]="identifier"></ion-input>
+  </ion-item>
+
+  <ion-button expand="full" (click)="recoverEmail()">Recuperar Correo</ion-button>
+</ion-content>

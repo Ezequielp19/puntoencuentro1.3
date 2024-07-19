@@ -1,0 +1,92 @@
+ion-content {
+  --background: #fff;
+}
+
+/* Estilos específicos para el componente */
+.custom-toolbar {
+  --background: #00243A;
+  color: #FFF;
+}
+
+.custom-title {
+  color: #FFF !important;
+}
+
+ion-button {
+  --background: #00B1BF;
+  --color: #FFF;
+}
+
+ion-button[color="danger"] {
+  --background: #FFCF00;
+  --color: #00243A;
+}
+
+ion-label {
+  color: #FFF !important; /* Cambiamos el color de los labels a amarillo */
+}
+
+ion-icon {
+  color: #FFCF00;
+}
+
+.info-card, .social-card, .horarios-card, .service-card, .about-card, .photo-card {
+  margin: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #244356;
+}
+
+.custom-card-header {
+  padding: 16px;
+  background-color: #00243A;
+  color: #FFF !important;
+}
+
+.custom-card-title, .custom-card-subtitle {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #FFF !important;
+  text-align: center;
+}
+
+.custom-card-content {
+  padding: 16px;
+  color: #FFF;
+}
+
+ion-item {
+  --background: #244356;
+  --color: #FFF;
+  --inner-background: #244356;
+  --inner-color: #FFF;
+  --label-color: #FFCF00; /* Cambiamos el color de los labels a amarillo */
+  --highlight-background: #FFCF00;
+}
+
+ion-select {
+  --color: #FFF;
+  --placeholder-color: #FFF;
+}
+
+ion-select-option {
+  --color: #00243A;
+}
+
+ion-button:hover {
+  filter: brightness(1.1);
+}
+
+.logo {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 5px solid #00243A; /* Añadir borde del color del toolbar */
+}
+
+.book-button.custom-button {
+  margin: 16px auto; /* Ajustar margen para que no sobresalga */
+  width: calc(100% - 32px); /* Asegurar que el ancho sea consistente con otros componentes */
+}

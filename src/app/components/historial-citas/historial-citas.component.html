@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" style="color: #FFCF00;"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Historial de Citas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="pagedCitas.length > 0; else noCitas">
+    <ng-container *ngFor="let cita of pagedCitas[currentPage - 1]">
+      <ion-card class="info-card review-card">
+        <ion-card-header class="review-card-header custom-card-header">
+          <ion-card-title class="review-card-title custom-card-title">{{ formatDate(cita.fecha_cita) }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="custom-card-content">
+          <p *ngIf="userType === 'cliente'">Servicio: {{ cita.nombreEmpresa }}</p>
+          <p *ngIf="userType === 'proveedor'">Cliente: {{ cita.nombre }}</p>
+          <p [ngClass]="getEstadoClass(cita.estado)">Estado: {{ cita.estado }}</p>
+          <p>Horario: {{ formatTime(cita.fecha_cita) }}</p>
+          <div class="appointment-actions">
+            <ion-item *ngIf="userType === 'proveedor'" lines="none" class="status-select">
+              <ion-label>Estado</ion-label>
+              <ion-select [value]="cita.estado" (ionChange)="changeAppointmentStatus(cita.id, $event.detail.value)">
+                <ion-select-option value="pendiente">Pendiente</ion-select-option>
+                <ion-select-option value="confirmada">Confirmada</ion-select-option>
+                <ion-select-option value="cancelada">Cancelada</ion-select-option>
+              </ion-select>
+            </ion-item>
+            <ion-button color="danger" (click)="deleteAppointment(cita.id)" class="delete-button">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </ion-list>
+
+  <div *ngIf="pagedCitas.length > 1" class="pagination-controls">
+    <div class="page-info">
+      Página {{ currentPage }} de {{ totalPages }}
+    </div>
+    <div class="pagination-buttons">
+      <ion-button (click)="previousPage()" [disabled]="currentPage === 1" class="custom-button">
+        Anterior
+      </ion-button>
+      <ion-button (click)="nextPage()" [disabled]="currentPage === totalPages" class="custom-button">
+        Siguiente
+      </ion-button>
+    </div>
+  </div>
+
+  <ng-template #noCitas>
+    <div class="no-citas">
+      <p>Aún no hay citas</p>
+    </div>
+  </ng-template>
+</ion-content>

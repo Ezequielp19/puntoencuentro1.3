@@ -1,0 +1,69 @@
+<ion-card class="about-card">
+  <ion-card-header class="about-card-header custom-card-header">
+    <div class="header-content">
+      <ion-card-title class="about-card-title custom-card-title">Reseñas</ion-card-title>
+      <div class="average-rating">
+        <ion-icon name="star" *ngFor="let i of createRange(round(averageRating))"></ion-icon>
+        <ion-icon name="star-outline" *ngFor="let i of createRange(5 - round(averageRating))"></ion-icon>
+        <span class="average-rating-number">({{ averageRating.toFixed(1) }})</span>
+      </div>
+    </div>
+  </ion-card-header>
+  <ion-card-content class="about-card-content custom-card-content">
+    <div class="review-grid">
+      <div *ngFor="let review of paginatedReviews">
+        <ion-card class="review-card">
+          <ion-card-header class="review-card-header custom-card-header">
+            <ion-card-title class="review-card-title custom-card-title">{{ review.nombreCliente }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p style="margin-top: 10px;">{{ review.comentario }}</p>
+            <div style="margin-top: 10px;" class="stars">
+              <ion-icon name="star" *ngFor="let i of createRange(review.calificacion)"></ion-icon>
+              <ion-icon name="star-outline" *ngFor="let i of createRange(5 - review.calificacion)"></ion-icon>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+
+    <div class="pagination-controls">
+      <div class="page-info">
+        Página {{ currentPage }} de {{ totalPages }}
+      </div>
+      <div class="pagination-buttons">
+        <ion-button (click)="previousPage()" [disabled]="currentPage === 1" class="custom-button">
+          Anterior
+        </ion-button>
+        <ion-button (click)="nextPage()" [disabled]="currentPage === totalPages" class="custom-button">
+          Siguiente
+        </ion-button>
+      </div>
+    </div>
+  </ion-card-content>
+</ion-card>
+
+<ion-button expand="block" class="book-button custom-button" (click)="toggleForm()">Agregar Reseña</ion-button>
+
+<ion-card *ngIf="showForm">
+  <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label style="margin:10px;">Comentario</ion-label>
+      <ion-textarea formControlName="comentario"></ion-textarea>
+    </ion-item>
+    <ion-item>
+      <ion-label style="margin:10px;">Calificación</ion-label>
+      <div class="star-rating">
+        <ion-icon *ngFor="let rating of ratings"
+                  [name]="rating <= reviewForm.get('calificacion').value ? 'star' : 'star-outline'"
+                  (click)="selectRating(rating)">
+        </ion-icon>
+      </div>
+    </ion-item>
+    <br>
+    <ion-button expand="block" type="submit" [disabled]="!reviewForm.valid || isLoading">
+      Enviar
+      <ion-spinner *ngIf="isLoading" slot="end"></ion-spinner>
+    </ion-button>
+  </form>
+</ion-card>

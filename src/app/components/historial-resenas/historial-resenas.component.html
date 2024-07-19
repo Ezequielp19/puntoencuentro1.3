@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" style="color: #FFCF00;"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Historial de Reseñas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list *ngIf="pagedResenas.length > 0; else noReviews">
+    <ng-container *ngFor="let resena of pagedResenas[currentPage]">
+      <ion-card class="info-card review-card">
+        <ion-card-header class="review-card-header custom-card-header">
+          <ion-card-title class="review-card-title custom-card-title">{{ resena.nombreEmpresa }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="custom-card-content">
+          <p>{{ resena.comentario }}</p>
+          <div class="stars">
+            <ion-icon name="star" *ngFor="let i of createRange(resena.calificacion)" style="color: #FFCF00;"></ion-icon>
+          </div>
+          <ion-button color="danger" (click)="deleteReview(resena.id)" class="delete-button">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </ion-list>
+
+  <div *ngIf="pagedResenas.length > 1" class="pagination-controls">
+    <div class="page-info">
+      Página {{ currentPage + 1 }} de {{ pagedResenas.length }}
+    </div>
+    <div class="pagination-buttons">
+      <ion-button (click)="previousPage()" [disabled]="currentPage === 0" class="custom-button">
+        Anterior
+      </ion-button>
+      <ion-button (click)="nextPage()" [disabled]="currentPage >= pagedResenas.length - 1" class="custom-button">
+        Siguiente
+      </ion-button>
+    </div>
+  </div>
+
+  <ng-template #noReviews>
+    <div class="no-citas">
+      <p>Aún no hay reseñas</p>
+    </div>
+  </ng-template>
+</ion-content>

@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-title class="ion-text-center custom-title">Iniciá sesión</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="login-container">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <img src="../../../assets/icon/fondosin.webp" class="logo-img" alt="Logo de tu empresa">
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input [(ngModel)]="email" type="email" placeholder="Ingresá tu email"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+
+
+
+        <ion-item>
+  <ion-label position="floating">Contraseña</ion-label>
+  <ion-input [(ngModel)]="password" [type]="showPassword ? 'text' : 'password'" placeholder="Ingresá tu contraseña">
+</ion-input>
+ <ion-icon
+  slot="end"
+  [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
+  (click)="togglePasswordVisibility()"
+  style="cursor: pointer; font-size: 24px;margin-top: 30px;  "
+></ion-icon>
+
+</ion-item>
+
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <ion-button expand="block" (click)="login()">Ingresar</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="6" class="ion-text-left">
+        <a (click)="goToEmail()">¿Olvidaste tu email?</a>
+      </ion-col>
+      <ion-col size="6" class="ion-text-right">
+        <a (click)="goToPassword()">¿Olvidaste tu contraseña?</a>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-button expand="block" class="google-button" (click)="loginWithGoogle()">
+          <img src="../../../assets/google.svg" class="icon"/>
+          Continuar con Google
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-button expand="block" class="facebook-button" (click)="loginWithFacebook()">
+          <img src="../../../assets/Facebook_f_logo_(2019).svg" class="icon"/>
+          Continuar con Facebook
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <p>¿No tenés cuenta? <a (click)="goToRegister()">Creala ahora</a></p>
+      </ion-col>
+    </ion-row>
+
+
+ <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <p>
+          Al iniciar sesión, aceptas nuestros
+          <a href="https://condiciones.vercel.app/" target="_blank">Términos y Condiciones</a>
+        </p>
+      </ion-col>
+    </ion-row>
+
+
+
+
+  </ion-grid>
+
+</ion-content>
+

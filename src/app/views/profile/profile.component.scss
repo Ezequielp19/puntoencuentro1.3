@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+ion-split-pane {
+  height: 100%;
+}
+
+ion-menu {
+  height: 100%;
+}
+
+ion-list {
+  padding-left: 0;
+}
+
+ion-item {
+  --padding-start: 16px;
+}
+
+ion-item:hover {
+  background-color: #f0f0f0;
+}
+
+ion-item {
+  --inner-padding-start: 0;
+}
+
+ion-item.ion-activated {
+  background-color: #d0d0d0;
+}
+

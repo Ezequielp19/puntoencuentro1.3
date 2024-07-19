@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" style="color: #FFCF00;"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title" style="color: #FFF;">Horas Hábiles</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="info-card">
+    <ion-card-header class="info-card-header">
+      <ion-card-title class="custom-card-title" style="color: #FFF;">Configurar Horarios</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="info-card-content">
+      <form (ngSubmit)="saveSchedule()">
+        <ion-item class="custom-item">
+          <ion-label>Seleccionar días disponibles:</ion-label>
+          <ion-grid>
+            <ion-row>
+              <ion-col *ngFor="let day of days" class="day-selection">
+                <ion-checkbox [(ngModel)]="selectedDays[day]" name="{{day}}" class="day-checkbox"></ion-checkbox>
+                <ion-label>{{day}}</ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+
+        <ion-item class="custom-item">
+          <ion-label>Hora de inicio:</ion-label>
+          <ion-select [(ngModel)]="startTime" name="startTime" required>
+            <ion-select-option *ngFor="let time of timeSlots" [value]="time">{{time}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="custom-item">
+          <ion-label>Hora de fin:</ion-label>
+          <ion-select [(ngModel)]="endTime" name="endTime" required>
+            <ion-select-option *ngFor="let time of timeSlots" [value]="time">{{time}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="custom-item">
+          <ion-label>Hora de descanso inicio:</ion-label>
+          <ion-select [(ngModel)]="breakStart" name="breakStart">
+            <ion-select-option *ngFor="let time of timeSlots" [value]="time">{{time}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="custom-item">
+          <ion-label>Hora de descanso fin:</ion-label>
+          <ion-select [(ngModel)]="breakEnd" name="breakEnd">
+            <ion-select-option *ngFor="let time of timeSlots" [value]="time">{{time}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button type="submit" expand="block">Guardar Horarios</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" style="color: #FFCF00;"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Pide tu Cita</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="goToProfile()">
+        <ion-icon name="person-circle-outline" class="custom-icon"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid class="ion-no-padding">
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="6" size-md="6">
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card class="info-card custom-card">
+    <ion-card-header class="info-card-header custom-card-header">
+      <ion-card-subtitle class="custom-card-subtitle">Horarios de atención</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content class="info-card-content custom-card-content">
+      <ion-list lines="none">
+        <ion-item *ngFor="let horario of sortedHorarios">
+          {{ formatHorario(horario) }}
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="info-card custom-card">
+    <ion-card-header class="info-card-header custom-card-header">
+      <ion-card-subtitle class="custom-card-subtitle">Selecciona una fecha</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content class="info-card-content custom-card-content">
+      <ion-datetime
+        [min]="today"
+        [locale]="locale"
+        display-format="DD/MM/YYYY"
+        (ionChange)="onDateSelected($event)"
+      ></ion-datetime>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-spinner *ngIf="isLoading"></ion-spinner>
+</ion-content>

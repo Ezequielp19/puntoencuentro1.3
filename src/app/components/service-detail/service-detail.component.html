@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" style="color: #FFCF00;"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">{{ service?.nombreEmpresa.toUpperCase() }}</ion-title>
+
+    <ion-buttons slot="end" *ngIf="!isAdmin">
+      <ion-button color="danger" (click)="goToProfile()">
+        <ion-icon name="person-circle-outline" class="custom-icon"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="service">
+  <ion-grid class="ion-no-padding">
+    <ion-row style="margin-top: 10px;" class="ion-justify-content-center">
+      <ion-col size="auto">
+        <ion-avatar class="logo">
+          <img [src]="service.imageUrl || 'assets/descargar.jpeg'" alt="{{ service.nombreEmpresa }}" />
+        </ion-avatar>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-card class="info-card custom-card">
+    <ion-card-header class="info-card-header custom-card-header">
+      <ion-card-title class="info-card-title custom-card-title ion-text-center">{{ service?.nombreEmpresa.toUpperCase() }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="info-card-content custom-card-content">
+      <h2 class="info-card-subtitle custom-card-subtitle">Información de contacto</h2>
+      <div class="contact-info">
+        <p>
+          <ion-icon name="location-outline" class="custom-icon"></ion-icon>
+          Dirección:
+          <a [href]="getGoogleMapsUrl(service?.dirreccion)" target="_blank">{{ service?.dirreccion }}</a>
+        </p>
+        <p><ion-icon name="call-outline" class="custom-icon"></ion-icon> Teléfono: {{ service?.telefono }}</p>
+        <p><ion-icon name="mail-outline" class="custom-icon"></ion-icon> Email: {{ service?.email }}</p>
+        <p *ngIf="service?.whatsapp"><ion-icon name="logo-whatsapp" class="custom-icon"></ion-icon> Whatsapp: {{ service?.whatsapp }}</p>
+        <p *ngIf="service?.instagram"><ion-icon name="logo-instagram" class="custom-icon"></ion-icon> Instagram: <a [href]="service?.instagram" target="_blank">{{ service?.instagram }}</a></p>
+        <p *ngIf="service?.facebook"><ion-icon name="logo-facebook" class="custom-icon"></ion-icon> Facebook: <a [href]="service?.facebook" target="_blank">{{ service?.facebook }}</a></p>
+        <p *ngIf="service?.website"><ion-icon name="globe-outline" class="custom-icon"></ion-icon> Sitio Web: <a [href]="service?.website" target="_blank">{{ service?.website }}</a></p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="info-card custom-card">
+    <ion-card-header class="info-card-header custom-card-header">
+      <ion-card-title class="info-card-title custom-card-title">Horario de atención</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="info-card-content custom-card-content">
+      <ion-list lines="none">
+        <ion-item *ngFor="let horario of sortedHorarios">
+          {{ formatHorario(horario) }}
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-button expand="block" class="book-button custom-button" (click)="navigateToCita()" *ngIf="!isAdmin">Reservar Cita</ion-button>
+
+  <ion-card class="info-card custom-card">
+    <ion-card-header class="info-card-header custom-card-header">
+      <ion-card-title class="info-card-title custom-card-title">Servicios</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="info-card-content custom-card-content">
+        <p>{{ service.servicio }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="info-card custom-card">
+    <ion-card-header class="info-card-header custom-card-header">
+      <ion-card-title class="info-card-title custom-card-title">Sobre nosotros</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="info-card-content custom-card-content">
+      <p>{{ service?.description }}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <app-reviews [servicioId]="serviceId" *ngIf="!isAdmin"></app-reviews>
+
+
+</ion-content>

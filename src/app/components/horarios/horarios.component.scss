@@ -1,0 +1,94 @@
+.custom-toolbar {
+  --background: #00243A;
+  color: #FFF;
+}
+
+.custom-title {
+  color: #FFF !important; /* Asegura que el color del título sea blanco */
+}
+
+ion-button {
+  --background: #00B1BF; /* Color turquesa para los botones */
+  --color: #FFF; /* Texto blanco para los botones */
+}
+
+ion-button[color="danger"] {
+  --background: #FFCF00; /* Color amarillo para el botón de logout */
+  --color: #00243A; /* Texto azul oscuro */
+}
+
+ion-label {
+  color: #FFF; /* Color blanco para las etiquetas */
+}
+
+ion-icon {
+  color: #FFCF00; /* Color amarillo para los iconos */
+}
+
+.info-card {
+  margin: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #244356; /* Fondo azul claro para las tarjetas */
+}
+
+.info-card-header {
+  padding: 16px;
+  background-color: #00243A; /* Color azul oscuro para los encabezados */
+  color: #FFF; /* Texto blanco */
+}
+
+.info-card-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #FFF; /* Nombre del usuario en blanco */
+  text-align: center;
+}
+
+.info-card-content {
+  padding: 16px;
+  color: #FFF; /* Letras en blanco para la información de contacto */
+}
+
+.custom-item {
+  --background: #244356; /* Fondo azul claro para los ítems */
+  --color: #FFF; /* Texto blanco */
+  --inner-background: #244356; /* Fondo interno azul claro */
+  --inner-color: #FFF; /* Texto interno blanco */
+  --label-color: #FFF; /* Color de las etiquetas */
+  --highlight-background: #FFCF00; /* Color de resalte amarillo */
+}
+
+ion-checkbox {
+  --background: #244356; /* Fondo azul claro para el checkbox */
+  --border-color: #FFCF00; /* Color del borde del checkbox */
+  --checkmark-color: #FFCF00; /* Color amarillo para el checkmark */
+  --size: 24px; /* Tamaño del checkbox */
+  --border-radius: 50%; /* Hace que el checkbox sea circular */
+  margin-right: 10px; /* Espacio entre el checkbox y la etiqueta */
+}
+
+.day-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.day-checkbox {
+  --background-checked: #00243A; /* Fondo del checkbox cuando está marcado */
+}
+
+ion-select {
+  --color: #FFF; /* Texto blanco */
+  --placeholder-color: #FFF; /* Texto de marcador de posición blanco */
+}
+
+ion-select-option {
+  --color: #00243A; /* Texto azul oscuro */
+}
+.custom-card-title {
+  font-size: 1.3em;
+  color: #FFF; /* Letras blancas */
+}

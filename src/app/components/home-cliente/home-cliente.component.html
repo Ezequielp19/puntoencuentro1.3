@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" style="color: #FFCF00;"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Buscar Servicios</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="goToProfile()">
+        <ion-icon name="person-circle-outline" class="custom-icon"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar placeholder="Buscar servicios..." (ionInput)="filterServices($event)"></ion-searchbar>
+
+  <ion-item class="custom-item">
+    <ion-label class="custom-label">Categoría:</ion-label>
+    <ion-select (ionChange)="filterServicesByCategory($event.detail.value)">
+      <ion-select-option *ngFor="let category of categories" [value]="category.id">
+        {{ category.nombre }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item class="custom-item">
+    <ion-label class="custom-label">Ciudad:</ion-label>
+    <ion-select (ionChange)="filterServicesByCity($event.detail.value)">
+      <ion-select-option *ngFor="let city of cities" [value]="city">
+        {{ city }}
+      </ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-list *ngIf="pagedServices.length > 0; else noServices">
+    <ng-container *ngFor="let page of pagedServices[currentPage]">
+      <ion-card (click)="goToService(page.id)">
+        <ion-card-content class="custom-card-content">
+          <div class="image-container">
+            <ion-avatar>
+              <img [src]="page.imageUrl" alt="{{page.nombreEmpresa}}" />
+            </ion-avatar>
+          </div>
+          <div class="details-container">
+            <h2 class="service-title">{{ page.nombreEmpresa }}</h2>
+            <p class="service-price">{{ page.price | currency }}</p>
+            <p class="service-info">{{ page.servicio }}</p>
+            <p class="service-description">{{ page.description }}</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </ion-list>
+
+  <div *ngIf="pagedServices.length > 1" class="pagination-controls">
+    <div class="page-info">
+      Página {{ currentPage + 1 }} de {{ pagedServices.length }}
+    </div>
+    <div class="pagination-buttons">
+      <ion-button (click)="previousPage()" [disabled]="currentPage === 0" class="custom-button">
+        Anterior
+      </ion-button>
+      <ion-button (click)="nextPage()" [disabled]="currentPage >= pagedServices.length - 1" class="custom-button">
+        Siguiente
+      </ion-button>
+    </div>
+  </div>
+
+  <ng-template #noServices>
+    <div class="no-services">
+      <p>No hay servicios disponibles</p>
+    </div>
+  </ng-template>
+</ion-content>

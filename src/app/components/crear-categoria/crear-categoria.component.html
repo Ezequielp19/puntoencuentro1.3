@@ -1,0 +1,72 @@
+<ion-header>
+  <ion-toolbar color="primary" class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button style="color: #FFCF00;" autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Agregar Categoria</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="logout()" class="custom-button-danger">
+        <ion-icon name="log-out-outline" class="custom-icon"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div style="margin: 20px;">
+    <ion-button (click)="toggleForm()" expand="block" shape="round" color="primary" class="custom-button">
+      Agregar Categoría
+    </ion-button>
+  </div>
+
+  <ion-card *ngIf="showForm" class="custom-card">
+    <ion-item class="custom-item">
+      <ion-label class="custom-label">Nombre</ion-label>
+      <ion-input [(ngModel)]="newCategory.nombre"></ion-input>
+    </ion-item>
+    <ion-item class="custom-item">
+      <ion-label class="custom-label">Descripción</ion-label>
+      <ion-input [(ngModel)]="newCategory.descripcion"></ion-input>
+    </ion-item>
+  </ion-card>
+
+  <div *ngIf="showForm" style="margin: 20px;">
+    <ion-button (click)="save()" expand="block" shape="round" expand="full" class="custom-button">
+      Guardar
+    </ion-button>
+  </div>
+
+  <div *ngIf="cargando" style="text-align: center;">
+    <ion-spinner name="bubbles"></ion-spinner>
+  </div>
+
+  <ion-card *ngFor="let category of paginatedCategories" class="custom-card">
+    <ion-card-header class="custom-card-header">
+      <ion-card-title class="custom-card-title">{{ category.nombre }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="custom-card-content">
+      <p>Descripción: {{ category.descripcion }}</p>
+      <ion-buttons slot="end">
+        <ion-button (click)="editCategory(category)" class="custom-button1">
+          <ion-icon slot="icon-only" name="create" class="custom-icon"></ion-icon>
+        </ion-button>
+        <ion-button (click)="delete(category)" class="custom-button1">
+          <ion-icon slot="icon-only" name="trash" class="custom-icon"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="page-info">
+    Página {{ currentPage }} de {{ totalPages }}
+  </div>
+
+  <div class="pagination-buttons">
+    <ion-button (click)="previousPage()" [disabled]="currentPage === 1" class="custom-button">
+      Anterior
+    </ion-button>
+    <ion-button (click)="nextPage()" [disabled]="currentPage === totalPages" class="custom-button">
+      Siguiente
+    </ion-button>
+  </div>
+</ion-content>

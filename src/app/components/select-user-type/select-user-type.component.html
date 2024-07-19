@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Selecciona Tipo de Usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="select-user-type-container">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <h2>Elige tu tipo de usuario</h2>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <ion-button expand="block" (click)="selectUserType('cliente')">Cliente</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">
+        <ion-button expand="block" (click)="selectUserType('proveedor')">Proveedor</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
