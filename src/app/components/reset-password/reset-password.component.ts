@@ -1,10 +1,9 @@
-import { IonicModule } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../common/services/auth.service';
-import { AlertController, LoadingController } from '@ionic/angular';
-
+import { AlertController} from '@ionic/angular';
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonTitle, IonToolbar, LoadingController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-reset-password',
@@ -13,7 +12,16 @@ import { AlertController, LoadingController } from '@ionic/angular';
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule,
+    IonHeader,
+    IonButtons,
+    IonToolbar,
+    IonBackButton,
+    IonTitle,
+    IonInput,
+    IonContent,
+    IonItem,
+    IonLabel,
+    IonButton,
     FormsModule,
     ReactiveFormsModule
   ]
@@ -33,10 +41,28 @@ export class ResetPasswordComponent  implements OnInit {
   }
 
   async resetPassword() {
-    const loading = await this.loadingController.create();
-    await loading.present();
+    console.log("1");
 
+    if (!this.email) {
+      console.error("El campo de correo electrónico está vacío.");
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Por favor, ingresa un correo electrónico válido.',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return;
+    }
+
+    const loading = await this.loadingController.create({
+      message: 'Por favor espera...',
+      duration: 5000
+    });
+    console.log("2");
+    await loading.present();
+    console.log("2.5");
     try {
+      console.log("3");
       await this.authService.resetPassword(this.email);
       await loading.dismiss();
       const alert = await this.alertController.create({
@@ -46,6 +72,7 @@ export class ResetPasswordComponent  implements OnInit {
       });
       await alert.present();
     } catch (error) {
+      console.error("Error in resetPassword:", error);
       await loading.dismiss();
       const alert = await this.alertController.create({
         header: 'Error',
