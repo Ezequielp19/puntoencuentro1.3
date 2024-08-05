@@ -17,15 +17,24 @@ export class AuthService {
     this.userSubject = new BehaviorSubject<User | null>(null);
     this.user$ = this.userSubject.asObservable();
 
-    this.afAuth.authState.pipe(
-      switchMap(user => {
-        if (user) {
-          return this.firestore.collection<User>('usuarios').doc(user.uid).valueChanges();
+   this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+      this.afAuth.authState.pipe(
+        switchMap(user => {
+          if (user) {
+            return this.firestore.collection<User>('usuarios').doc(user.uid).valueChanges();
+          } else {
+            return new Observable<User | null>(observer => observer.next(null));
+          }
+        })
+      ).subscribe(userData => {
+        this.userSubject.next(userData);
+        if (userData) {
+          localStorage.setItem('currentUser', JSON.stringify(userData));
         } else {
-          return new Observable<User | null>(observer => observer.next(null));
+          localStorage.removeItem('currentUser');
         }
-      })
-    ).subscribe(userData => this.userSubject.next(userData));
+      });
+    });
   }
 
     // Método para obtener todos los usuarios

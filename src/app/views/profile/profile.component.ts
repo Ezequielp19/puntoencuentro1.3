@@ -51,8 +51,21 @@ export class ProfileComponent implements OnInit {
     this.menuCtrl.close();  // Cerrar el menú después de seleccionar una opción
   }
 
-  logout() {
-    this.authService.logout();
+  // logout() {
+  //   this.authService.logout();
+  //   this.router.navigate(['/login']);
+  // }
+
+   logout() {
+  this.authService.logout().then(() => {
+    localStorage.removeItem('currentUser');
     this.router.navigate(['/login']);
-  }
+  }).catch(error => {
+    console.error('Error durante el cierre de sesión:', error);
+  });
+}
+
+
+
+
 }
