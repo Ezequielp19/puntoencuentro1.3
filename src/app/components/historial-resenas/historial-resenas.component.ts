@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
 import { Observable } from 'rxjs';
@@ -6,6 +5,7 @@ import { IonicModule, AlertController } from '@ionic/angular';
 import { Reviews } from 'src/app/common/models/reviews.model';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-historial-resenas',
@@ -29,7 +29,7 @@ export class HistorialResenasComponent implements OnInit {
     private firestoreService: FirestoreService,
     private authService: AuthService,
     private router: Router,
-    private alertController: AlertController // Asegúrate de incluir AlertController
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -44,6 +44,12 @@ export class HistorialResenasComponent implements OnInit {
     });
   }
 
+  ionViewWillEnter() {
+    if (this.resenas.length === 0) {
+      this.presentNoReviewsAlert();
+    }
+  }
+
   async loadReviews() {
     try {
       let resenas: Reviews[] = [];
@@ -53,9 +59,6 @@ export class HistorialResenasComponent implements OnInit {
         resenas = await this.firestoreService.getReviewsByProviderId(this.userId);
       }
       this.resenas = resenas;
-      if (this.resenas.length === 0) {
-        this.presentNoReviewsAlert();
-      }
       this.paginateResenas();
     } catch (error) {
       console.error('Error cargando reseñas:', error);

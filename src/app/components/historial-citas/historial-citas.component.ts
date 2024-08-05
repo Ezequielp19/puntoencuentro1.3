@@ -28,6 +28,7 @@ export class HistorialCitasComponent implements OnInit {
   totalPages: number;
   userId: string;
   userType: string;
+  alertShown = false; // Bandera para controlar la visualización de la alerta
 
   constructor(
     private firestoreService: FirestoreService,
@@ -46,6 +47,10 @@ export class HistorialCitasComponent implements OnInit {
         console.error('No se pudo obtener el usuario actual.');
       }
     });
+  }
+
+  ionViewWillEnter() {
+    this.loadAppointments();
   }
 
   loadAppointments() {
@@ -69,8 +74,9 @@ export class HistorialCitasComponent implements OnInit {
       this.citas$.subscribe(citas => {
         this.citas = citas;
         this.paginateCitas();
-        if (this.citas.length === 0) {
+        if (this.citas.length === 0 && !this.alertShown) {
           this.presentNoAppointmentsAlert();
+          this.alertShown = true; // Marcar la alerta como mostrada
         }
       });
     } else if (this.userType === 'proveedor') {
@@ -95,14 +101,18 @@ export class HistorialCitasComponent implements OnInit {
           this.citas$.subscribe(citas => {
             this.citas = citas;
             this.paginateCitas();
-            if (this.citas.length === 0) {
+            if (this.citas.length === 0 && !this.alertShown) {
               this.presentNoAppointmentsAlert();
+              this.alertShown = true; // Marcar la alerta como mostrada
             }
           });
         } else {
           console.error('No se encontró un servicio para este proveedor.');
           this.citas$ = of([]);
-          this.presentNoAppointmentsAlert();
+          if (!this.alertShown) {
+            this.presentNoAppointmentsAlert();
+            this.alertShown = true; // Marcar la alerta como mostrada
+          }
         }
       });
     }

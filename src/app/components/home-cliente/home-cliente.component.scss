@@ -81,7 +81,7 @@ ion-card {
   }
 }
 
-ion-card:hover {
+ion-card.service-card:hover {
   background-color: #003554; /* Slightly lighter blue for hover */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   transform: scale(1.05);
@@ -145,4 +145,113 @@ ion-button.custom-button[disabled] {
   text-align: center;
   color: #999;
   font-size: 1.2em;
+}
+
+.filter-card {
+  --ion-card-background: #244356;
+  color: #FFF;
+  margin: 10px 16px;
+  border-radius: 8px;
+  box-shadow: none; /* Remove shadow */
+  transition: none; /* Remove transition effects */
+}
+
+.filter-card ion-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espacio entre los filtros */
+}
+
+ion-select {
+  --placeholder-color: #FFF; /* Placeholder blanco */
+  --color: #FFF; /* Texto blanco */
+}
+
+ion-select::part(text) {
+  color: #FFF; /* Ensure the selected text is white */
+}
+
+.filter-card:hover {
+  background-color: #244356; /* Keep the same color on hover */
+  box-shadow: none;
+  transform: none;
+  z-index: auto;
+}
+
+ion-select-option {
+  color: #FFF; /* Texto de opciones blanco */
+}
+
+
+ion-select-option[selected] {
+  background-color: #003554; /* Color de fondo del item seleccionado */
+  color: #FFF !important; /* Texto blanco para el item seleccionado */
+}
+
+.custom-item {
+  --background: #244356; /* Color de fondo oscuro para los items */
+  border-radius: 5px;
+  margin: 5px 0; /* Espacio entre los items */
+}
+
+.custom-label {
+  color: #FFF; /* Color del texto de la etiqueta */
+}
+
+ion-searchbar {
+  --background: #244356;
+  --placeholder-color: #FFF;
+  --color: #FFF;
+  --icon-color: #FFCF00;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+ion-searchbar::part(container) {
+  background: transparent;
+}
+
+ion-searchbar::part(input) {
+  color: #FFF;
+}
+
+ion-item.custom-item {
+  --background: transparent;
+}
+
+ion-label.custom-label,
+ion-select::part(text),
+ion-select-option {
+  color: #FFF !important;
+}
+
+.clear-filters-button {
+  --background: #00B1BF; /* Estilo del botón para que coincida con los otros */
+  --color: #FFF;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+ion-card.service-card {
+  background-color: #00243A; /* Color de fondo inicial */
+  color: #FFF; /* Color de texto */
+  border-radius: 10px;
+  margin: 10px 16px;
+  transition: background-color 0.3s ease, border 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+ion-card.service-card.selected {
+  background-color: #00B1BF; /* Color de fondo cuando está seleccionada */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
+}
+
+ion-card.service-card:hover {
+  cursor: pointer; /* Cambia el cursor para indicar que se puede hacer clic */
+}
+
+ion-card.service-card:active {
+  background-color: #00B1BF; /* Color de fondo al hacer clic */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.05);
 }

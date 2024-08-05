@@ -14,29 +14,39 @@
 </ion-header>
 
 <ion-content>
-  <ion-searchbar placeholder="Buscar servicios..." (ionInput)="filterServices($event)"></ion-searchbar>
+  <ion-card class="filter-card">
+    <ion-card-content>
+      <ion-searchbar [(ngModel)]="searchTerm" placeholder="Buscar servicios..." (ionInput)="filterServices($event)"></ion-searchbar>
 
-  <ion-item class="custom-item">
-    <ion-label class="custom-label">Categoría:</ion-label>
-    <ion-select (ionChange)="filterServicesByCategory($event.detail.value)">
-      <ion-select-option *ngFor="let category of categories" [value]="category.id">
-        {{ category.nombre }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
+      <ion-item class="custom-item">
+        <ion-label class="custom-label">Categoría:</ion-label>
+        <ion-select [(ngModel)]="selectedCategory" interface="alert" (ionChange)="filterServicesByCategory($event.detail.value)">
+          <ion-select-option *ngFor="let category of filteredCategories" [value]="category.id">
+            {{ category.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
 
-  <ion-item class="custom-item">
-    <ion-label class="custom-label">Ciudad:</ion-label>
-    <ion-select (ionChange)="filterServicesByCity($event.detail.value)">
-      <ion-select-option *ngFor="let city of cities" [value]="city">
-        {{ city }}
-      </ion-select-option>
-    </ion-select>
-  </ion-item>
+      <ion-item class="custom-item">
+        <ion-label class="custom-label">Ciudad:</ion-label>
+        <ion-select [(ngModel)]="selectedCity" interface="alert" (ionChange)="filterServicesByCity($event.detail.value)">
+          <ion-select-option *ngFor="let city of filteredCities" [value]="city">
+            {{ city }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Botón para limpiar filtros -->
+      <ion-button expand="block" (click)="clearFilters()" class="clear-filters-button">
+        Limpiar Filtros
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
 
   <ion-list *ngIf="pagedServices.length > 0; else noServices">
     <ng-container *ngFor="let page of pagedServices[currentPage]">
-      <ion-card (click)="goToService(page.id)">
+      <ion-card class="service-card" (click)="goToService(page.id)">
         <ion-card-content class="custom-card-content">
           <div class="image-container">
             <ion-avatar>
@@ -51,6 +61,7 @@
           </div>
         </ion-card-content>
       </ion-card>
+
     </ng-container>
   </ion-list>
 

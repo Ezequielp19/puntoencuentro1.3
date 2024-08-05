@@ -77,9 +77,16 @@ export class HomeClienteComponent implements OnInit {
   pagedServices: Service[][] = [];
   currentPage: number = 0;
   categories: CategoryI[] = [];
+  filteredCategories: CategoryI[] = [];
   cities: string[] = [];
+  filteredCities: string[] = [];
+  selectedCategory: string = '';
+  selectedCity: string = '';
+  searchTerm: string = ''; // Variable para el término de búsqueda
+  categorySearchTerm: string = ''; // Variable para el término de búsqueda de categorías
+  citySearchTerm: string = ''; // Variable para el término de búsqueda de ciudades
 
-  constructor(private router: Router, private firestoreService: FirestoreService) { }
+  constructor(private router: Router, private firestoreService: FirestoreService) {}
 
   ngOnInit() {
     this.loadServices();
@@ -90,6 +97,7 @@ export class HomeClienteComponent implements OnInit {
     this.services = await this.firestoreService.getServices();
     this.filteredServices = this.services;
     this.cities = [...new Set(this.services.map(service => service.ciudad))];
+    this.filteredCities = this.cities; // Inicializa con todas las ciudades
     this.paginateServices();
   }
 
@@ -97,31 +105,53 @@ export class HomeClienteComponent implements OnInit {
     this.firestoreService.getCollectionChanges<CategoryI>('Categorías').subscribe(data => {
       if (data) {
         this.categories = data;
+        this.filteredCategories = data; // Inicializa con todas las categorías
       }
     });
   }
 
   filterServicesByCategory(categoryId: string) {
-    this.filteredServices = this.services.filter(service =>
-      service.category === categoryId
-    );
-    this.paginateServices();
+    this.selectedCategory = categoryId;
+    this.applyFilters();
   }
 
   filterServicesByCity(city: string) {
-    this.filteredServices = this.services.filter(service =>
-      service.ciudad === city
-    );
-    this.paginateServices();
+    this.selectedCity = city;
+    this.applyFilters();
   }
 
   filterServices(event: any) {
+    this.searchTerm = event.target.value.toLowerCase();
+    this.applyFilters();
+  }
+
+  filterCategories(event: any) {
     const searchTerm = event.target.value.toLowerCase();
-    this.filteredServices = this.services.filter(service =>
-      service.nombreEmpresa.toLowerCase().includes(searchTerm) ||
-      service.description.toLowerCase().includes(searchTerm) ||
-      service.ciudad.toLowerCase().includes(searchTerm)
-    );
+    this.filteredCategories = this.categories.filter(category => category.nombre.toLowerCase().includes(searchTerm));
+  }
+
+  filterCities(event: any) {
+    const searchTerm = event.target.value.toLowerCase();
+    this.filteredCities = this.cities.filter(city => city.toLowerCase().includes(searchTerm));
+  }
+
+  applyFilters() {
+    this.filteredServices = this.services.filter(service => {
+      const matchesCategory = this.selectedCategory ? service.category === this.selectedCategory : true;
+      const matchesCity = this.selectedCity ? service.ciudad === this.selectedCity : true;
+      const matchesSearch = service.nombreEmpresa.toLowerCase().includes(this.searchTerm) ||
+                            service.description.toLowerCase().includes(this.searchTerm) ||
+                            service.ciudad.toLowerCase().includes(this.searchTerm);
+      return matchesCategory && matchesCity && matchesSearch;
+    });
+    this.paginateServices();
+  }
+
+  clearFilters() {
+    this.selectedCategory = '';
+    this.selectedCity = '';
+    this.searchTerm = '';
+    this.filteredServices = this.services;
     this.paginateServices();
   }
 
@@ -146,7 +176,10 @@ export class HomeClienteComponent implements OnInit {
   }
 
   goToService(serviceId: string) {
-    this.router.navigate(['/serviceDetail', serviceId]);
+    // Añade un retraso de 1 segundo antes de navegar
+    setTimeout(() => {
+      this.router.navigate(['/serviceDetail', serviceId]);
+    }, 500); // 1000 ms = 1 segundo
   }
 
   goToProfile() {
