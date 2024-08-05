@@ -90,8 +90,6 @@ export class LoginComponent {
 
 
 
-
-
   async login() {
     try {
       const userCredential = await this.authService.login(this.email, this.password);
