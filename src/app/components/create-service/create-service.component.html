@@ -55,14 +55,35 @@
           <ion-label position="floating">Servicio</ion-label>
           <ion-input formControlName="servicio" required></ion-input>
         </ion-item>
-        <ion-item>
+
+        <!-- <ion-item>
           <ion-label position="floating">Dirección</ion-label>
           <ion-input formControlName="dirreccion" required></ion-input>
-        </ion-item>
-        <ion-item>
+        </ion-item> -->
+
+<ion-item>
+  <ion-label position="floating">Dirección</ion-label>
+  <ion-input formControlName="dirreccion"></ion-input>
+</ion-item>
+<div class="autocomplete-container" *ngIf="addressPredictions.length > 0">
+  <div class="autocomplete-item" *ngFor="let prediction of addressPredictions" (click)="selectAddress(prediction)">
+    {{ prediction.display_name.split(',')[0] }}
+  </div>
+</div>
+<ion-item>
+  <ion-label position="floating">Ciudad</ion-label>
+  <ion-input formControlName="ciudad"></ion-input>
+</ion-item>
+
+
+
+
+
+
+        <!-- <ion-item>
           <ion-label position="floating">Ciudad</ion-label>
           <ion-input formControlName="ciudad" required></ion-input>
-        </ion-item>
+        </ion-item> -->
         <ion-item>
           <ion-label position="stacked">Imagen</ion-label>
           <input type="file" (change)="onFileSelected($event)">

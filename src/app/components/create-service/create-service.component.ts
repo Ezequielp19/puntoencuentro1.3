@@ -1,14 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+
+import { IonicModule, AlertController} from '@ionic/angular';
+import { Component, ElementRef, OnInit, ViewChild,NgZone, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FirestoreService } from '../../common/services/firestore.service';
 import { AuthService } from '../../common/services/auth.service';
+import { NominatimService } from '../../common/services/NominatimService';
+
+
 import { CategoryI } from '../../common/models/categoria.model';
 import { User } from 'src/app/common/models/users.models';
-import { AngularFireStorage } from '@angular/fire/compat/storage';
-import { finalize } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/compat/storage'; // Importa AngularFireStorage
+import { finalize } from 'rxjs/operators'; // Importa finalize
 import { Router } from '@angular/router';
-import { AlertController, IonicModule } from '@ionic/angular';
+
+
 
 @Component({
   selector: 'app-create-service',
@@ -17,6 +23,7 @@ import { AlertController, IonicModule } from '@ionic/angular';
   standalone: true,
   imports: [
     CommonModule,
+
     IonicModule,
     FormsModule,
     ReactiveFormsModule
@@ -24,12 +31,15 @@ import { AlertController, IonicModule } from '@ionic/angular';
 })
 export class CreateServiceComponent implements OnInit {
 
+
+
   createServiceForm: FormGroup;
   categories: CategoryI[] = [];
   selectedFile: File | null = null;
   imagenUsuario: File | null = null;
-  currentUser: User | null = null;
-  alertShown = false; // Bandera para controlar la visualización de la alerta
+  currentUser: User | null = null;  // Añadido
+  addressPredictions: any[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +47,10 @@ export class CreateServiceComponent implements OnInit {
     private authService: AuthService,
     private storage: AngularFireStorage,
     private router: Router,
-    private alertController: AlertController
+    private ngZone: NgZone,
+    private alertController: AlertController,
+    private nominatimService: NominatimService
+
   ) {
     this.createServiceForm = this.fb.group({
       nombreEmpresa: ['', Validators.required],
@@ -46,11 +59,15 @@ export class CreateServiceComponent implements OnInit {
       telefono: ['', Validators.required],
       category: ['', Validators.required],
       sobreNosotros: [''],
-      price: ['', [Validators.min(0)]],
+      price: ['', [ Validators.min(0)]],
       servicio: ['', Validators.required],
       dirreccion: ['', Validators.required],
       imagenUrl: [''],
-      ciudad: ['', Validators.required]
+      ciudad:['',Validators.required ]
+
+
+
+
     });
   }
 
@@ -58,8 +75,27 @@ export class CreateServiceComponent implements OnInit {
     this.loadCategories();
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
-
     });
+
+ this.createServiceForm.get('dirreccion')?.valueChanges.subscribe(address => {
+      if (address) {
+        this.nominatimService.searchAddress(address).subscribe(data => {
+          this.addressPredictions = data;
+        });
+      }
+    });
+  }
+
+  selectAddress(prediction: any) {
+    const address = prediction.display_name.split(',')[0];
+    this.createServiceForm.get('dirreccion')?.setValue(address);
+    this.addressPredictions = [];
+    this.setCityFromAddress(prediction);
+  }
+
+  setCityFromAddress(prediction: any) {
+    const city = prediction.address.city || prediction.address.town || prediction.address.village || '';
+    this.createServiceForm.get('ciudad')?.setValue(city);
   }
 
   loadCategories() {
@@ -71,18 +107,27 @@ export class CreateServiceComponent implements OnInit {
   }
 
 
+
+
+
+
   onFileSelected(event: any) {
     this.imagenUsuario = event.target.files[0];
+      // console.log('Imagen seleccionada:', this.imagenUsuario);
+
   }
 
   async onSubmit() {
     if (this.createServiceForm.valid) {
+      // console.log('Formulario válido, procesando...');
       if (this.currentUser && this.currentUser.id) {
+        // Si hay una imagen seleccionada, súbela a Firebase Storage
         if (this.imagenUsuario) {
           const filePath = `images/${Date.now()}_${this.imagenUsuario.name}`;
           const fileRef = this.storage.ref(filePath);
           const uploadTask = this.storage.upload(filePath, this.imagenUsuario);
 
+          // Espera a que la imagen se suba y obtén la URL de descarga
           uploadTask.snapshotChanges().pipe(
             finalize(async () => {
               const downloadURL = await fileRef.getDownloadURL().toPromise();
@@ -91,6 +136,7 @@ export class CreateServiceComponent implements OnInit {
                 providerId: this.currentUser.id,
                 imageUrl: downloadURL
               };
+              // console.log('Datos del servicio:', serviceData);
               try {
                 await this.firestoreService.createService(serviceData);
                 await this.presentAlert('Éxito', 'El servicio se ha creado correctamente.');
@@ -106,10 +152,10 @@ export class CreateServiceComponent implements OnInit {
             providerId: this.currentUser.id,
             imageUrl: ''
           };
+          // console.log('Datos del servicio:', serviceData);
           try {
             await this.firestoreService.createService(serviceData);
-            await this.presentAlert('Éxito', 'El servicio se ha creado correctamente.');
-            this.router.navigate(['/perfil/miServicio']);
+            // console.log('Servicio creado con éxito');
           } catch (error) {
             console.error('Error al crear el servicio:', error);
           }
@@ -122,17 +168,22 @@ export class CreateServiceComponent implements OnInit {
     }
   }
 
-  async presentAlert(header: string, message: string) {
+
+   async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
       header: header,
       message: message,
       buttons: ['OK']
     });
+
     await alert.present();
   }
+
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 }
+
+
