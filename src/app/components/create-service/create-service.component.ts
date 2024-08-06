@@ -80,21 +80,21 @@ export class CreateServiceComponent implements OnInit {
  this.createServiceForm.get('dirreccion')?.valueChanges.subscribe(address => {
       if (address) {
         this.nominatimService.searchAddress(address).subscribe(data => {
-          this.addressPredictions = data.map((result: any) => result.display_name.split(',')[0]);
+          this.addressPredictions = data;
         });
       }
     });
   }
 
-  selectAddress(address: string) {
+  selectAddress(prediction: any) {
+    const address = prediction.display_name.split(',')[0];
     this.createServiceForm.get('dirreccion')?.setValue(address);
     this.addressPredictions = [];
-    this.setCityFromAddress(address);
+    this.setCityFromAddress(prediction);
   }
 
-  setCityFromAddress(address: string) {
-    // Esta función debe definir cómo se extrae la ciudad del nombre de la dirección
-    const city = 'Rosario'; // Ajusta esta línea según tu lógica
+  setCityFromAddress(prediction: any) {
+    const city = prediction.address.city || prediction.address.town || prediction.address.village || '';
     this.createServiceForm.get('ciudad')?.setValue(city);
   }
 
@@ -186,27 +186,4 @@ export class CreateServiceComponent implements OnInit {
   }
 }
 
-//   async onSubmit() {
-//     if (this.createServiceForm.valid) {
-//       console.log('Formulario válido, procesando...');
-//       if (this.currentUser && this.currentUser.id) {
-//         const serviceData = {
-//           ...this.createServiceForm.value,
-//           providerId: this.currentUser.id,
-//           imageUrl: this.imagenUsuario ? URL.createObjectURL(this.imagenUsuario) : ''
-//         };
-//         console.log('Datos del servicio:', serviceData);
-//         try {
-//           await this.firestoreService.createService(serviceData);
-//           console.log('Servicio creado con éxito');
-//         } catch (error) {
-//           console.error('Error al crear el servicio:', error);
-//         }
-//       } else {
-//         console.error('No se pudo obtener el ID del usuario');
-//       }
-//     } else {
-//       console.error('Formulario inválido');
-//     }
-//   }
-// }
+
