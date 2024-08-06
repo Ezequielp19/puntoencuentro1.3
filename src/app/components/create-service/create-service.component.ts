@@ -1,10 +1,11 @@
+
 import { IonicModule, AlertController} from '@ionic/angular';
 import { Component, ElementRef, OnInit, ViewChild,NgZone, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FirestoreService } from '../../common/services/firestore.service';
 import { AuthService } from '../../common/services/auth.service';
-
+import { NominatimService } from '../../common/services/NominatimService';
 
 
 import { CategoryI } from '../../common/models/categoria.model';
@@ -12,6 +13,7 @@ import { User } from 'src/app/common/models/users.models';
 import { AngularFireStorage } from '@angular/fire/compat/storage'; // Importa AngularFireStorage
 import { finalize } from 'rxjs/operators'; // Importa finalize
 import { Router } from '@angular/router';
+
 
 
 @Component({
@@ -36,6 +38,8 @@ export class CreateServiceComponent implements OnInit {
   selectedFile: File | null = null;
   imagenUsuario: File | null = null;
   currentUser: User | null = null;  // Añadido
+  addressPredictions: any[] = [];
+
 
   constructor(
     private fb: FormBuilder,
@@ -44,9 +48,8 @@ export class CreateServiceComponent implements OnInit {
     private storage: AngularFireStorage,
     private router: Router,
     private ngZone: NgZone,
-        private alertController: AlertController
-
-
+    private alertController: AlertController,
+    private nominatimService: NominatimService
 
   ) {
     this.createServiceForm = this.fb.group({
@@ -69,15 +72,31 @@ export class CreateServiceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
-
     this.loadCategories();
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
+
+ this.createServiceForm.get('dirreccion')?.valueChanges.subscribe(address => {
+      if (address) {
+        this.nominatimService.searchAddress(address).subscribe(data => {
+          this.addressPredictions = data.map((result: any) => result.display_name.split(',')[0]);
+        });
+      }
+    });
   }
 
+  selectAddress(address: string) {
+    this.createServiceForm.get('dirreccion')?.setValue(address);
+    this.addressPredictions = [];
+    this.setCityFromAddress(address);
+  }
+
+  setCityFromAddress(address: string) {
+    // Esta función debe definir cómo se extrae la ciudad del nombre de la dirección
+    const city = 'Rosario'; // Ajusta esta línea según tu lógica
+    this.createServiceForm.get('ciudad')?.setValue(city);
+  }
   loadCategories() {
     this.firestoreService.getCollectionChanges<CategoryI>('Categorías').subscribe(data => {
       if (data) {
