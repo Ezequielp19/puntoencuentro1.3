@@ -412,6 +412,22 @@ export class FirestoreService {
     });
     return services;
   }
+
+  async userHasService(providerId: string): Promise<boolean> {
+    try {
+      // Obtiene los servicios del proveedor con el providerId dado
+      const servicesRef = collection(this.firestore, 'services') as CollectionReference<Service>;
+      const serviceQuery = query(servicesRef, where('providerId', '==', providerId));
+      const querySnapshot = await getDocs(serviceQuery);
+
+      // Si hay al menos un servicio, el usuario tiene un servicio
+      return !querySnapshot.empty;
+    } catch (error) {
+      console.error('Error al verificar si el usuario tiene un servicio:', error);
+      throw error;
+    }
+  }
+
 }
 
 

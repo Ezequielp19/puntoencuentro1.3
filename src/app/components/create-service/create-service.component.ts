@@ -58,9 +58,7 @@ export class CreateServiceComponent implements OnInit {
     this.loadCategories();
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
-      if (this.currentUser && this.currentUser.id) {
-        this.checkIfServiceExists(this.currentUser.id);
-      }
+
     });
   }
 
@@ -72,16 +70,6 @@ export class CreateServiceComponent implements OnInit {
     });
   }
 
-  async checkIfServiceExists(providerId: string) {
-    if (this.alertShown) return; // Evitar duplicidad de alertas
-    const service = await this.firestoreService.getServiceByProviderId(providerId);
-    if (service) {
-      // Si ya existe un servicio para este proveedor, mostrar alerta y redirigir
-      this.alertShown = true;
-      await this.presentAlert('Aviso', 'Ya tienes un servicio creado. Redirigiendo a "Mi Servicio".');
-      this.router.navigate(['/perfil/miServicio']);
-    }
-  }
 
   onFileSelected(event: any) {
     this.imagenUsuario = event.target.files[0];

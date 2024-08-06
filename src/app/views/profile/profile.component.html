@@ -1,4 +1,3 @@
-
 <ion-content [fullscreen]="true">
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay">
@@ -39,19 +38,19 @@
             <ion-label>Historial de Reseñas</ion-label>
           </ion-item>
 
-          <!-- Mi Servicio: Solo para Proveedores -->
-          <ion-item *ngIf="user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/miServicio']" (click)="selectOption('miServicio')">
+          <!-- Mi Servicio: Solo para Proveedores con servicio -->
+          <ion-item *ngIf="user?.tipo_usuario === 'proveedor' && hasService" [routerLink]="['/perfil/miServicio']" (click)="selectOption('miServicio')">
             <ion-icon name="business-outline" slot="start"></ion-icon>
             <ion-label>Mi Servicio</ion-label>
           </ion-item>
 
-          <!-- Crear Servicio: Solo para Proveedores -->
-          <ion-item *ngIf="user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/crearServicio']" (click)="selectOption('crearServicio')">
+          <!-- Crear Servicio: Solo para Proveedores sin servicio -->
+          <ion-item *ngIf="user?.tipo_usuario === 'proveedor' && !hasService" [routerLink]="['/perfil/crearServicio']" (click)="selectOption('crearServicio')">
             <ion-icon name="add-circle-outline" slot="start"></ion-icon>
             <ion-label>Crear Servicio</ion-label>
           </ion-item>
 
-         <!-- Crear Categoria: Solo para Admin -->
+          <!-- Crear Categoria: Solo para Admin -->
           <ion-item *ngIf="user?.tipo_usuario === 'admin'" [routerLink]="['/perfil/crearCategoria']" (click)="selectOption('crearCategoria')">
             <ion-icon name="pricetags-outline" slot="start"></ion-icon>
             <ion-label>Crear Categoria</ion-label>

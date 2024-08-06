@@ -49,39 +49,14 @@ export class MiServicioComponent implements OnInit {
 
   async loadServiceByProviderId(providerId: string) {
     this.firestoreService.getServiceByProviderId(providerId).subscribe((service) => {
-      if (service) {
         this.service = service;
         this.serviceId = service.id; // Aseguramos que el ID del servicio esté disponible
-      } else {
-        this.presentNoServiceAlert();
-      }
     }, (error) => {
       console.error('Error loading service:', error);
     });
   }
 
-  async presentNoServiceAlert() {
-    if (this.alertShown) return; // Evitar duplicidad de alertas
-    this.alertShown = true;
-    const alert = await this.alertController.create({
-      header: 'Sin servicio',
-      message: 'No tienes un servicio creado. ¿Deseas crear uno?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Ir a crear servicio',
-          handler: () => {
-            this.router.navigate(['/perfil/crearServicio']);
-          }
-        }
-      ]
-    });
 
-    await alert.present();
-  }
 
   loadHorarios(userId: string) {
     this.firestoreService.getHorariosByUserId(userId).subscribe((querySnapshot) => {
