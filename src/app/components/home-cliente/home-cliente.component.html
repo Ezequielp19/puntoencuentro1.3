@@ -20,8 +20,14 @@
 
       <ion-item class="custom-item">
         <ion-label class="custom-label">Categoría:</ion-label>
+
+        <ion-searchbar [(ngModel)]="categorySearchTerm" placeholder="Buscar categoría..." (ionInput)="filterCategories($event)"></ion-searchbar>
+
+
         <ion-select [(ngModel)]="selectedCategory" interface="alert" (ionChange)="filterServicesByCategory($event.detail.value)">
           <ion-select-option *ngFor="let category of filteredCategories" [value]="category.id">
+                  <ion-searchbar [(ngModel)]="categorySearchTerm" placeholder="Buscar categoría..." (ionInput)="filterCategories($event)"></ion-searchbar>
+
             {{ category.nombre }}
           </ion-select-option>
         </ion-select>
