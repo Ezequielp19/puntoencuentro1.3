@@ -1,19 +1,17 @@
-
 import { IonicModule, AlertController} from '@ionic/angular';
 import { Component, ElementRef, OnInit, ViewChild,NgZone, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FirestoreService } from '../../common/services/firestore.service';
 import { AuthService } from '../../common/services/auth.service';
-import { NominatimService } from '../../common/services/NominatimService';
+
 
 
 import { CategoryI } from '../../common/models/categoria.model';
 import { User } from 'src/app/common/models/users.models';
-import { AngularFireStorage } from '@angular/fire/compat/storage'; // Importa AngularFireStorage
-import { finalize } from 'rxjs/operators'; // Importa finalize
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
-
 
 
 @Component({
@@ -23,7 +21,6 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-
     IonicModule,
     FormsModule,
     ReactiveFormsModule
@@ -31,15 +28,11 @@ import { Router } from '@angular/router';
 })
 export class CreateServiceComponent implements OnInit {
 
-
-
   createServiceForm: FormGroup;
   categories: CategoryI[] = [];
   selectedFile: File | null = null;
   imagenUsuario: File | null = null;
   currentUser: User | null = null;  // Añadido
-  addressPredictions: any[] = [];
-
 
   constructor(
     private fb: FormBuilder,
@@ -48,8 +41,9 @@ export class CreateServiceComponent implements OnInit {
     private storage: AngularFireStorage,
     private router: Router,
     private ngZone: NgZone,
-    private alertController: AlertController,
-    private nominatimService: NominatimService
+        private alertController: AlertController
+
+
 
   ) {
     this.createServiceForm = this.fb.group({
@@ -59,15 +53,11 @@ export class CreateServiceComponent implements OnInit {
       telefono: ['', Validators.required],
       category: ['', Validators.required],
       sobreNosotros: [''],
-      price: ['', [ Validators.min(0)]],
+      price: ['', [Validators.min(0)]],
       servicio: ['', Validators.required],
       dirreccion: ['', Validators.required],
       imagenUrl: [''],
-      ciudad:['',Validators.required ]
-
-
-
-
+      ciudad: ['', Validators.required]
     });
   }
 
@@ -75,6 +65,9 @@ export class CreateServiceComponent implements OnInit {
     this.loadCategories();
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
+      if (this.currentUser && this.currentUser.id) {
+        this.checkIfServiceExists(this.currentUser.id);
+      }
     });
 
  this.createServiceForm.get('dirreccion')?.valueChanges.subscribe(address => {
@@ -105,28 +98,29 @@ export class CreateServiceComponent implements OnInit {
     });
   }
 
-
-
-
-
+  async checkIfServiceExists(providerId: string) {
+    if (this.alertShown) return; // Evitar duplicidad de alertas
+    const service = await this.firestoreService.getServiceByProviderId(providerId);
+    if (service) {
+      // Si ya existe un servicio para este proveedor, mostrar alerta y redirigir
+      this.alertShown = true;
+      await this.presentAlert('Aviso', 'Ya tienes un servicio creado. Redirigiendo a "Mi Servicio".');
+      this.router.navigate(['/perfil/miServicio']);
+    }
+  }
 
   onFileSelected(event: any) {
     this.imagenUsuario = event.target.files[0];
-      // console.log('Imagen seleccionada:', this.imagenUsuario);
-
   }
 
   async onSubmit() {
     if (this.createServiceForm.valid) {
-      // console.log('Formulario válido, procesando...');
       if (this.currentUser && this.currentUser.id) {
-        // Si hay una imagen seleccionada, súbela a Firebase Storage
         if (this.imagenUsuario) {
           const filePath = `images/${Date.now()}_${this.imagenUsuario.name}`;
           const fileRef = this.storage.ref(filePath);
           const uploadTask = this.storage.upload(filePath, this.imagenUsuario);
 
-          // Espera a que la imagen se suba y obtén la URL de descarga
           uploadTask.snapshotChanges().pipe(
             finalize(async () => {
               const downloadURL = await fileRef.getDownloadURL().toPromise();
@@ -135,7 +129,6 @@ export class CreateServiceComponent implements OnInit {
                 providerId: this.currentUser.id,
                 imageUrl: downloadURL
               };
-              // console.log('Datos del servicio:', serviceData);
               try {
                 await this.firestoreService.createService(serviceData);
                 await this.presentAlert('Éxito', 'El servicio se ha creado correctamente.');
@@ -151,10 +144,10 @@ export class CreateServiceComponent implements OnInit {
             providerId: this.currentUser.id,
             imageUrl: ''
           };
-          // console.log('Datos del servicio:', serviceData);
           try {
             await this.firestoreService.createService(serviceData);
-            // console.log('Servicio creado con éxito');
+            await this.presentAlert('Éxito', 'El servicio se ha creado correctamente.');
+            this.router.navigate(['/perfil/miServicio']);
           } catch (error) {
             console.error('Error al crear el servicio:', error);
           }
@@ -167,45 +160,17 @@ export class CreateServiceComponent implements OnInit {
     }
   }
 
-
-   async presentAlert(header: string, message: string) {
+  async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
       header: header,
       message: message,
       buttons: ['OK']
     });
-
     await alert.present();
   }
-
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 }
-
-//   async onSubmit() {
-//     if (this.createServiceForm.valid) {
-//       console.log('Formulario válido, procesando...');
-//       if (this.currentUser && this.currentUser.id) {
-//         const serviceData = {
-//           ...this.createServiceForm.value,
-//           providerId: this.currentUser.id,
-//           imageUrl: this.imagenUsuario ? URL.createObjectURL(this.imagenUsuario) : ''
-//         };
-//         console.log('Datos del servicio:', serviceData);
-//         try {
-//           await this.firestoreService.createService(serviceData);
-//           console.log('Servicio creado con éxito');
-//         } catch (error) {
-//           console.error('Error al crear el servicio:', error);
-//         }
-//       } else {
-//         console.error('No se pudo obtener el ID del usuario');
-//       }
-//     } else {
-//       console.error('Formulario inválido');
-//     }
-//   }
-// }

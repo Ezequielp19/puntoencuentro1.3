@@ -10,7 +10,7 @@ import { finalize } from 'rxjs/operators';
 import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-mi-servicio',
@@ -25,6 +25,7 @@ export class MiServicioComponent implements OnInit {
   horarios: any[] = [];
   sortedHorarios: any[] = [];
   selectedFile: File | null = null;
+  alertShown = false; // Bandera para controlar la visualización de la alerta
 
   constructor(
     private route: ActivatedRoute,
@@ -33,7 +34,8 @@ export class MiServicioComponent implements OnInit {
     private authService: AuthService,
     private firestore: AngularFirestore,
     private storage: AngularFireStorage,
-    private alertController: AlertController  // Asegúrate de incluir AlertController
+    private alertController: AlertController,
+    private loadingController: LoadingController // Agregado para el loading spinner
   ) {}
 
   ngOnInit() {
@@ -59,6 +61,8 @@ export class MiServicioComponent implements OnInit {
   }
 
   async presentNoServiceAlert() {
+    if (this.alertShown) return; // Evitar duplicidad de alertas
+    this.alertShown = true;
     const alert = await this.alertController.create({
       header: 'Sin servicio',
       message: 'No tienes un servicio creado. ¿Deseas crear uno?',
@@ -125,13 +129,14 @@ export class MiServicioComponent implements OnInit {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   }
 
-  updateService() {
+  async updateService() {
     if (this.serviceId && this.service) {
-      this.firestoreService.updateService(this.serviceId, this.service).then(() => {
-        // console.log('Service updated successfully');
-      }).catch(error => {
+      try {
+        await this.firestoreService.updateService(this.serviceId, this.service);
+        await this.presentAlert('Éxito', 'El servicio se ha actualizado correctamente.');
+      } catch (error) {
         console.error('Error updating service:', error);
-      });
+      }
     } else {
       console.error('Service ID or service data is missing');
     }
@@ -142,8 +147,13 @@ export class MiServicioComponent implements OnInit {
     // console.log('Imagen seleccionada:', this.selectedFile);
   }
 
-  uploadServiceImage() {
+  async uploadServiceImage() {
     if (this.selectedFile && this.service) {
+      const loading = await this.loadingController.create({
+        message: 'Cargando imagen...',
+      });
+      await loading.present();
+
       const filePath = `service_images/${Date.now()}_${this.selectedFile.name}`;
       const fileRef = this.storage.ref(filePath);
       const uploadTask = this.storage.upload(filePath, this.selectedFile);
@@ -154,6 +164,8 @@ export class MiServicioComponent implements OnInit {
           if (this.serviceId) {
             await this.firestoreService.updateServiceProfileImage(this.serviceId, downloadURL);
             this.service!.imageUrl = downloadURL; // Actualizamos la URL de la imagen en el servicio
+            await loading.dismiss();
+            await this.presentAlert('Éxito', 'La imagen del servicio se ha actualizado correctamente.');
             // console.log('Imagen de perfil del servicio actualizada:', downloadURL);
           }
         })
@@ -161,6 +173,15 @@ export class MiServicioComponent implements OnInit {
     } else {
       console.error('No se ha seleccionado ninguna imagen o no se ha cargado el servicio');
     }
+  }
+
+  async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
   logout() {

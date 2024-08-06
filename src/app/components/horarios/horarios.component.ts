@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonCard,IonCardHeader,IonCardContent,IonCardTitle,IonHeader, IonItem,IonMenuButton, IonIcon,IonButton, IonToolbar, IonContent, IonLabel, IonRow, IonGrid, IonCol, IonTitle, IonCheckbox, IonText, IonSelect, IonSelectOption, IonInput, IonButtons, IonBackButton } from '@ionic/angular/standalone';
-import {User} from '../../common/models/users.models'
+import { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonHeader, IonItem, IonMenuButton, IonIcon, IonButton, IonToolbar, IonContent, IonLabel, IonRow, IonGrid, IonCol, IonTitle, IonCheckbox, IonText, IonSelect, IonSelectOption, IonInput, IonButtons, IonBackButton } from '@ionic/angular/standalone';
+import { AlertController } from '@ionic/angular';
+import { User } from '../../common/models/users.models';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-schedule-config',
@@ -18,7 +18,8 @@ import { ActivatedRoute, Router } from '@angular/router';
     ReactiveFormsModule,
     FormsModule,
     IonHeader,
-    IonMenuButton, IonIcon,
+    IonMenuButton,
+    IonIcon,
     IonItem,
     IonButton,
     IonToolbar,
@@ -35,7 +36,10 @@ import { ActivatedRoute, Router } from '@angular/router';
     IonInput,
     IonButtons,
     IonBackButton,
-    IonCard,IonCardHeader,IonCardContent,IonCardTitle,
+    IonCard,
+    IonCardHeader,
+    IonCardContent,
+    IonCardTitle,
   ]
 })
 export class ScheduleConfigComponent {
@@ -49,15 +53,18 @@ export class ScheduleConfigComponent {
 
   timeSlots: string[] = [];
 
-    userId: string | null = null;
-     horarios: any[] = [];
+  userId: string | null = null;
+  horarios: any[] = [];
 
   serviceId: any;
 
-
-  constructor(private firestore: AngularFirestore,private authService: AuthService,
-  private route: ActivatedRoute,   private router: Router,
-) {
+  constructor(
+    private firestore: AngularFirestore,
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private alertController: AlertController
+  ) {
     this.initializeTimeSlots();
   }
 
@@ -69,8 +76,6 @@ export class ScheduleConfigComponent {
       }
     });
   }
-
-
 
   initializeTimeSlots() {
     const times = [];
@@ -86,45 +91,57 @@ export class ScheduleConfigComponent {
     return num < 10 ? '0' + num : num.toString();
   }
 
-  saveSchedule() {
+  async saveSchedule() {
+    if (this.horarios.length >= 2) {
+      await this.presentAlert('Límite de horarios alcanzado', 'No se pueden agregar más de dos horarios.');
+      return;
+    }
+
     const schedule = {
-      userId:this.userId,
+      userId: this.userId,
       selectedDays: this.selectedDays,
       startTime: this.startTime,
       endTime: this.endTime,
       breakTimes: `${this.breakStart}-${this.breakEnd}`,
     };
 
-    console.log(schedule);
     if (!schedule.startTime || !schedule.endTime) {
-      console.error('Hora de inicio o fin no puede estar vacía');
+      await this.presentAlert('Error', 'Hora de inicio o fin no puede estar vacía');
       return;
     }
 
     this.firestore.collection('horarios').add(schedule)
-      .then(() => {
-        // console.log('Horario guardado con éxito');
+      .then(async () => {
+        await this.presentAlert('Horario guardado', 'El horario ha sido guardado con éxito.');
+        this.loadHorarios();  // Reload schedules after saving
       })
-      .catch(error => {
+      .catch(async error => {
         console.error('Error al guardar el horario: ', error);
+        await this.presentAlert('Error', 'Hubo un error al guardar el horario.');
       });
   }
 
-   loadHorarios() {
+  loadHorarios() {
     if (this.userId) {
       this.firestore.collection('horarios', ref => ref.where('userId', '==', this.userId))
         .valueChanges({ idField: 'id' })
         .subscribe((horarios: any[]) => {
           this.horarios = horarios;
-          console.log('Horarios cargados:', this.horarios);
         });
     }
   }
 
+  async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 }
-
