@@ -1,14 +1,17 @@
 <ion-header>
   <ion-toolbar class="custom-toolbar">
-    <ion-title class="ion-text-center custom-title">Buscar Servicios</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" style="color: #FFCF00;"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Buscar Servicio</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="danger" (click)="goToProfile()">
-        <ion-icon name="person-circle-outline" class="custom-icon"></ion-icon>
-        <ion-label >Perfil</ion-label>
+      <ion-button color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content>
   <ion-card class="filter-card">

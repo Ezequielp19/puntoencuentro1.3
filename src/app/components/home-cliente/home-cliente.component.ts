@@ -23,6 +23,7 @@ import {
   IonSearchbar,
   IonAvatar,
   IonModal,
+  IonMenuButton,
   IonIcon
 } from '@ionic/angular/standalone';
 import { Component, OnInit } from '@angular/core';
@@ -34,6 +35,7 @@ import { Router } from '@angular/router';
 import { Service } from 'src/app/common/models/service.models';
 import { CategoryI } from 'src/app/common/models/categoria.model';
 import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
+import { AuthService } from 'src/app/common/services/auth.service';
 
 @Component({
   selector: 'app-home-cliente',
@@ -70,6 +72,7 @@ import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
     IonSelect,
     IonButton,
     IonIcon,
+    IonMenuButton,
     IoniconsModule
   ],
 })
@@ -93,7 +96,9 @@ export class HomeClienteComponent implements OnInit {
   selectedCityName: string = '';
 
   isDropdownOpen = false;
-  constructor(private router: Router, private firestoreService: FirestoreService) {}
+  constructor(private router: Router, private firestoreService: FirestoreService,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit() {
     this.loadServices();
@@ -229,5 +234,10 @@ export class HomeClienteComponent implements OnInit {
     this.selectedCityName = city; // Guardar el nombre de la ciudad seleccionada
     this.toggleCityDropdown();
     this.filterServicesByCity(city);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
