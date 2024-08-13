@@ -149,7 +149,7 @@ export class LoginComponent {
         // Redirigir según el tipo de usuario
         switch (user.tipo_usuario) {
           case 'cliente':
-            this.router.navigate(['/homeCliente']);
+            this.router.navigate(['/perfil/homeCliente']);
             break;
           case 'proveedor':
             this.router.navigate(['/perfil']);

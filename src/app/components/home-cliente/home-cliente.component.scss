@@ -18,7 +18,7 @@ ion-button[color="danger"] {
 }
 
 ion-label {
-  color: #FFF !important;
+  color: #000 !important;
 }
 
 ion-icon {
@@ -51,7 +51,7 @@ ion-card {
   }
 
   .details-container {
-    background-color: #244356;
+    background-color: transparent;
     flex-grow: 1;
   }
 
@@ -177,21 +177,22 @@ ion-select::part(text) {
   transform: none;
   z-index: auto;
 }
-
 ion-select-option {
-  color: #FFF; /* Texto de opciones blanco */
+  color: #00243A !important; /* Texto de opciones en negro */
 }
-
 
 ion-select-option[selected] {
   background-color: #003554; /* Color de fondo del item seleccionado */
   color: #FFF !important; /* Texto blanco para el item seleccionado */
 }
 
+.perfil {
+  color: #FFF;
+}
+
 .custom-item {
   --background: #244356; /* Color de fondo oscuro para los items */
-  border-radius: 5px;
-  margin: 5px 0; /* Espacio entre los items */
+  --color: #FFF; /* Texto blanco para los items */
 }
 
 .custom-label {
@@ -255,3 +256,20 @@ ion-card.service-card:active {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   transform: scale(1.05);
 }
+
+.dropdown-container {
+  background-color: #244356; /* Fondo oscuro */
+  padding: 10px;
+  border-radius: 8px;
+  color: #FFF;
+}
+
+.dropdown-container ion-item {
+  --background: transparent; /* Fondo transparente para los items del dropdown */
+}
+
+.dropdown-container ion-label {
+  color: #FFF; /* Texto blanco para las etiquetas del dropdown */
+}
+
+

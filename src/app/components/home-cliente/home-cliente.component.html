@@ -1,46 +1,70 @@
 <ion-header>
   <ion-toolbar class="custom-toolbar">
-    <!-- <ion-buttons slot="start">
-      <ion-back-button defaultHref="/" style="color: #FFCF00;"></ion-back-button>
-    </ion-buttons> -->
-    <ion-title class="ion-text-center custom-title">Buscar Servicios</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" style="color: #FFCF00;"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Buscar Servicio</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="danger" (click)="goToProfile()">
-        <ion-icon name="person-circle-outline" class="custom-icon"></ion-icon>
-        <ion-label>Perfil</ion-label>
+      <ion-button color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content>
   <ion-card class="filter-card">
     <ion-card-content>
       <ion-searchbar [(ngModel)]="searchTerm" placeholder="Buscar servicios..." (ionInput)="filterServices($event)"></ion-searchbar>
 
-      <ion-item class="custom-item">
+      <!-- Botón para abrir el desplegable de categorías -->
+      <ion-item class="custom-item" (click)="toggleDropdown()">
         <ion-label class="custom-label">Categoría:</ion-label>
+        <ion-input [value]="selectedCategoryName" placeholder="Seleccione una categoría" readonly></ion-input>
+      </ion-item>
 
+      <!-- Contenedor del desplegable de categorías -->
+      <div *ngIf="isDropdownOpen" class="dropdown-container">
         <ion-searchbar [(ngModel)]="categorySearchTerm" placeholder="Buscar categoría..." (ionInput)="filterCategories($event)"></ion-searchbar>
+        <ion-list>
+          <ng-container *ngIf="filteredCategories && filteredCategories.length > 0; else noCategories">
+            <ion-item button *ngFor="let category of filteredCategories" (click)="selectCategory(category)">
+              <ion-label>{{ category.nombre }}</ion-label>
+            </ion-item>
+          </ng-container>
+          <ng-template #noCategories>
+            <ion-item>
+              <ion-label>No hay categorías disponibles</ion-label>
+            </ion-item>
+          </ng-template>
+        </ion-list>
+        <ion-button expand="full" (click)="toggleDropdown()">Cerrar</ion-button>
+      </div>
 
-
-        <ion-select [(ngModel)]="selectedCategory" interface="alert" (ionChange)="filterServicesByCategory($event.detail.value)">
-          <ion-select-option *ngFor="let category of filteredCategories" [value]="category.id">
-                  <ion-searchbar [(ngModel)]="categorySearchTerm" placeholder="Buscar categoría..." (ionInput)="filterCategories($event)"></ion-searchbar>
-
-            {{ category.nombre }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item class="custom-item">
+      <!-- Botón para abrir el desplegable de ciudades -->
+      <ion-item class="custom-item" (click)="toggleCityDropdown()">
         <ion-label class="custom-label">Ciudad:</ion-label>
-        <ion-select [(ngModel)]="selectedCity" interface="alert" (ionChange)="filterServicesByCity($event.detail.value)">
-          <ion-select-option *ngFor="let city of filteredCities" [value]="city">
-            {{ city }}
-          </ion-select-option>
-        </ion-select>
+        <ion-input [value]="selectedCityName" placeholder="Seleccione una ciudad" readonly></ion-input>
       </ion-item>
+
+      <!-- Contenedor del desplegable de ciudades -->
+      <div *ngIf="isCityDropdownOpen" class="dropdown-container">
+        <ion-searchbar [(ngModel)]="citySearchTerm" placeholder="Buscar ciudad..." (ionInput)="filterCities($event)"></ion-searchbar>
+        <ion-list>
+          <ng-container *ngIf="filteredCities && filteredCities.length > 0; else noCities">
+            <ion-item button *ngFor="let city of filteredCities" (click)="selectCity(city)">
+              <ion-label>{{ city }}</ion-label>
+            </ion-item>
+          </ng-container>
+          <ng-template #noCities>
+            <ion-item>
+              <ion-label>No hay ciudades disponibles</ion-label>
+            </ion-item>
+          </ng-template>
+        </ion-list>
+        <ion-button expand="full" (click)="toggleCityDropdown()">Cerrar</ion-button>
+      </div>
 
       <!-- Botón para limpiar filtros -->
       <ion-button expand="block" (click)="clearFilters()" class="clear-filters-button">
@@ -48,7 +72,6 @@
       </ion-button>
     </ion-card-content>
   </ion-card>
-
 
   <ion-list *ngIf="pagedServices.length > 0; else noServices">
     <ng-container *ngFor="let page of pagedServices[currentPage]">
@@ -67,7 +90,6 @@
           </div>
         </ion-card-content>
       </ion-card>
-
     </ng-container>
   </ion-list>
 

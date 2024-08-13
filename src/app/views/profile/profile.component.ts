@@ -13,6 +13,8 @@ import {
   IonSelect, IonAvatar, IonMenu, IonMenuToggle, IonSplitPane, IonIcon, IonRouterOutlet, IonMenuButton, MenuController
 } from '@ionic/angular/standalone';
 
+import { FirestoreService } from 'src/app/common/services/firestore.service'; // Asegúrate de importar el servicio
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -31,19 +33,31 @@ export class ProfileComponent implements OnInit {
   userType: string = '';
   selectedOption: string;
   user: User | null = null;
+  hasService: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router, private menuCtrl: MenuController) {}
+  constructor(
+    private authService: AuthService,
+    private firestoreService: FirestoreService, // Agregado
+    private router: Router,
+    private menuCtrl: MenuController
+  ) {}
 
   ngOnInit() {
     this.authService.getCurrentUser().subscribe(user => {
       if (user) {
         this.user = user;
+        this.checkUserServiceStatus(); // Verificar el estado del servicio del usuario
       } else {
-        // Manejar el caso donde el usuario no existe
         console.error('No se encontró el usuario');
       }
       console.log(this.user);
     });
+  }
+
+  async checkUserServiceStatus() {
+    if (this.user) {
+      this.hasService = await this.firestoreService.userHasService(this.user.id); // Asegúrate de pasar el ID correcto del usuario
+    }
   }
 
   selectOption(option: string) {
@@ -51,21 +65,12 @@ export class ProfileComponent implements OnInit {
     this.menuCtrl.close();  // Cerrar el menú después de seleccionar una opción
   }
 
-  // logout() {
-  //   this.authService.logout();
-  //   this.router.navigate(['/login']);
-  // }
-
-   logout() {
-  this.authService.logout().then(() => {
-    localStorage.removeItem('currentUser');
-    this.router.navigate(['/login']);
-  }).catch(error => {
-    console.error('Error durante el cierre de sesión:', error);
-  });
-}
-
-
-
-
+  logout() {
+    this.authService.logout().then(() => {
+      localStorage.removeItem('currentUser');
+      this.router.navigate(['/login']);
+    }).catch(error => {
+      console.error('Error durante el cierre de sesión:', error);
+    });
+  }
 }

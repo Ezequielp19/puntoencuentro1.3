@@ -67,7 +67,7 @@
 </ion-item>
 <div class="autocomplete-container" *ngIf="addressPredictions.length > 0">
   <div class="autocomplete-item" *ngFor="let prediction of addressPredictions" (click)="selectAddress(prediction)">
-    {{ prediction }}
+    {{ prediction.display_name.split(',')[0] }}
   </div>
 </div>
 <ion-item>

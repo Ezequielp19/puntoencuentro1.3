@@ -22,6 +22,8 @@ import {
   IonSelect,
   IonSearchbar,
   IonAvatar,
+  IonModal,
+  IonMenuButton,
   IonIcon
 } from '@ionic/angular/standalone';
 import { Component, OnInit } from '@angular/core';
@@ -33,6 +35,7 @@ import { Router } from '@angular/router';
 import { Service } from 'src/app/common/models/service.models';
 import { CategoryI } from 'src/app/common/models/categoria.model';
 import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
+import { AuthService } from 'src/app/common/services/auth.service';
 
 @Component({
   selector: 'app-home-cliente',
@@ -41,6 +44,7 @@ import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
   standalone: true,
   imports: [
     IonIcon,
+    IonModal,
     IonAvatar,
     IonSearchbar,
     IonSpinner,
@@ -68,6 +72,7 @@ import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
     IonSelect,
     IonButton,
     IonIcon,
+    IonMenuButton,
     IoniconsModule
   ],
 })
@@ -85,8 +90,15 @@ export class HomeClienteComponent implements OnInit {
   searchTerm: string = ''; // Variable para el término de búsqueda
   categorySearchTerm: string = ''; // Variable para el término de búsqueda de categorías
   citySearchTerm: string = ''; // Variable para el término de búsqueda de ciudades
+  isCategoryModalOpen: boolean = false;
+  selectedCategoryName: string = '';
+  isCityDropdownOpen: boolean = false;
+  selectedCityName: string = '';
 
-  constructor(private router: Router, private firestoreService: FirestoreService) {}
+  isDropdownOpen = false;
+  constructor(private router: Router, private firestoreService: FirestoreService,
+    private authService: AuthService,
+  ) {}
 
   ngOnInit() {
     this.loadServices();
@@ -103,9 +115,11 @@ export class HomeClienteComponent implements OnInit {
 
   loadCategories() {
     this.firestoreService.getCollectionChanges<CategoryI>('Categorías').subscribe(data => {
-      if (data) {
+      if (data && data.length > 0) {
         this.categories = data;
-        this.filteredCategories = data; // Inicializa con todas las categorías
+        this.filteredCategories = data;
+      } else {
+        this.filteredCategories = []; // Asegurarse de que esté inicializada
       }
     });
   }
@@ -151,6 +165,12 @@ export class HomeClienteComponent implements OnInit {
     this.selectedCategory = '';
     this.selectedCity = '';
     this.searchTerm = '';
+    this.categorySearchTerm = ''; // Reiniciar el término de búsqueda de categorías
+    this.citySearchTerm = ''; // Reiniciar el término de búsqueda de ciudades
+    this.selectedCategoryName = ''; // Reiniciar el nombre de la categoría seleccionada
+    this.selectedCityName = ''; // Reiniciar el nombre de la ciudad seleccionada
+    this.filteredCategories = this.categories; // Reiniciar el filtro de categorías
+    this.filteredCities = this.cities; // Reiniciar el filtro de ciudades
     this.filteredServices = this.services;
     this.paginateServices();
   }
@@ -184,5 +204,40 @@ export class HomeClienteComponent implements OnInit {
 
   goToProfile() {
     this.router.navigate(['/perfil']);
+  }
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  openCategoryModal() {
+    this.isCategoryModalOpen = true;
+  }
+
+  dismissCategoryModal() {
+    this.isCategoryModalOpen = false;
+  }
+
+  selectCategory(category: CategoryI) {
+    this.selectedCategory = category.id;
+    this.selectedCategoryName = category.nombre; // Guardar el nombre de la categoría seleccionada
+    this.toggleDropdown();
+    this.filterServicesByCategory(category.id);
+  }
+
+  toggleCityDropdown() {
+    this.isCityDropdownOpen = !this.isCityDropdownOpen;
+  }
+
+  selectCity(city: string) {
+    this.selectedCity = city;
+    this.selectedCityName = city; // Guardar el nombre de la ciudad seleccionada
+    this.toggleCityDropdown();
+    this.filterServicesByCity(city);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

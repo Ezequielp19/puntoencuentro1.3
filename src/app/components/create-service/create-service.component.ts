@@ -186,27 +186,4 @@ export class CreateServiceComponent implements OnInit {
   }
 }
 
-//   async onSubmit() {
-//     if (this.createServiceForm.valid) {
-//       console.log('Formulario válido, procesando...');
-//       if (this.currentUser && this.currentUser.id) {
-//         const serviceData = {
-//           ...this.createServiceForm.value,
-//           providerId: this.currentUser.id,
-//           imageUrl: this.imagenUsuario ? URL.createObjectURL(this.imagenUsuario) : ''
-//         };
-//         console.log('Datos del servicio:', serviceData);
-//         try {
-//           await this.firestoreService.createService(serviceData);
-//           console.log('Servicio creado con éxito');
-//         } catch (error) {
-//           console.error('Error al crear el servicio:', error);
-//         }
-//       } else {
-//         console.error('No se pudo obtener el ID del usuario');
-//       }
-//     } else {
-//       console.error('Formulario inválido');
-//     }
-//   }
-// }
+

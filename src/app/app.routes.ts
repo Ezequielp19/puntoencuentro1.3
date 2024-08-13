@@ -51,7 +51,10 @@ export const routes: Routes = [
         path: 'userlist',
         loadComponent: () => import('./components/service-ver-detalle/service-ver-detalle.component').then(m => m.UserListComponent),
       },
-
+      {
+        path: 'homeCliente',
+        loadComponent: () => import('./components/home-cliente/home-cliente.component').then((m) => m.HomeClienteComponent),
+      },
 
 
       {
@@ -64,15 +67,15 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'perfilUsuario',
+        redirectTo: 'homeCliente',
         pathMatch: 'full',
       },
     ],
   },
-  {
-    path: 'homeCliente',
-    loadComponent: () => import('./components/home-cliente/home-cliente.component').then((m) => m.HomeClienteComponent),
-  },
+  // {
+  //   path: 'homeCliente',
+  //   loadComponent: () => import('./components/home-cliente/home-cliente.component').then((m) => m.HomeClienteComponent),
+  // },
   {
     path: 'serviceDetail/:id',
     loadComponent: () => import('./components/service-detail/service-detail.component').then((m) => m.ServiceDetailComponent),

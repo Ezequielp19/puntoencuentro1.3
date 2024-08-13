@@ -40,17 +40,17 @@
           "configurations": {
             "production": {
               "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
-              ],
+  {
+    "type": "initial",
+    "maximumWarning": "2mb",
+    "maximumError": "5mb"
+  },
+  {
+    "type": "anyComponentStyle",
+    "maximumWarning": "3.5kb",
+    "maximumError": "5kb"
+  }
+],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -83,7 +83,7 @@
               "buildTarget": "app:build:development"
             },
             "ci": {
-              "progress": false
+
             }
           },
           "defaultConfiguration": "development"
