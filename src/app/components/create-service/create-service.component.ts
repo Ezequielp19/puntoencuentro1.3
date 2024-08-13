@@ -77,26 +77,26 @@ export class CreateServiceComponent implements OnInit {
       this.currentUser = user;
     });
 
- this.createServiceForm.get('dirreccion')?.valueChanges.subscribe(address => {
-      if (address) {
-        this.nominatimService.searchAddress(address).subscribe(data => {
-          this.addressPredictions = data.map((result: any) => result.display_name.split(',')[0]);
-        });
-      }
-    });
+//  this.createServiceForm.get('dirreccion')?.valueChanges.subscribe(address => {
+//       if (address) {
+//         this.nominatimService.searchAddress(address).subscribe(data => {
+//           this.addressPredictions = data.map((result: any) => result.display_name.split(',')[0]);
+//         });
+//       }
+//     });
   }
 
-  selectAddress(address: string) {
-    this.createServiceForm.get('dirreccion')?.setValue(address);
-    this.addressPredictions = [];
-    this.setCityFromAddress(address);
-  }
+  // selectAddress(address: string) {
+  //   this.createServiceForm.get('dirreccion')?.setValue(address);
+  //   this.addressPredictions = [];
+  //   this.setCityFromAddress(address);
+  // }
 
-  setCityFromAddress(address: string) {
-    // Esta función debe definir cómo se extrae la ciudad del nombre de la dirección
-    const city = 'Rosario'; // Ajusta esta línea según tu lógica
-    this.createServiceForm.get('ciudad')?.setValue(city);
-  }
+  // setCityFromAddress(address: string) {
+
+  //   const city = 'Rosario';
+  //   this.createServiceForm.get('ciudad')?.setValue(city);
+  // }
 
   loadCategories() {
     this.firestoreService.getCollectionChanges<CategoryI>('Categorías').subscribe(data => {
