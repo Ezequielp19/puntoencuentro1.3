@@ -1,3 +1,5 @@
+
+
 export interface Service {
   id: string;
   providerId: string;
@@ -19,5 +21,13 @@ export interface Service {
   whatsapp?: string;
   facebook?: string;
   website?: string;
+
+
+  // Nuevos campos para el sistema de publicidad
+  monthlyFeePaid?: boolean;    // Indica si el canon mensual ha sido pagado
+  monthlyFeeAmount?: number;   // Monto del canon mensual
+  bidAmount?: number;          // Monto adicional ofrecido en la subasta
+  paymentDate?: any;     // Fecha del último pago
+
 
 }

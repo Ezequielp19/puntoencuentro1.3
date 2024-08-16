@@ -1,0 +1,19 @@
+<div class="subasta-container">
+  <h2>Participar en la Subasta</h2>
+
+  <form (ngSubmit)="makeBid()">
+    <div>
+      <label for="bidAmount">Monto Adicional:</label>
+      <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" required>
+    </div>
+
+    <button type="submit">Hacer Oferta</button>
+  </form>
+
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="success">
+    {{ successMessage }}
+  </div>
+</div>

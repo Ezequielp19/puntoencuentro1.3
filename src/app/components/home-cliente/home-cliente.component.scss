@@ -273,3 +273,25 @@ ion-card.service-card:active {
 }
 
 
+.verified-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  font-size: 1.0rem;
+}
+
+.header-content ion-icon {
+  font-size: 2rem; /* Tamaño del ícono más grande */
+  margin-right: 10px; /* Espacio entre el ícono y el texto */
+  color: #3880ff; /* Color del ícono */
+}
+
+.header-content span {
+  font-weight: bold;
+  color: #3880ff;
+}

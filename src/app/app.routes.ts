@@ -42,6 +42,10 @@ export const routes: Routes = [
         path: 'crearServicio',
         loadComponent: () => import('./components/create-service/create-service.component').then(m => m.CreateServiceComponent),
       },
+      {
+        path: 'subasta',
+        loadComponent: () => import('./components/subasta/subasta.component').then(m => m.SubastaComponent),
+      },
        {
         path: 'verServicios',
         loadComponent: () => import('./components/verservices/verservices.component').then(m => m.VerservicesComponent),

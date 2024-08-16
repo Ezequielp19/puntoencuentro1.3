@@ -5,7 +5,9 @@ import {
   Firestore, collection, doc, getDoc, setDoc, DocumentData, WithFieldValue,
   collectionData, docData, getDocs, deleteDoc, DocumentReference, CollectionReference,
   DocumentSnapshot, QueryDocumentSnapshot, query, where, QuerySnapshot, getFirestore,
-  updateDoc
+  updateDoc,
+  serverTimestamp,
+  orderBy
 } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -36,6 +38,9 @@ const collectionWithConverter = <T>(firestore: Firestore, path: string) =>
 export class FirestoreService {
 
   private firestore: Firestore = inject(Firestore);
+
+    private servicesCollection = collection(this.firestore, 'services');
+
 
   constructor() { }
 
@@ -285,16 +290,68 @@ export class FirestoreService {
     }
   }
 
-  async updateService(serviceId: string, serviceData: Partial<Service>): Promise<void> {
-    const serviceRef = doc(this.firestore, `services/${serviceId}`);
+  // async updateService(serviceId: string, serviceData: Partial<Service>): Promise<void> {
+  //   const serviceRef = doc(this.firestore, `services/${serviceId}`);
+  //   try {
+  //     await updateDoc(serviceRef, serviceData);
+  //   } catch (error) {
+  //     console.error('Error updating service:', error);
+  //     throw error;
+  //   }
+  // }
+
+
+
+async updateService(serviceId: string, serviceData: Partial<Service>): Promise<void> {
+  const serviceRef = doc(this.firestore, `services/${serviceId}`);
+
+  try {
+    // Preparamos los datos para actualizar, incluyendo la lógica del sistema de publicidad
+    const updatedData: Partial<Service> = {
+      ...serviceData,
+      // Verifica si se incluyen los nuevos campos y asigna valores por defecto si es necesario
+      monthlyFeePaid: serviceData.monthlyFeePaid ?? false,
+      monthlyFeeAmount: serviceData.monthlyFeeAmount ?? 0,
+      bidAmount: serviceData.bidAmount ?? 0,
+      paymentDate: serviceData.paymentDate ?? serverTimestamp(),  // Usa la fecha actual si no se proporciona
+    };
+
+    await updateDoc(serviceRef, updatedData);
+  } catch (error) {
+    console.error('Error updating service:', error);
+    throw error;
+  }
+}
+
+
+// Obtener servicios ordenados por ciudad y sistema de publicidad
+  async getServicesByCity(city: string): Promise<Service[]> {
     try {
-      await updateDoc(serviceRef, serviceData);
-      // console.log('Service updated successfully in Firestore');
+      const q = query(
+        this.servicesCollection,
+        where('ciudad', '==', city),
+        where('monthlyFeePaid', '==', true),
+        orderBy('monthlyFeeAmount', 'desc'),
+        orderBy('bidAmount', 'desc'),
+        orderBy('paymentDate', 'asc')
+      );
+
+      const querySnapshot = await getDocs(q);
+      const services: Service[] = querySnapshot.docs.map(doc => doc.data() as Service);
+      return services;
     } catch (error) {
-      console.error('Error updating service:', error);
+      console.error('Error getting services:', error);
       throw error;
     }
   }
+
+
+
+
+
+
+
+
   async deleteReview(reviewId: string): Promise<void> {
     try {
       const reviewRef = doc(this.firestore, `reviews/${reviewId}`);
@@ -427,6 +484,41 @@ export class FirestoreService {
       throw error;
     }
   }
+
+
+
+async getCitiesOfServices(): Promise<string[]> {
+  try {
+    const servicesRef = collection(this.firestore, 'services') as CollectionReference<Service>;
+    const querySnapshot = await getDocs(servicesRef);
+
+    // Extraer la ciudad de cada servicio
+    const cities = querySnapshot.docs.map(doc => {
+      const service = doc.data();
+      return service.ciudad?.trim() || ''; // Asegúrate de que 'ciudad' es el campo correcto
+    }).filter(city => city); // Filtra valores vacíos
+
+    // Eliminar duplicados
+    const uniqueCities = Array.from(new Set(cities));
+
+    console.log('Cities:', uniqueCities);
+    return uniqueCities;
+  } catch (error) {
+    console.error('Error retrieving cities of services:', error);
+    throw error;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
 
 }
 

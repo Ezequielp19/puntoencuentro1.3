@@ -63,7 +63,9 @@ export class CreateServiceComponent implements OnInit {
       servicio: ['', Validators.required],
       dirreccion: ['', Validators.required],
       imagenUrl: [''],
-      ciudad:['',Validators.required ]
+      ciudad:['',Validators.required ],
+        nuevaCiudad: [''] // Campo opcional para nueva ciudad
+
 
 
 
@@ -73,30 +75,19 @@ export class CreateServiceComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
+    this.loadCities();
     this.authService.getCurrentUser().subscribe(user => {
       this.currentUser = user;
     });
-
-//  this.createServiceForm.get('dirreccion')?.valueChanges.subscribe(address => {
-//       if (address) {
-//         this.nominatimService.searchAddress(address).subscribe(data => {
-//           this.addressPredictions = data.map((result: any) => result.display_name.split(',')[0]);
-//         });
-//       }
-//     });
   }
 
-  // selectAddress(address: string) {
-  //   this.createServiceForm.get('dirreccion')?.setValue(address);
-  //   this.addressPredictions = [];
-  //   this.setCityFromAddress(address);
-  // }
+  cities: string[] = [];
 
-  // setCityFromAddress(address: string) {
 
-  //   const city = 'Rosario';
-  //   this.createServiceForm.get('ciudad')?.setValue(city);
-  // }
+ async loadCities() {
+    this.cities = await this.firestoreService.getCitiesOfServices();
+  }
+
 
   loadCategories() {
     this.firestoreService.getCollectionChanges<CategoryI>('Categorías').subscribe(data => {
@@ -105,9 +96,6 @@ export class CreateServiceComponent implements OnInit {
       }
     });
   }
-
-
-
 
 
 
@@ -121,11 +109,28 @@ export class CreateServiceComponent implements OnInit {
     if (this.createServiceForm.valid) {
       // console.log('Formulario válido, procesando...');
       if (this.currentUser && this.currentUser.id) {
+
+
+ let ciudadSeleccionada = this.createServiceForm.value.ciudad;
+            const nuevaCiudad = this.createServiceForm.value.nuevaCiudad;
+
+            // Verifica si se seleccionó "Crear nueva ciudad..." y si la nueva ciudad no está en la lista
+            if (ciudadSeleccionada === 'new' && nuevaCiudad && !this.cities.includes(nuevaCiudad)) {
+                ciudadSeleccionada = nuevaCiudad; // Usa la nueva ciudad
+            }
+
+
+
+
+
+
+
         // Si hay una imagen seleccionada, súbela a Firebase Storage
         if (this.imagenUsuario) {
           const filePath = `images/${Date.now()}_${this.imagenUsuario.name}`;
           const fileRef = this.storage.ref(filePath);
           const uploadTask = this.storage.upload(filePath, this.imagenUsuario);
+
 
           // Espera a que la imagen se suba y obtén la URL de descarga
           uploadTask.snapshotChanges().pipe(
@@ -134,8 +139,15 @@ export class CreateServiceComponent implements OnInit {
               const serviceData = {
                 ...this.createServiceForm.value,
                 providerId: this.currentUser.id,
+                ciudad: ciudadSeleccionada, // Asegúrate de usar la ciudad seleccionada o nueva
                 imageUrl: downloadURL
               };
+
+
+
+
+
+
               // console.log('Datos del servicio:', serviceData);
               try {
                 await this.firestoreService.createService(serviceData);
@@ -150,6 +162,7 @@ export class CreateServiceComponent implements OnInit {
           const serviceData = {
             ...this.createServiceForm.value,
             providerId: this.currentUser.id,
+      ciudad: ciudadSeleccionada, // Asegúrate de usar la ciudad seleccionada o nueva
             imageUrl: ''
           };
           // console.log('Datos del servicio:', serviceData);

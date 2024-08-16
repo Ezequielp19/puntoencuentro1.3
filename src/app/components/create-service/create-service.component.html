@@ -61,29 +61,31 @@
           <ion-input formControlName="dirreccion" required></ion-input>
         </ion-item>
 
-<!-- <ion-item>
-  <ion-label position="floating">Dirección</ion-label>
-  <ion-input formControlName="dirreccion"></ion-input>
-</ion-item>
-<div class="autocomplete-container" *ngIf="addressPredictions.length > 0">
-  <div class="autocomplete-item" *ngFor="let prediction of addressPredictions" (click)="selectAddress(prediction)">
-    {{ prediction.display_name.split(',')[0] }}
-  </div>
-</div>
+
+
+
+
 <ion-item>
   <ion-label position="floating">Ciudad</ion-label>
-  <ion-input formControlName="ciudad"></ion-input>
-</ion-item> -->
+  <ion-select formControlName="ciudad">
+    <ion-select-option *ngFor="let city of cities" [value]="city">
+      {{ city }}
+    </ion-select-option>
+    <ion-select-option value="new">Crear nueva ciudad...</ion-select-option>
+  </ion-select>
+</ion-item>
+
+<ion-item *ngIf="createServiceForm.value.ciudad === 'new'">
+  <ion-label position="floating">Nueva Ciudad</ion-label>
+  <ion-input formControlName="nuevaCiudad"></ion-input>
+</ion-item>
 
 
 
-
-
-
-        <ion-item>
+        <!-- <ion-item>
           <ion-label position="floating">Ciudad</ion-label>
           <ion-input formControlName="ciudad" required></ion-input>
-        </ion-item>
+        </ion-item> -->
         <ion-item>
           <ion-label position="stacked">Imagen</ion-label>
           <input type="file" (change)="onFileSelected($event)">
