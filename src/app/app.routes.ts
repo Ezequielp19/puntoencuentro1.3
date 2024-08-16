@@ -59,8 +59,10 @@ export const routes: Routes = [
         path: 'homeCliente',
         loadComponent: () => import('./components/home-cliente/home-cliente.component').then((m) => m.HomeClienteComponent),
       },
-
-
+      {
+        path: 'mercadoPago',
+        loadComponent: () => import('./components/mercado-pago/mercado-pago.component').then((m) => m.MercadoPagoComponent),
+      },
       {
         path: 'crearCategoria',
         loadComponent: () => import('./components/crear-categoria/crear-categoria.component').then(m => m.CrearCategoriaComponent),
