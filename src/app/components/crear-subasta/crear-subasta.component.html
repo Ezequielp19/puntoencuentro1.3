@@ -1,0 +1,98 @@
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" style="color: #FFCF00;"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Crear y Ver Subastas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div style="margin: 20px;">
+    <ion-button (click)="toggleForm()" expand="block" shape="round">
+      Crear Subasta
+    </ion-button>
+  </div>
+
+  <ion-card *ngIf="showForm" class="custom-card">
+    <ion-card-header class="custom-card-header">
+      <ion-card-title class="custom-card-title">Formulario de Subasta</ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="custom-card-content">
+      <ion-item>
+        <ion-label>Ciudad</ion-label>
+        <ion-input
+          [value]="selectedCityName"
+          placeholder="Seleccione una ciudad"
+          readonly
+          (click)="toggleCityDropdown()"
+        ></ion-input>
+      </ion-item>
+
+      <div *ngIf="isCityDropdownOpen" class="dropdown-container">
+        <ion-searchbar
+          [(ngModel)]="citySearchTerm"
+          placeholder="Buscar ciudad..."
+          (ionInput)="filterCities($event)"
+        ></ion-searchbar>
+        <ion-list>
+          <ng-container *ngIf="filteredCities && filteredCities.length > 0; else noCities">
+            <ion-item button *ngFor="let city of filteredCities" (click)="selectCity(city)">
+              <ion-label>{{ city }}</ion-label>
+            </ion-item>
+          </ng-container>
+          <ng-template #noCities>
+            <ion-item>
+              <ion-label>No hay ciudades disponibles</ion-label>
+            </ion-item>
+          </ng-template>
+        </ion-list>
+        <ion-button expand="full" (click)="toggleCityDropdown()">Cerrar</ion-button>
+      </div>
+
+      <ion-item>
+        <ion-label>Precio Inicial</ion-label>
+        <ion-input type="number" [(ngModel)]="auction.initialPrice" name="initialPrice" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Duración (en horas)</ion-label>
+        <ion-input type="number" [(ngModel)]="auction.duration" name="duration" required></ion-input>
+      </ion-item>
+
+      <div style="margin: 20px;">
+        <ion-button (click)="createAuction()" expand="block" shape="round">
+          Guardar Subasta
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Mostrar todas las subastas creadas -->
+  <ion-list *ngIf="auctions.length > 0">
+    <ion-card *ngFor="let auction of auctions" class="custom-card">
+      <ion-card-header class="custom-card-header">
+        <ion-card-title class="custom-card-title">{{ auction.city }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="custom-card-content">
+        <ion-item>
+          <ion-label>Precio Inicial:</ion-label>
+          <p>{{ auction.initialPrice | currency }}</p>
+        </ion-item>
+        <ion-item>
+          <ion-label>Duración:</ion-label>
+          <p>{{ auction.duration }} horas</p>
+        </ion-item>
+        <ion-item>
+          <ion-label>Hora de Inicio:</ion-label>
+          <p>{{ auction.startTime | date:'short' }}</p>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

@@ -44,6 +44,11 @@
             <ion-label>Mi Servicio</ion-label>
           </ion-item>
 
+          <ion-item *ngIf="user?.tipo_usuario === 'proveedor' && hasService" [routerLink]="['/perfil/subasta']" (click)="selectOption('subasta')">
+            <ion-icon name="business-outline" slot="start"></ion-icon>
+            <ion-label>Nueva Subasta</ion-label>
+          </ion-item>
+
           <!-- Crear Servicio: Solo para Proveedores sin servicio -->
           <ion-item *ngIf="user?.tipo_usuario === 'proveedor' && !hasService" [routerLink]="['/perfil/crearServicio']" (click)="selectOption('crearServicio')">
             <ion-icon name="add-circle-outline" slot="start"></ion-icon>
@@ -54,6 +59,11 @@
           <ion-item *ngIf="user?.tipo_usuario === 'admin'" [routerLink]="['/perfil/crearCategoria']" (click)="selectOption('crearCategoria')">
             <ion-icon name="pricetags-outline" slot="start"></ion-icon>
             <ion-label>Crear Categoria</ion-label>
+          </ion-item>
+
+          <ion-item *ngIf="user?.tipo_usuario === 'admin'" [routerLink]="['/perfil/crearSubasta']" (click)="selectOption('crearSubasta')">
+            <ion-icon name="pricetags-outline" slot="start"></ion-icon>
+            <ion-label>Subastas</ion-label>
           </ion-item>
 
           <ion-item *ngIf="user?.tipo_usuario === 'admin'" [routerLink]="['/perfil/verServicios']" (click)="selectOption('verServicios')">

@@ -72,6 +72,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/mi-servicio/mi-servicio.component').then(m => m.MiServicioComponent),
       },
       {
+        path: 'crearSubasta',
+        loadComponent: () => import('./components/crear-subasta/crear-subasta.component').then(m => m.CrearSubastaComponent),
+      },
+      {
         path: '',
         redirectTo: 'homeCliente',
         pathMatch: 'full',

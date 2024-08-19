@@ -19,6 +19,7 @@ import { Citas } from '../models/cita.model';
 // import { Reviews } from './../models/reviews.model';
 import { Service } from '../models/service.models';
 import { CategoryI } from '../models/categoria.model';
+import { Auction } from '../models/subasta.model';
 
 // Convertidor genérico para Firestore
 const converter = <T>() => ({
@@ -510,18 +511,57 @@ async getCitiesOfServices(): Promise<string[]> {
 }
 
 
+async createAuction(auction: Auction): Promise<void> {
+  const auctionId = this.createIdDoc();
+  auction.id = auctionId;
+  const auctionRef = doc(this.firestore, `subastas/${auctionId}`).withConverter(converter<Auction>());
+  await setDoc(auctionRef, auction);
+}
+async getAllAuctions(): Promise<Auction[]> {
+  const auctionsRef = collection(this.firestore, 'subastas') as CollectionReference<Auction>;
+  const querySnapshot = await getDocs(auctionsRef);
+  const auctions: Auction[] = [];
+  querySnapshot.forEach((doc) => {
+    auctions.push(doc.data());
+  });
+  return auctions;
+}
+
+async getServiceByUserId(userId: string): Promise<Service | null> {
+  try {
+    const servicesRef = collection(this.firestore, 'services') as CollectionReference<Service>;
+    const serviceQuery = query(servicesRef, where('providerId', '==', userId));
+    const querySnapshot = await getDocs(serviceQuery);
+
+    if (querySnapshot.empty) {
+      return null;
+    }
+
+    return querySnapshot.docs[0].data() as Service;
+  } catch (error) {
+    console.error('Error al obtener el servicio por ID de usuario:', error);
+    throw error;
+  }
+}
+
+ getAuctionsByCity(city: string): Observable<Auction[]> {
+    const auctionsRef = collection(this.firestore, 'subastas');
+    const q = query(auctionsRef, where('city', '==', city));
+    return collectionData(q, { idField: 'id' }) as Observable<Auction[]>;
+  }
 
 
 
 
-
-
-
-
-
-
+async updateAuction(auctionId: string, auctionData: Partial<Auction>): Promise<void> {
+  const auctionRef = doc(this.firestore, `subastas/${auctionId}`);
+  try {
+    await updateDoc(auctionRef, auctionData);
+  } catch (error) {
+    console.error('Error updating auction:', error);
+    throw error;
+  }
 }
 
 
-
-
+}
