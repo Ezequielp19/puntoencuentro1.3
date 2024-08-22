@@ -89,8 +89,11 @@
           <p>{{ auction.duration }} horas</p>
         </ion-item>
         <ion-item>
-          <ion-label>Hora de Inicio:</ion-label>
-          <p>{{ auction.startTime | date:'short' }}</p>
+          <ion-label>Tiempo Restante:</ion-label>
+          <ngx-countdown
+          [config]="{ leftTime: auction.timeRemaining }"
+          (event)="handleCountdown($event, auction)">
+        </ngx-countdown>
         </ion-item>
       </ion-card-content>
     </ion-card>

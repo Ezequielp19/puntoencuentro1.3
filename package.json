@@ -35,6 +35,7 @@
     "jsonwebtoken": "^9.0.2",
     "mercadopago": "^2.0.11",
     "ng2-pdf-viewer": "^10.2.2",
+    "ngx-countdown": "^18.0.0",
     "ngx-star-rating": "^2.1.0",
     "process": "^0.11.10",
     "rxjs": "~7.8.0",

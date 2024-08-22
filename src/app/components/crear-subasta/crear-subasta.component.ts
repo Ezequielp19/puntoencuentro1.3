@@ -6,13 +6,16 @@ import { FirestoreService } from '../../common/services/firestore.service';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { Router } from '@angular/router';
+import { CountdownEvent, CountdownModule } from 'ngx-countdown';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';  // Importar CUSTOM_ELEMENTS_SCHEMA
 
 @Component({
   selector: 'app-crear-subasta',
   templateUrl: './crear-subasta.component.html',
   styleUrls: ['./crear-subasta.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule, CountdownModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],  // Agregar CUSTOM_ELEMENTS_SCHEMA aquí
 })
 export class CrearSubastaComponent implements OnInit {
   auction: Auction = {
@@ -22,7 +25,9 @@ export class CrearSubastaComponent implements OnInit {
     currentWinningPrice: 0,
     winningUserId: '',
     duration: 0,
-    startTime: new Date(),
+    createdAt: new Date(),
+    endTime: new Date(),
+    timeRemaining: 0
   };
 
   auctions: Auction[] = [];
@@ -80,11 +85,20 @@ export class CrearSubastaComponent implements OnInit {
 
   createAuction() {
     if (this.auction.city && this.auction.initialPrice > 0 && this.auction.duration > 0) {
+      this.auction.createdAt = new Date();
+      this.auction.endTime = new Date(
+        this.auction.createdAt.getTime() + this.auction.duration * 3600000
+      );
+
+      // Calcula el tiempo restante en segundos
+      const now = new Date();
+      this.auction.timeRemaining = Math.floor((this.auction.endTime.getTime() - now.getTime()) / 1000);
+
       this.firestoreService.createAuction(this.auction)
         .then(() => {
           console.log('Subasta creada con éxito');
           this.showForm = false;
-          this.loadAuctions(); // Recargar las subastas después de crear una nueva
+          this.loadAuctions();
         })
         .catch((error) => {
           console.error('Error al crear la subasta: ', error);
@@ -92,12 +106,26 @@ export class CrearSubastaComponent implements OnInit {
     }
   }
 
+  finalizeAuction(auction: Auction) {
+    auction.winningUserId = 'usuarioFinalGanador';
+
+    this.firestoreService.updateAuction(auction.id, {
+      winningUserId: auction.winningUserId,
+      currentWinningPrice: auction.currentWinningPrice
+    }).then(() => {
+      console.log(`La subasta en ${auction.city} ha finalizado.`);
+    });
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 
-  goBack() {
-    window.history.back();
+  handleCountdown(event: any, auction: Auction) {
+    if (event.action === 'done') {
+      this.finalizeAuction(auction);
+    }
   }
+
 }

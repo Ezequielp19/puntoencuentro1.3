@@ -552,16 +552,16 @@ async getServiceByUserId(userId: string): Promise<Service | null> {
 
 
 
-
-async updateAuction(auctionId: string, auctionData: Partial<Auction>): Promise<void> {
-  const auctionRef = doc(this.firestore, `subastas/${auctionId}`);
-  try {
-    await updateDoc(auctionRef, auctionData);
-  } catch (error) {
-    console.error('Error updating auction:', error);
-    throw error;
+  async updateAuction(auctionId: string, auctionData: Partial<Auction>): Promise<void> {
+    const auctionRef = doc(this.firestore, `subastas/${auctionId}`);
+    try {
+      await updateDoc(auctionRef, auctionData);
+    } catch (error) {
+      console.error('Error updating auction:', error);
+      throw error;
+    }
   }
-}
+
 
 
 }
