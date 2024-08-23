@@ -562,6 +562,12 @@ async getServiceByUserId(userId: string): Promise<Service | null> {
     }
   }
 
+  deleteAuction(auctionId: string) {
+    const auctionDocRef = doc(this.firestore, `auctions/${auctionId}`);
+    return deleteDoc(auctionDocRef);
+  }
+
+
 
 
 }
