@@ -88,13 +88,26 @@
           <ion-label>Duración:</ion-label>
           <p>{{ auction.duration }} horas</p>
         </ion-item>
-        <ion-item>
-          <ion-label>Tiempo Restante:</ion-label>
-          <ngx-countdown
-          [config]="{ leftTime: auction.timeRemaining }"
-          (event)="handleCountdown($event, auction)">
-        </ngx-countdown>
-        </ion-item>
+
+     <ion-item>
+  <ion-label>Tiempo Restante:</ion-label>
+  <p>{{ formatTime(auction.timeRemaining) }}</p>
+</ion-item>
+
+
+
+<!-- Mostrar estado de la subasta y botón para activarla/desactivarla -->
+      <ion-item>
+        <ion-label>Estado:</ion-label>
+        <p>{{ auction.isActive ? 'Activa' : 'Inactiva' }}</p>
+      </ion-item>
+
+      <ion-button expand="full" (click)="toggleAuctionStatus(auction)">
+        {{ auction.isActive ? 'Desactivar Subasta' : 'Activar Subasta' }}
+      </ion-button>
+
+      
+
       </ion-card-content>
     </ion-card>
   </ion-list>

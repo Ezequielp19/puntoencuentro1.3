@@ -9,4 +9,6 @@ export interface Auction {
   createdAt: Date;  // Fecha y hora de creación de la subasta
   endTime: Date;  // Fecha y hora de finalización de la subasta
   timeRemaining: number;  // Tiempo restante en segundos
+    isActive: boolean;  // Asegúrate de que esta propiedad esté presente
+
 }

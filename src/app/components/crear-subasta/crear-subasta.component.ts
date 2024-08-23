@@ -27,7 +27,11 @@ export class CrearSubastaComponent implements OnInit {
     duration: 0,
     createdAt: new Date(),
     endTime: new Date(),
-    timeRemaining: 0
+    timeRemaining: 0,
+        isActive: true, // Campo para activar/desactivar la subasta
+
+
+
   };
 
   auctions: Auction[] = [];
@@ -37,6 +41,11 @@ export class CrearSubastaComponent implements OnInit {
   citySearchTerm: string = '';
   isCityDropdownOpen: boolean = false;
   showForm: boolean = false;
+
+
+  intervalId: any;
+
+
 
   constructor(
     private firestoreService: FirestoreService,
@@ -56,9 +65,16 @@ export class CrearSubastaComponent implements OnInit {
     });
   }
 
-  loadAuctions() {
+  // loadAuctions() {
+  //   this.firestoreService.getAllAuctions().then((auctions) => {
+  //     this.auctions = auctions;
+  //   });
+  // }
+
+   loadAuctions() {
     this.firestoreService.getAllAuctions().then((auctions) => {
       this.auctions = auctions;
+      this.auctions.forEach((auction) => this.startCountdown(auction));
     });
   }
 
@@ -84,7 +100,11 @@ export class CrearSubastaComponent implements OnInit {
   }
 
   createAuction() {
-    if (this.auction.city && this.auction.initialPrice > 0 && this.auction.duration > 0) {
+    if (
+      this.auction.city &&
+      this.auction.initialPrice > 0 &&
+      this.auction.duration > 0
+    ) {
       this.auction.createdAt = new Date();
       this.auction.endTime = new Date(
         this.auction.createdAt.getTime() + this.auction.duration * 3600000
@@ -92,9 +112,12 @@ export class CrearSubastaComponent implements OnInit {
 
       // Calcula el tiempo restante en segundos
       const now = new Date();
-      this.auction.timeRemaining = Math.floor((this.auction.endTime.getTime() - now.getTime()) / 1000);
+      this.auction.timeRemaining = Math.floor(
+        (this.auction.endTime.getTime() - now.getTime()) / 1000
+      );
 
-      this.firestoreService.createAuction(this.auction)
+      this.firestoreService
+        .createAuction(this.auction)
         .then(() => {
           console.log('Subasta creada con éxito');
           this.showForm = false;
@@ -103,19 +126,62 @@ export class CrearSubastaComponent implements OnInit {
         .catch((error) => {
           console.error('Error al crear la subasta: ', error);
         });
+
+      // Inicia el temporizador
+      this.startCountdown(this.auction);
     }
   }
+
+  // startCountdown(auction: Auction) {
+  //   if (auction.timeRemaining > 0) {
+  //     this.intervalId = setInterval(() => {
+  //       auction.timeRemaining--;
+
+  //       if (auction.timeRemaining <= 0) {
+  //         clearInterval(this.intervalId);
+  //         this.finalizeAuction(auction);
+  //       }
+  //     }, 1000);
+  //   }
+  // }
+
+
+  startCountdown(auction: Auction) {
+  // Si la subasta no está activa, no iniciamos el contador
+  if (auction.timeRemaining > 0 && auction.isActive) {
+    this.intervalId = setInterval(() => {
+      auction.timeRemaining--;
+
+      if (auction.timeRemaining <= 0) {
+        clearInterval(this.intervalId);
+        this.finalizeAuction(auction);
+      }
+    }, 1000);
+  }
+}
 
   finalizeAuction(auction: Auction) {
     auction.winningUserId = 'usuarioFinalGanador';
 
-    this.firestoreService.updateAuction(auction.id, {
-      winningUserId: auction.winningUserId,
-      currentWinningPrice: auction.currentWinningPrice
-    }).then(() => {
-      console.log(`La subasta en ${auction.city} ha finalizado.`);
-    });
+    this.firestoreService
+      .updateAuction(auction.id, {
+        winningUserId: auction.winningUserId,
+        currentWinningPrice: auction.currentWinningPrice,
+      })
+      .then(() => {
+        console.log(`La subasta en ${auction.city} ha finalizado.`);
+      });
   }
+
+
+  formatTime(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  return `${hours}h ${minutes}m ${remainingSeconds}s`;
+}
+
 
   logout() {
     this.authService.logout();
@@ -126,6 +192,46 @@ export class CrearSubastaComponent implements OnInit {
     if (event.action === 'done') {
       this.finalizeAuction(auction);
     }
+  }
+
+  //  toggleAuctionStatus(auction: Auction) {
+  //   auction.isActive = !auction.isActive;
+  //   this.firestoreService
+  //     .updateAuction(auction.id, { isActive: auction.isActive })
+  //     .then(() => {
+  //       console.log(`Subasta en ${auction.city} actualizada.`);
+  //     });
+  // }
+
+
+  toggleAuctionStatus(auction: Auction) {
+  auction.isActive = !auction.isActive;
+
+  // Si la subasta se desactiva, detenemos el temporizador
+  if (!auction.isActive && this.intervalId) {
+    clearInterval(this.intervalId);
+  } else if (auction.isActive) {
+    // Si se vuelve a activar, reiniciamos el temporizador
+    this.startCountdown(auction);
+  }
+
+  this.firestoreService
+    .updateAuction(auction.id, { isActive: auction.isActive })
+    .then(() => {
+      console.log(`Subasta en ${auction.city} actualizada.`);
+    });
+}
+
+  deleteAuction(auctionId: string) {
+    this.firestoreService
+      .deleteAuction(auctionId)
+      .then(() => {
+        console.log('Subasta eliminada con éxito.');
+        this.loadAuctions(); // Recargar subastas después de eliminar
+      })
+      .catch((error: any) => {
+        console.error('Error al eliminar la subasta: ', error);
+      });
   }
 
 }
