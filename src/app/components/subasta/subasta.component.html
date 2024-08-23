@@ -1,19 +1,47 @@
-<div class="subasta-container">
-  <h2>Participar en la Subasta</h2>
+<ion-header>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false" style="color: #FFCF00;"></ion-menu-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center custom-title">Subastas Disponibles</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="danger" (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <form (ngSubmit)="makeBid()">
-    <div>
-      <label for="bidAmount">Monto Adicional:</label>
-      <input type="number" id="bidAmount" [(ngModel)]="bidAmount" name="bidAmount" required>
-    </div>
-
-    <button type="submit">Hacer Oferta</button>
-  </form>
-
-  <div *ngIf="errorMessage" class="error">
-    {{ errorMessage }}
+<ion-content class="ion-padding">
+  <div *ngIf="auctions && auctions.length > 0; else noAuctions">
+    <ion-card *ngFor="let auction of auctions" class="custom-card">
+      <ion-card-header class="custom-card-header">
+        <ion-card-title class="custom-card-title">{{ auction.city }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="custom-card-content">
+        <ion-item>
+          <ion-label>Precio del actual Ganador:</ion-label>
+          <p>{{ auction.currentWinningPrice | currency }}</p>
+        </ion-item>
+        <ion-item>
+          <ion-label>Duración:</ion-label>
+          <p>{{ auction.duration }} horas</p>
+        </ion-item>
+        <ion-item>
+          <ion-label>Tiempo Restante:</ion-label>
+          <p>{{ getRemainingTime(auction.endTime, auction.duration) }}</p>
+        </ion-item>
+        <ion-item>
+          <ion-label>Tu Puja:</ion-label>
+          <ion-input type="number" [(ngModel)]="newBidAmount" min="{{ auction.currentWinningPrice + 1 }}"></ion-input>
+        </ion-item>
+        <ion-button (click)="placeBid(auction)" expand="block" shape="round">
+          Pujar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
   </div>
-  <div *ngIf="successMessage" class="success">
-    {{ successMessage }}
-  </div>
-</div>
+  <ng-template #noAuctions>
+    <p>No hay subastas disponibles en tu localidad.</p>
+  </ng-template>
+</ion-content>
