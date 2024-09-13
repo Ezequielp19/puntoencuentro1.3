@@ -6,8 +6,10 @@ import { FirestoreService } from '../../common/services/firestore.service';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { Router } from '@angular/router';
-import { CountdownEvent, CountdownModule } from 'ngx-countdown';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';  // Importar CUSTOM_ELEMENTS_SCHEMA
+import { CountdownModule } from 'ngx-countdown';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { ModalController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-crear-subasta',
@@ -15,23 +17,22 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';  // Importar CUSTOM_ELEM
   styleUrls: ['./crear-subasta.component.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule, CountdownModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],  // Agregar CUSTOM_ELEMENTS_SCHEMA aquí
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CrearSubastaComponent implements OnInit {
   auction: Auction = {
     id: '',
     city: '',
-    initialPrice: 0,
     currentWinningPrice: 0,
     winningUserId: '',
     duration: 0,
     createdAt: new Date(),
     endTime: new Date(),
     timeRemaining: 0,
-        isActive: true, // Campo para activar/desactivar la subasta
-
-
-
+    isActive: true,
+    lastUpdatedAt: new Date(),
+    isFinished: false,
+    winningUserName:'',
   };
 
   auctions: Auction[] = [];
@@ -42,15 +43,18 @@ export class CrearSubastaComponent implements OnInit {
   isCityDropdownOpen: boolean = false;
   showForm: boolean = false;
 
+  intervalIds: { [key: string]: any } = {};  // Guardar intervalos por subasta
 
-  intervalId: any;
-
+  showAuctionModal = false;  // Inicialmente no se muestra el modal
+  selectedAuction: Auction | null = null;
 
 
   constructor(
     private firestoreService: FirestoreService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef,  // Injectar ChangeDetectorRef
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -58,25 +62,31 @@ export class CrearSubastaComponent implements OnInit {
     this.loadAuctions();
   }
 
-  loadCities() {
-    this.firestoreService.getServices().then((services) => {
-      this.cities = [...new Set(services.map((service) => service.ciudad))];
-      this.filteredCities = this.cities;
-    });
-  }
-
-  // loadAuctions() {
-  //   this.firestoreService.getAllAuctions().then((auctions) => {
-  //     this.auctions = auctions;
-  //   });
+  // toggleAuctionModal(auction: Auction) {
+  //   this.showAuctionModal = !this.showAuctionModal;
+  //   this.selectedAuction = auction;
   // }
 
-   loadAuctions() {
-    this.firestoreService.getAllAuctions().then((auctions) => {
-      this.auctions = auctions;
-      this.auctions.forEach((auction) => this.startCountdown(auction));
-    });
+  toggleCityDropdown() {
+    this.isCityDropdownOpen = !this.isCityDropdownOpen;
   }
+
+  toggleForm() {
+    this.showForm = !this.showForm;
+  }
+
+  loadUserDetails(winningUserId: string): Promise<string> {
+    return this.firestoreService.getUserById(winningUserId)
+      .then(user => {
+        // console.log('Nombre del usuario cargado: ', user?.nombre);
+        return user?.nombre || 'Desconocido';
+      })
+      .catch((error) => {
+        console.error('Error al cargar el usuario: ', error);
+        return 'Desconocido';
+      });
+  }
+
 
   filterCities(event: any) {
     const searchTerm = event.target.value.toLowerCase();
@@ -91,26 +101,45 @@ export class CrearSubastaComponent implements OnInit {
     this.toggleCityDropdown();
   }
 
-  toggleCityDropdown() {
-    this.isCityDropdownOpen = !this.isCityDropdownOpen;
+  loadCities() {
+    this.firestoreService.getServices().then((services) => {
+      this.cities = [...new Set(services.map((service) => service.ciudad))];
+      this.filteredCities = this.cities;
+    });
   }
 
-  toggleForm() {
-    this.showForm = !this.showForm;
+  loadAuctions() {
+    this.firestoreService.getAllAuctions().then((auctions) => {
+      this.auctions = auctions;
+      this.auctions.forEach((auction) => {
+        // Cargar el nombre del usuario ganador
+        this.loadUserDetails(auction.winningUserId).then(nombre => {
+          auction.winningUserName = nombre; // Añadir un campo temporal para el nombre
+        });
+        this.startCountdown(auction);
+      });
+    });
+  }
+
+  toggleAuctionModal(auction: Auction) {
+    this.showAuctionModal = !this.showAuctionModal;  // Alterna la visibilidad del modal
+    this.selectedAuction = auction;
+
+    // if (auction) {
+
+    //   console.log(`Subasta terminada: ${auction.isFinished}`);
+    //   console.log(`Subasta pagada: ${auction.isPaid}`);
+    //   console.log(`Subasta activa: ${auction.isActive}`);
+    // }
   }
 
   createAuction() {
-    if (
-      this.auction.city &&
-      this.auction.initialPrice > 0 &&
-      this.auction.duration > 0
-    ) {
+    if (this.auction.city && this.auction.currentWinningPrice > 0 && this.auction.duration > 0) {
       this.auction.createdAt = new Date();
       this.auction.endTime = new Date(
         this.auction.createdAt.getTime() + this.auction.duration * 3600000
       );
 
-      // Calcula el tiempo restante en segundos
       const now = new Date();
       this.auction.timeRemaining = Math.floor(
         (this.auction.endTime.getTime() - now.getTime()) / 1000
@@ -127,111 +156,98 @@ export class CrearSubastaComponent implements OnInit {
           console.error('Error al crear la subasta: ', error);
         });
 
-      // Inicia el temporizador
       this.startCountdown(this.auction);
     }
   }
 
-  // startCountdown(auction: Auction) {
-  //   if (auction.timeRemaining > 0) {
-  //     this.intervalId = setInterval(() => {
-  //       auction.timeRemaining--;
-
-  //       if (auction.timeRemaining <= 0) {
-  //         clearInterval(this.intervalId);
-  //         this.finalizeAuction(auction);
-  //       }
-  //     }, 1000);
-  //   }
-  // }
-
-
   startCountdown(auction: Auction) {
-  // Si la subasta no está activa, no iniciamos el contador
-  if (auction.timeRemaining > 0 && auction.isActive) {
-    this.intervalId = setInterval(() => {
-      auction.timeRemaining--;
+    if (auction.timeRemaining > 0 && auction.isActive) {
+      this.intervalIds[auction.id] = setInterval(() => {
+        auction.timeRemaining--;
 
-      if (auction.timeRemaining <= 0) {
-        clearInterval(this.intervalId);
-        this.finalizeAuction(auction);
-      }
-    }, 1000);
-  }
-}
+        if (auction.timeRemaining <= 0) {
+          clearInterval(this.intervalIds[auction.id]);
+          auction.isFinished = true;
+        }
 
-  finalizeAuction(auction: Auction) {
-    auction.winningUserId = 'usuarioFinalGanador';
+        // Usamos ChangeDetectorRef para asegurarnos de que Angular detecte cambios
+        this.cd.detectChanges();
+      }, 1000);
 
-    this.firestoreService
-      .updateAuction(auction.id, {
-        winningUserId: auction.winningUserId,
-        currentWinningPrice: auction.currentWinningPrice,
-      })
-      .then(() => {
-        console.log(`La subasta en ${auction.city} ha finalizado.`);
-      });
+      setInterval(() => {
+        this.firestoreService.updateAuction(auction.id, {
+          timeRemaining: auction.timeRemaining,
+          lastUpdatedAt: new Date(),
+          isFinished: auction.isFinished,
+        }).catch(error => {
+          console.error('Error al actualizar el tiempo restante:', error);
+        });
+      }, 30000);
+    }
   }
 
 
   formatTime(seconds: number): string {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
 
-  return `${hours}h ${minutes}m ${remainingSeconds}s`;
-}
-
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    return `${hours}h ${minutes}m ${remainingSeconds}s`;
   }
-
-  handleCountdown(event: any, auction: Auction) {
-    if (event.action === 'done') {
-      this.finalizeAuction(auction);
-    }
-  }
-
-  //  toggleAuctionStatus(auction: Auction) {
-  //   auction.isActive = !auction.isActive;
-  //   this.firestoreService
-  //     .updateAuction(auction.id, { isActive: auction.isActive })
-  //     .then(() => {
-  //       console.log(`Subasta en ${auction.city} actualizada.`);
-  //     });
-  // }
-
 
   toggleAuctionStatus(auction: Auction) {
-  auction.isActive = !auction.isActive;
+    auction.isActive = !auction.isActive;
 
-  // Si la subasta se desactiva, detenemos el temporizador
-  if (!auction.isActive && this.intervalId) {
-    clearInterval(this.intervalId);
-  } else if (auction.isActive) {
-    // Si se vuelve a activar, reiniciamos el temporizador
-    this.startCountdown(auction);
+    if (!auction.isActive && this.intervalIds[auction.id]) {
+      clearInterval(this.intervalIds[auction.id]);  // Aquí se corrige el uso de clearInterval
+    } else if (auction.isActive) {
+      this.startCountdown(auction);
+    }
+
+    this.firestoreService
+      .updateAuction(auction.id, { isActive: auction.isActive })
+      .then(() => {
+        console.log(`Subasta en ${auction.city} actualizada.`);
+      });
   }
-
-  this.firestoreService
-    .updateAuction(auction.id, { isActive: auction.isActive })
-    .then(() => {
-      console.log(`Subasta en ${auction.city} actualizada.`);
-    });
-}
 
   deleteAuction(auctionId: string) {
     this.firestoreService
       .deleteAuction(auctionId)
       .then(() => {
         console.log('Subasta eliminada con éxito.');
-        this.loadAuctions(); // Recargar subastas después de eliminar
+        this.loadAuctions();
       })
       .catch((error: any) => {
         console.error('Error al eliminar la subasta: ', error);
       });
   }
 
+  // Método para manejar el cambio de estado de la subasta
+  onAuctionStatusChange(auction: Auction) {
+    auction.isActive = auction.isActive === true;
+
+    // Si la subasta está inactiva, solo detener el temporizador
+    if (!auction.isActive && this.intervalIds[auction.id]) {
+      clearInterval(this.intervalIds[auction.id]);  // Pausa el temporizador
+    }
+    // Si la subasta se activa nuevamente, reanudar el temporizador desde el tiempo restante
+    else if (auction.isActive) {
+      this.startCountdown(auction);  // Reanudar el temporizador
+    }
+
+    this.firestoreService
+      .updateAuction(auction.id, { isActive: auction.isActive })
+      .then(() => {
+        console.log(`Subasta en ${auction.city} actualizada.`);
+      })
+      .catch((error) => {
+        console.error('Error al actualizar el estado de la subasta:', error);
+      });
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

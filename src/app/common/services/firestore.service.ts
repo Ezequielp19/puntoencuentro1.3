@@ -567,7 +567,20 @@ async getServiceByUserId(userId: string): Promise<Service | null> {
     return deleteDoc(auctionDocRef);
   }
 
+  async getUserById(userId: string): Promise<User | undefined> {
+    try {
+      const userDocRef = doc(this.firestore, `usuarios/${userId}`) as DocumentReference<User>;
+      const userDoc = await getDoc(userDocRef);
 
+      if (userDoc.exists()) {
+        return userDoc.data();
+      }
+      return undefined;
+    } catch (error) {
+      console.error('Error fetching user by ID:', error);
+      throw error;
+    }
+  }
 
 
 }

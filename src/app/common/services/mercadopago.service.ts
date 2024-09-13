@@ -1,17 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MercadoPagoService {
-  private accessToken = 'APP_USR-914576361690041-081618-57242d0c8d98478b8805ff7ea9065e50-1842406931'; // Reemplaza con tu access_token de Mercado Pago
+  private apiUrl = 'http://localhost:3333/create_preference';  // Ruta del servidor backend
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private firestore: AngularFirestore) {}
 
-  createPreference(preferenceData: any): Observable<any> {
-    const url = `https://api.mercadopago.com/checkout/preferences?access_token=${this.accessToken}`;
-    return this.http.post(url, preferenceData);
+  // Método para enviar la orden de pago al servidor backend
+  sendPaymentData(paymentData: any): Observable<any> {
+    const url = `${this.apiUrl}`;
+    return this.http.post(url, paymentData);
   }
+
+  // Método para guardar el estado de pago en Firestore
+  // savePaymentStatus(userId: string, paymentData: any): Promise<DocumentReference> {
+  //   return this.firestore.collection('usuarios').doc(userId).collection('payments').add(paymentData);
+  // }
 }

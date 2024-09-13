@@ -57,7 +57,7 @@
 
       <ion-item>
         <ion-label>Precio Inicial</ion-label>
-        <ion-input type="number" [(ngModel)]="auction.initialPrice" name="initialPrice" required></ion-input>
+        <ion-input type="number" [(ngModel)]="auction.currentWinningPrice" name="initialPrice" required></ion-input>
       </ion-item>
 
       <ion-item>
@@ -65,7 +65,7 @@
         <ion-input type="number" [(ngModel)]="auction.duration" name="duration" required></ion-input>
       </ion-item>
 
-      <div style="margin: 20px;">
+      <div class="button-container">
         <ion-button (click)="createAuction()" expand="block" shape="round">
           Guardar Subasta
         </ion-button>
@@ -81,34 +81,86 @@
       </ion-card-header>
       <ion-card-content class="custom-card-content">
         <ion-item>
-          <ion-label>Precio Inicial:</ion-label>
-          <p>{{ auction.initialPrice | currency }}</p>
+          <ion-label>Actual Monto Ganador:</ion-label>
+          <p>{{ auction.currentWinningPrice | currency }}</p>
         </ion-item>
         <ion-item>
           <ion-label>Duración:</ion-label>
           <p>{{ auction.duration }} horas</p>
         </ion-item>
+        <ion-item>
+          <ion-label>Tiempo Restante:</ion-label>
+          <p>{{ formatTime(auction.timeRemaining) }}</p>
+        </ion-item>
 
-     <ion-item>
-  <ion-label>Tiempo Restante:</ion-label>
-  <p>{{ formatTime(auction.timeRemaining) }}</p>
-</ion-item>
+        <ion-item>
+          <ion-label>Estado:</ion-label>
+          <ion-select [(ngModel)]="auction.isActive" (ionChange)="onAuctionStatusChange(auction)">
+            <ion-select-option [value]="true">Activa</ion-select-option>
+            <ion-select-option [value]="false">Inactiva</ion-select-option>
+          </ion-select>
+        </ion-item>
 
-
-
-<!-- Mostrar estado de la subasta y botón para activarla/desactivarla -->
-      <ion-item>
-        <ion-label>Estado:</ion-label>
-        <p>{{ auction.isActive ? 'Activa' : 'Inactiva' }}</p>
-      </ion-item>
-
-      <ion-button expand="full" (click)="toggleAuctionStatus(auction)">
-        {{ auction.isActive ? 'Desactivar Subasta' : 'Activar Subasta' }}
-      </ion-button>
-
-      
-
+        <!-- Botón para abrir el modal -->
+        <div class="button-container">
+          <ion-button (click)="toggleAuctionModal(auction)">
+            Ver detalles de la subasta
+          </ion-button>
+        </div>
       </ion-card-content>
     </ion-card>
   </ion-list>
 </ion-content>
+
+<!-- Modal para mostrar detalles de subasta -->
+<div class="custom-modal" *ngIf="showAuctionModal">
+  <div class="custom-modal-content">
+    <ion-card class="custom-card">
+      <ion-card-header class="custom-card-header">
+        <ion-card-title class="custom-card-title">{{ selectedAuction?.city }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="custom-card-content">
+
+        <!-- Mostrar información ya visible antes del modal -->
+        <ion-item lines="full">
+          <ion-label>Precio actual:</ion-label>
+          <p>{{ selectedAuction?.currentWinningPrice | currency }}</p>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label>Usuario ganador:</ion-label>
+          <p>{{ selectedAuction?.winningUserName || 'Desconocido' }}</p>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label>Duración:</ion-label>
+          <p>{{ selectedAuction?.duration }} horas</p>
+        </ion-item>
+
+        <!-- Información nueva dentro del modal -->
+        <ion-item lines="full">
+          <ion-label>Tiempo Restante:</ion-label>
+          <p *ngIf="selectedAuction?.timeRemaining > 0">{{ formatTime(selectedAuction.timeRemaining) }}</p>
+          <ng-template #noTime>No disponible</ng-template>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label>¿Subasta Terminada?:</ion-label>
+          <p>{{ selectedAuction.isFinished ? 'Sí' : 'No'}}</p>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label>¿Subasta Paga?:</ion-label>
+          <p>{{ selectedAuction.isPaid ? 'Sí' : 'No' }}</p>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label>¿Subasta Activa?:</ion-label>
+          <p>{{ selectedAuction.isActive ? 'Sí' : 'No' }}</p>
+        </ion-item>
+      </ion-card-content>
+
+      <!-- Botón para cerrar el modal -->
+      <div class="button-container">
+        <ion-button color="danger" (click)="toggleAuctionModal(null)">
+          Cerrar
+        </ion-button>
+      </div>
+    </ion-card>
+  </div>
+</div>

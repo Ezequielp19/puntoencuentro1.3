@@ -14,7 +14,9 @@
 
 <ion-content class="ion-padding">
   <div *ngIf="auctions && auctions.length > 0; else noAuctions">
-    <ion-card *ngFor="let auction of auctions" class="custom-card">
+    <ion-card *ngFor="let auction of auctions"
+              [class.winning-user]="auction.isWinningUser"
+              class="custom-card">
       <ion-card-header class="custom-card-header">
         <ion-card-title class="custom-card-title">{{ auction.city }}</ion-card-title>
       </ion-card-header>
@@ -31,13 +33,17 @@
           <ion-label>Tiempo Restante:</ion-label>
           <p>{{ getRemainingTime(auction.endTime, auction.duration) }}</p>
         </ion-item>
-        <ion-item>
+        <ion-item *ngIf="!auction.isWinningUser">
           <ion-label>Tu Puja:</ion-label>
           <ion-input type="number" [(ngModel)]="newBidAmount" min="{{ auction.currentWinningPrice + 1 }}"></ion-input>
         </ion-item>
-        <ion-button (click)="placeBid(auction)" expand="block" shape="round">
+        <ion-button *ngIf="!auction.isWinningUser" (click)="placeBid(auction)" expand="block" shape="round">
           Pujar
         </ion-button>
+        <div *ngIf="auction.isWinningUser">
+          <p>¡Felicidades! Eres el ganador de esta subasta.</p>
+          <button (click)="sendPaymentData(auction)">Pagar con MercadoPago</button>
+        </div>
       </ion-card-content>
     </ion-card>
   </div>
