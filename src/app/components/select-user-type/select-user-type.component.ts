@@ -1,9 +1,8 @@
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton } from '@ionic/angular/standalone';
+import { AlertController, IonHeader, IonToolbar, IonTitle, IonContent, IonGrid, IonRow, IonCol, IonButton } from '@ionic/angular/standalone';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FirestoreService } from '../../common/services/firestore.service';
 import { AuthService } from '../../common/services/auth.service';
-import { AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs'; // Importa firstValueFrom para convertir el Observable en Promesa

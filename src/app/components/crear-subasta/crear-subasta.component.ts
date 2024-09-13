@@ -3,20 +3,23 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Auction } from '../../common/models/subasta.model';
 import { FirestoreService } from '../../common/services/firestore.service';
-import { IonicModule } from '@ionic/angular';
+
 import { AuthService } from 'src/app/common/services/auth.service';
 import { Router } from '@angular/router';
 import { CountdownModule } from 'ngx-countdown';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
-import { ModalController } from '@ionic/angular/standalone';
+import { ModalController, IonSearchbar, IonHeader, IonContent, IonTitle, IonLabel, IonToolbar, IonButton, IonButtons, IonMenuButton, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonInput, IonList, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-crear-subasta',
   templateUrl: './crear-subasta.component.html',
   styleUrls: ['./crear-subasta.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, CountdownModule],
+  imports: [CommonModule, FormsModule, IonHeader,IonContent,IonTitle,IonLabel,
+    IonToolbar, IonButton,IonButtons, IonMenuButton,
+    IonIcon, IonCard,IonCardHeader,IonCardTitle,IonCardContent,IonItem,IonInput,
+    IonSearchbar, IonList,IonSelect,IonSelectOption,CountdownModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class CrearSubastaComponent implements OnInit {
@@ -54,7 +57,6 @@ export class CrearSubastaComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private cd: ChangeDetectorRef,  // Injectar ChangeDetectorRef
-    private modalController: ModalController
   ) {}
 
   ngOnInit() {

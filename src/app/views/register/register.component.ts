@@ -13,7 +13,7 @@ import {
   IonList,
   IonCardContent,
   IonToolbar,
-
+  AlertController,
   IonTitle,
   IonHeader, IonBackButton, IonButtons, IonSpinner, IonSelectOption, IonSelect, IonAvatar } from '@ionic/angular/standalone';
 import { Component, OnInit, Input } from '@angular/core';
@@ -23,7 +23,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { User } from 'src/app/common/models/users.models';
-import { AlertController } from '@ionic/angular';
 import { AuthService } from 'src/app/common/services/auth.service';
 
 @Component({

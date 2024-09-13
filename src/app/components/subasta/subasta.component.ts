@@ -1,4 +1,4 @@
-import { IonicModule } from '@ionic/angular';
+import { IonContent, IonHeader, IonToolbar, IonButton, IonButtons, IonMenuButton, IonTitle, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput } from '@ionic/angular/standalone';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/common/services/auth.service';
@@ -13,7 +13,8 @@ import { MercadoPagoService } from '../../common/services/mercadopago.service';
   standalone: true,
   templateUrl: './subasta.component.html',
   styleUrls: ['./subasta.component.scss'],
-  imports: [CommonModule, IonicModule, FormsModule]
+  imports: [CommonModule, IonContent,IonHeader,IonToolbar,IonButton,IonButtons,IonMenuButton,IonTitle,IonIcon
+    ,IonCard,IonCardHeader,IonCardTitle , IonCardContent,IonItem,IonLabel,IonInput,FormsModule]
 })
 export class SubastaComponent implements OnInit {
   auctions: Auction[] = [];

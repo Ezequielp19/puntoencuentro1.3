@@ -1,9 +1,8 @@
+import { AlertController, LoadingController,IonHeader, IonToolbar, IonButtons, IonButton, IonBackButton, IonTitle, IonContent, IonItem, IonLabel, IonInput } from '@ionic/angular/standalone';
 import { Component, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms'; // Importar FormsModule
-
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AlertController, LoadingController } from '@ionic/angular'
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-recovery-email',
@@ -11,10 +10,9 @@ import { AlertController, LoadingController } from '@ionic/angular'
   styleUrls: ['./recovery-email.component.scss'],
   standalone:true,
    imports: [
-
-    IonicModule,
-FormsModule
-
+    IonHeader,IonToolbar,IonButtons,IonButton,IonBackButton,
+    IonTitle,IonContent,IonItem,IonLabel,IonInput,
+    FormsModule, CommonModule
   ]
 })
 export class RecoveryEmailComponent  implements OnInit {

@@ -4,7 +4,7 @@ import { FirestoreService } from 'src/app/common/services/firestore.service';
 import { Citas } from 'src/app/common/models/cita.model';
 import { Observable, from, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
-import { IonicModule, AlertController } from '@ionic/angular';
+import { AlertController, IonHeader, IonToolbar, IonButton, IonButtons, IonMenuButton, IonTitle, IonIcon, IonContent, IonList, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonSelect, IonSelectOption } from '@ionic/angular/standalone';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { User } from 'src/app/common/models/users.models';
 import { Service } from 'src/app/common/models/service.models';
@@ -17,7 +17,8 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule
+    IonHeader,IonToolbar,IonButton,IonButtons,IonMenuButton,IonTitle,IonIcon, IonContent,IonList,IonCard,
+    IonCardHeader,IonCardTitle,IonCardContent,IonItem,IonLabel,IonSelect,IonSelectOption
   ]
 })
 export class HistorialCitasComponent implements OnInit {

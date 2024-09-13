@@ -4,13 +4,11 @@ import { FirestoreService } from '../../common/services/firestore.service';
 import { Reviews } from '../../common/models/reviews.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonItem, IonLabel, IonItemDivider, IonButton, IonSelect, IonSelectOption, IonTextarea, IonIcon } from '@ionic/angular/standalone';
+import { AlertController,IonSpinner,IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonItem, IonLabel, IonItemDivider, IonButton, IonSelect, IonSelectOption, IonTextarea, IonIcon } from '@ionic/angular/standalone';
 import { AuthService } from '../../common/services/auth.service';
 import { User } from 'src/app/common/models/users.models';
 import { Service } from 'src/app/common/models/service.models';
 import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
-import { AlertController } from '@ionic/angular';
-import { IonSpinner } from '@ionic/angular/standalone';
 
 
 @Component({

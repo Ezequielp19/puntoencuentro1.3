@@ -1,5 +1,3 @@
-import { IonCardHeader, IonCardContent, IonCardSubtitle, IonCardTitle } from '@ionic/angular/standalone';
-// profile.component.ts
 import { Component, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { finalize } from 'rxjs/operators';
@@ -8,7 +6,7 @@ import { FirestoreService } from '../../common/services/firestore.service';
 import { User } from 'src/app/common/models/users.models';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonCard,     IonTitle,
+import { IonCard, IonCardHeader, IonCardContent, IonCardSubtitle, IonCardTitle,  IonTitle,
   IonContent,
   IonItem,
   IonLabel,

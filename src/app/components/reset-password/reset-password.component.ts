@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../common/services/auth.service';
-import { AlertController} from '@ionic/angular';
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonTitle, IonToolbar, LoadingController } from '@ionic/angular/standalone';
+import {  AlertController,IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonInput, IonItem, IonLabel, IonTitle, IonToolbar, LoadingController } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-reset-password',

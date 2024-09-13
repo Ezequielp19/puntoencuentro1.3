@@ -15,14 +15,13 @@ import {
   IonToolbar,
   IonIcon,
   IonTitle,
-  IonHeader, IonBackButton, IonButtons, IonSpinner, IonSelectOption, IonSelect, IonSegment, IonSegmentButton, IonImg, IonModal, IonPopover, IonFooter } from '@ionic/angular/standalone';
+  IonHeader, IonBackButton, AlertController,IonButtons, IonSpinner, IonSelectOption, IonSelect, IonSegment, IonSegmentButton, IonImg, IonModal, IonPopover, IonFooter } from '@ionic/angular/standalone';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FirestoreService } from '../../common/services/firestore.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../common/services/auth.service';
-import { AlertController  } from '@ionic/angular';
 import { User } from 'src/app/common/models/users.models';
 import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
 

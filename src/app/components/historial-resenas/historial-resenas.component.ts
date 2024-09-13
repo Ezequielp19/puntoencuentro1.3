@@ -1,7 +1,7 @@
+import { AlertController, IonHeader, IonToolbar, IonButtons, IonButton, IonMenuButton, IonTitle, IonIcon, IonContent, IonCard, IonList, IonCardContent, IonCardHeader, IonCardTitle } from '@ionic/angular/standalone';
 import { Component, OnInit } from '@angular/core';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
 import { Observable } from 'rxjs';
-import { IonicModule, AlertController } from '@ionic/angular';
 import { Reviews } from 'src/app/common/models/reviews.model';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { Router } from '@angular/router';
@@ -14,7 +14,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule
+    IonHeader, IonToolbar,IonHeader,IonButtons,IonButton,IonMenuButton,IonTitle,IonIcon,IonContent
+    ,IonCard,IonList,IonCardContent,IonCardHeader,IonCardTitle
   ]
 })
 export class HistorialResenasComponent implements OnInit {

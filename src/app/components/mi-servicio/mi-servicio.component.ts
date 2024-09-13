@@ -1,4 +1,4 @@
-import { IonicModule } from '@ionic/angular';
+import { IonContent, IonAvatar, IonButton, AlertController, LoadingController, IonCard, IonCardHeader, IonCardContent, IonCardTitle, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonButtons, IonHeader, IonToolbar, IonMenuButton, IonTitle, IonIcon, IonCardSubtitle, IonList } from '@ionic/angular/standalone';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirestoreService } from '../../common/services/firestore.service';
@@ -10,14 +10,16 @@ import { finalize } from 'rxjs/operators';
 import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AlertController, LoadingController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-mi-servicio',
   templateUrl: './mi-servicio.component.html',
   styleUrls: ['./mi-servicio.component.scss'],
   standalone: true,
-  imports: [IoniconsModule, IonicModule, ReactiveFormsModule, FormsModule, CommonModule]
+  imports: [IoniconsModule, IonContent,IonCard,IonCardHeader,IonCardContent,IonCardTitle,IonGrid,IonRow,IonCol
+    ,IonAvatar,IonItem,IonLabel,IonButtons,IonButton,
+    IonHeader,IonToolbar,IonMenuButton,IonTitle,IonIcon,IonCardSubtitle,IonList, ReactiveFormsModule, FormsModule, CommonModule]
 })
 export class MiServicioComponent implements OnInit {
   service: Service | null = null;
