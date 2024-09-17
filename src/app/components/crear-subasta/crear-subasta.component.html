@@ -61,10 +61,13 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Duración (en horas)</ion-label>
-        <ion-input type="number" [(ngModel)]="auction.duration" name="duration" required></ion-input>
+        <ion-label>Fecha Inicial</ion-label>
+        <ion-input type="date" [(ngModel)]="auction.createdAt" name="fechaInicio" required></ion-input>
       </ion-item>
-
+      <ion-item>
+        <ion-label>Fecha Final</ion-label>
+        <ion-input type="date" [(ngModel)]="auction.endTime" name="fechaFin" required></ion-input>
+      </ion-item>
       <div class="button-container">
         <ion-button (click)="createAuction()" expand="block" shape="round">
           Guardar Subasta
@@ -85,13 +88,14 @@
           <p>{{ auction.currentWinningPrice | currency }}</p>
         </ion-item>
         <ion-item>
-          <ion-label>Duración:</ion-label>
-          <p>{{ auction.duration }} horas</p>
+          <ion-label>Fecha Fin:</ion-label>
+          <p>{{ formatDate(auction.endTime) }}</p>
         </ion-item>
         <ion-item>
-          <ion-label>Tiempo Restante:</ion-label>
-          <p>{{ formatTime(auction.timeRemaining) }}</p>
+          <ion-label>Fecha Inicio:</ion-label>
+          <p>{{ formatDate(auction.createdAt) }}</p>
         </ion-item>
+
 
         <ion-item>
           <ion-label>Estado:</ion-label>
@@ -130,17 +134,17 @@
           <ion-label>Usuario ganador:</ion-label>
           <p>{{ selectedAuction?.winningUserName || 'Desconocido' }}</p>
         </ion-item>
-        <ion-item lines="full">
-          <ion-label>Duración:</ion-label>
-          <p>{{ selectedAuction?.duration }} horas</p>
+
+        <ion-item>
+          <ion-label>Fecha Inicio:</ion-label>
+          <p>{{ formatDate(selectedAuction.createdAt) }}</p>
         </ion-item>
 
-        <!-- Información nueva dentro del modal -->
-        <ion-item lines="full">
-          <ion-label>Tiempo Restante:</ion-label>
-          <p *ngIf="selectedAuction?.timeRemaining > 0">{{ formatTime(selectedAuction.timeRemaining) }}</p>
-          <ng-template #noTime>No disponible</ng-template>
+        <ion-item>
+          <ion-label>Fecha Fin:</ion-label>
+          <p>{{ formatDate(selectedAuction.endTime) }}</p>
         </ion-item>
+
         <ion-item lines="full">
           <ion-label>¿Subasta Terminada?:</ion-label>
           <p>{{ selectedAuction.isFinished ? 'Sí' : 'No'}}</p>

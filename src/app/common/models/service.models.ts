@@ -21,7 +21,7 @@ export interface Service {
   whatsapp?: string;
   facebook?: string;
   website?: string;
-
+  subastaWinner: boolean;
 
   // Nuevos campos para el sistema de publicidad
   monthlyFeePaid?: boolean;    // Indica si el canon mensual ha sido pagado

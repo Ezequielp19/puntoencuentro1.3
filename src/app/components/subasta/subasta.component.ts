@@ -7,86 +7,67 @@ import { Auction } from '../../common/models/subasta.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MercadoPagoService } from '../../common/services/mercadopago.service';
+import { ChangeDetectorRef } from '@angular/core'; // Importar ChangeDetectorRef
 
 @Component({
   selector: 'app-subasta',
   standalone: true,
   templateUrl: './subasta.component.html',
   styleUrls: ['./subasta.component.scss'],
-  imports: [CommonModule, IonContent,IonHeader,IonToolbar,IonButton,IonButtons,IonMenuButton,IonTitle,IonIcon
-    ,IonCard,IonCardHeader,IonCardTitle , IonCardContent,IonItem,IonLabel,IonInput,FormsModule]
+  imports: [CommonModule, IonContent, IonHeader, IonToolbar, IonButton, IonButtons, IonMenuButton, IonTitle, IonIcon, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonItem, IonLabel, IonInput, FormsModule]
 })
 export class SubastaComponent implements OnInit {
   auctions: Auction[] = [];
   userCity: string = '';
   newBidAmount: number = 0;
+  intervalIds: { [key: string]: any } = {}; // Para almacenar intervalos
 
   constructor(
     private firestoreService: FirestoreService,
     private authService: AuthService,
     private mercadoPagoService: MercadoPagoService,
-    private router: Router
+    private router: Router,
+    private cd: ChangeDetectorRef // Inyectar ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.loadUserCityAndAuctions();
   }
 
-  // Método para enviar la orden de pago al backend y redireccionar al init_point
-  sendPaymentData(auction: Auction) {
-    const paymentData = {
-      auctionId: auction.id,
-      winningUserId: auction.winningUserId,
-      currentWinningPrice: auction.currentWinningPrice
-    };
+  async sendPaymentData(auction: Auction) {
+    try {
+      const service = await this.firestoreService.getServiceByUserId(auction.winningUserId);
 
-    this.mercadoPagoService.sendPaymentData(paymentData).subscribe(
-      (response: any) => {
-        console.log('Orden de pago enviada con éxito:', response);
-        // Redireccionar al init_point devuelto por Mercado Pago
-        if (response.init_point) {
-          window.location.href = response.init_point;
-        } else {
-          console.error('Error: init_point no encontrado en la respuesta.');
-        }
-      },
-      (error: any) => {
-        console.error('Error al enviar la orden de pago:', error);
+      if (service && service.id) {
+        const paymentData = {
+          serviceId: service.id, // Asegúrate de que service tiene un campo id
+          auctionId: auction.id,
+          winningUserId: auction.winningUserId,
+          currentWinningPrice: auction.currentWinningPrice
+        };
+        console.log("paymentdata: " + auction.winningUserId)
+        this.mercadoPagoService.sendPaymentData(paymentData).subscribe(
+          (response: any) => {
+            console.log('Orden de pago enviada con éxito:', response);
+            if (response.init_point) {
+              window.location.href = response.init_point; // Redirigir al usuario al link de Mercado Pago
+            } else {
+              console.error('Error: init_point no encontrado en la respuesta.');
+            }
+          },
+          (error: any) => {
+            console.error('Error al enviar la orden de pago:', error);
+          }
+        );
+      } else {
+        console.error('No se encontró el servicio para el usuario ganador.');
       }
-    );
-  }
-
-  // Método para calcular el tiempo restante de la subasta
-  getRemainingTime(startTime: Date, duration: number): string {
-    const now = Date.now();
-    const start = new Date(startTime).getTime();
-    const end = start + duration * 3600000;
-    const remaining = end - now;
-
-    if (remaining <= 0) {
-      return 'Finalizada';
+    } catch (error) {
+      console.error('Error al obtener el servicio por el ID del usuario ganador:', error);
     }
-
-    const hours = Math.floor(remaining / 3600000);
-    const minutes = Math.floor((remaining % 3600000) / 60000);
-
-    return `${hours}h ${minutes}m`;
   }
 
-  // Método para finalizar la subasta y generar el botón de pago si es el ganador
-  finalizeAuction() {
-    this.auctions.forEach(async (auction) => {
-      if (auction.isActive && this.getRemainingTime(auction.createdAt, auction.duration) === 'Finalizada') {
-        await this.firestoreService.updateAuction(auction.id, { isActive: false });
-
-        if (auction.isWinningUser) {
-          this.sendPaymentData(auction);
-        }
-      }
-    });
-  }
-
-  // Cargar las subastas según la ciudad del usuario
+  // Método para cargar las subastas según la ciudad del usuario
   loadUserCityAndAuctions() {
     this.authService.getCurrentUser().subscribe(async (user) => {
       if (user) {
@@ -97,8 +78,13 @@ export class SubastaComponent implements OnInit {
             this.firestoreService.getAuctionsByCity(this.userCity).subscribe((auctions: Auction[]) => {
               this.auctions = auctions.map(auction => ({
                 ...auction,
-                isWinningUser: auction.winningUserId === user.id
+                // El usuario será el ganador solo si el temporizador ha llegado a 0 y la subasta está marcada como finalizada
+                isWinningUser: auction.winningUserId === user.id && auction.isFinished
               }));
+
+              this.auctions.forEach(auction => {
+
+              });
             });
           } else {
             console.error('El usuario no tiene un servicio asociado.');
@@ -136,5 +122,14 @@ export class SubastaComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    const day = ('0' + date.getDate()).slice(-2);
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
   }
 }

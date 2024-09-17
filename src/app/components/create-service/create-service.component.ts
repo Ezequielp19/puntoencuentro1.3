@@ -140,7 +140,8 @@ export class CreateServiceComponent implements OnInit {
                 ...this.createServiceForm.value,
                 providerId: this.currentUser.id,
                 ciudad: ciudadSeleccionada, // Asegúrate de usar la ciudad seleccionada o nueva
-                imageUrl: downloadURL
+                imageUrl: downloadURL,
+                subastaWinner: false
               };
 
 
@@ -163,7 +164,8 @@ export class CreateServiceComponent implements OnInit {
             ...this.createServiceForm.value,
             providerId: this.currentUser.id,
       ciudad: ciudadSeleccionada, // Asegúrate de usar la ciudad seleccionada o nueva
-            imageUrl: ''
+            imageUrl: '',
+            subastaWinner: false
           };
           // console.log('Datos del servicio:', serviceData);
           try {

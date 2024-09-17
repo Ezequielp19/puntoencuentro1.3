@@ -12,7 +12,6 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content>
   <ion-card class="filter-card">
     <ion-card-content>
@@ -75,50 +74,54 @@
 
   <ion-list *ngIf="pagedServices.length > 0; else noServices">
 
-
-
-    <!-- Card especial para usuario verificado -->
-<ion-card class="service-card verified-card">
-  <ion-card-header color="primary" class="verified-header">
-    <div class="header-content">
-      <span  style="color: #FFCF00; ;">Nombre Servicio</span>
-      <ion-icon name="checkmark-circle-outline"></ion-icon>
-    </div>
-  </ion-card-header>
-  <ion-card-content class="custom-card-content">
-    <div class="image-container">
-      <ion-avatar>
-        <img [src]="" />
-      </ion-avatar>
-    </div>
-    <div class="details-container">
-
-      <p class="service-price">1999</p>
-      <p class="service-info">hola</p>
-      <p class="service-description">hola</p>
-    </div>
-  </ion-card-content>
-</ion-card>
-
-
-
-    <ng-container *ngFor="let page of pagedServices[currentPage]">
-      <ion-card class="service-card" (click)="goToService(page.id)">
-        <ion-card-content class="custom-card-content">
-          <div class="image-container">
-            <ion-avatar>
-              <img [src]="page.imageUrl" alt="{{page.nombreEmpresa}}" />
-            </ion-avatar>
-          </div>
-          <div class="details-container">
-            <h2 class="service-title">{{ page.nombreEmpresa }}</h2>
-            <p class="service-price">{{ page.price | currency }}</p>
-            <p class="service-info">{{ page.servicio }}</p>
-            <p class="service-description">{{ page.description }}</p>
-          </div>
-        </ion-card-content>
-      </ion-card>
+    <!-- Mostrar subastas donde el usuario es ganador -->
+    <ng-container *ngFor="let service of pagedServices[currentPage]">
+      <ng-container *ngIf="service.subastaWinner === true">
+        <ion-card class="service-card verified-card">
+          <ion-card-header color="primary" class="verified-header">
+            <div class="header-content">
+              <span style="color: #FFCF00;">{{ service.nombreEmpresa }}</span>
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+            </div>
+          </ion-card-header>
+          <ion-card-content class="custom-card-content">
+            <div class="image-container">
+              <ion-avatar>
+                <img [src]="service.imageUrl" alt="{{ service.nombreEmpresa }}" />
+              </ion-avatar>
+            </div>
+            <div class="details-container">
+              <h2 class="service-title">{{ service.nombreEmpresa }}</h2>
+              <p class="service-price">{{ service.price | currency }}</p>
+              <p class="service-info">{{ service.servicio }}</p>
+              <p class="service-description">{{ service.description }}</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
     </ng-container>
+
+    <!-- Mostrar subastas donde el usuario no es ganador -->
+    <ng-container *ngFor="let service of pagedServices[currentPage]">
+      <ng-container *ngIf="service.subastaWinner === false || !service.subastaWinner">
+        <ion-card class="service-card">
+          <ion-card-content class="custom-card-content">
+            <div class="image-container">
+              <ion-avatar>
+                <img [src]="service.imageUrl" alt="{{ service.nombreEmpresa }}" />
+              </ion-avatar>
+            </div>
+            <div class="details-container">
+              <h2 class="service-title">{{ service.nombreEmpresa }}</h2>
+              <p class="service-price">{{ service.price | currency }}</p>
+              <p class="service-info">{{ service.servicio }}</p>
+              <p class="service-description">{{ service.description }}</p>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
+    </ng-container>
+
   </ion-list>
 
   <div *ngIf="pagedServices.length > 1" class="pagination-controls">

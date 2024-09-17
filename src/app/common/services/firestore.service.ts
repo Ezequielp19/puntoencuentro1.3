@@ -582,5 +582,4 @@ async getServiceByUserId(userId: string): Promise<Service | null> {
     }
   }
 
-
 }

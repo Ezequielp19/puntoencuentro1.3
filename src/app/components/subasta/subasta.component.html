@@ -15,36 +15,74 @@
 <ion-content class="ion-padding">
   <div *ngIf="auctions && auctions.length > 0; else noAuctions">
     <ion-card *ngFor="let auction of auctions"
-              [class.winning-user]="auction.isWinningUser"
+              [class.winning-user]="auction.winningUserId && auction.isFinished"
+              [class.current-winner]="auction.winningUserId && !auction.isFinished"
               class="custom-card">
+
       <ion-card-header class="custom-card-header">
         <ion-card-title class="custom-card-title">{{ auction.city }}</ion-card-title>
       </ion-card-header>
+
       <ion-card-content class="custom-card-content">
-        <ion-item>
-          <ion-label>Precio del actual Ganador:</ion-label>
-          <p>{{ auction.currentWinningPrice | currency }}</p>
-        </ion-item>
-        <ion-item>
-          <ion-label>Duración:</ion-label>
-          <p>{{ auction.duration }} horas</p>
-        </ion-item>
-        <ion-item>
-          <ion-label>Tiempo Restante:</ion-label>
-          <p>{{ getRemainingTime(auction.endTime, auction.duration) }}</p>
-        </ion-item>
-        <ion-item *ngIf="!auction.isWinningUser">
-          <ion-label>Tu Puja:</ion-label>
-          <ion-input type="number" [(ngModel)]="newBidAmount" min="{{ auction.currentWinningPrice + 1 }}"></ion-input>
-        </ion-item>
-        <ion-button *ngIf="!auction.isWinningUser" (click)="placeBid(auction)" expand="block" shape="round">
-          Pujar
-        </ion-button>
-        <div *ngIf="auction.isWinningUser">
-          <p>¡Felicidades! Eres el ganador de esta subasta.</p>
-          <button (click)="sendPaymentData(auction)">Pagar con MercadoPago</button>
+
+        <div class="auction-info-wrapper">
+          <!-- Mostrar el input de puja si no es el usuario ganador o la subasta no está finalizada -->
+          <ion-item *ngIf="!auction.winningUserId || !auction.isFinished" class="auction-info">
+            <ion-label>Precio del actual Ganador:</ion-label>
+            <p>{{ auction.currentWinningPrice | currency }}</p>
+          </ion-item>
+          <ion-item class="auction-info">
+            <ion-label>Fecha Fin:</ion-label>
+            <p>{{ formatDate(auction.endTime) }}</p>
+          </ion-item>
+          <ion-item class="auction-info">
+            <ion-label>Fecha Inicio:</ion-label>
+            <p>{{ formatDate(auction.createdAt) }}</p>
+          </ion-item>
+
+          <ion-item *ngIf="!auction.winningUserId || !auction.isFinished" class="auction-info">
+            <ion-label>Tu Puja:</ion-label>
+            <ion-input type="number" [(ngModel)]="newBidAmount" min="{{ auction.currentWinningPrice + 1 }}"></ion-input>
+          </ion-item>
+          <!-- Mostrar mensaje adicional si es el ganador actual y la subasta no ha terminado -->
+          <div *ngIf="auction.winningUserId && !auction.isFinished">
+            <p class="winner-message">¡Eres el actual ganador de esta subasta!</p>
+          </div>
+
+          <!-- Condición para el botón de puja deshabilitado si ya hay un ganador actual -->
+          <ion-button *ngIf="auction.winningUserId && !auction.isFinished" expand="block" shape="round" disabled>
+            Pujar
+          </ion-button>
+          <ion-button *ngIf="!auction.winningUserId && !auction.isFinished" (click)="placeBid(auction)" expand="block" shape="round">
+            Pujar
+          </ion-button>
+        </div>
+
+        <!-- Mostrar mensaje y botón de pago si la subasta está finalizada y el usuario es el ganador -->
+        <div *ngIf="auction.isFinished && auction.winningUserId">
+          <div class="auction-info-wrapper">
+            <ion-item class="auction-info">
+              <ion-label>Precio Final Ganador:</ion-label>
+              <p>{{ auction.currentWinningPrice | currency }}</p>
+            </ion-item>
+
+            <ion-item class="auction-info">
+              <ion-label>Estado de Subasta:</ion-label>
+              <p>{{ auction.isFinished ? 'Finalizada' : 'Activa' }}</p>
+            </ion-item>
+
+            <ion-item class="auction-info">
+              <ion-label>Estado de Pago:</ion-label>
+              <p [class.paid]="auction.isPaid" [class.unpaid]="!auction.isPaid">
+                {{ auction.isPaid ? 'Pagado' : 'No Pagado' }}
+              </p>
+            </ion-item>
+          </div>
+          <p class="winner-message">¡Felicidades! Eres el ganador de esta subasta.</p>
+          <ion-button class="payment-button" expand="block" shape="round" (click)="sendPaymentData(auction)">Pagar con MercadoPago</ion-button>
         </div>
       </ion-card-content>
+
     </ion-card>
   </div>
   <ng-template #noAuctions>

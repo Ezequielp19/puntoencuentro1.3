@@ -165,12 +165,8 @@ export class HomeClienteComponent implements OnInit {
     this.selectedCategory = '';
     this.selectedCity = '';
     this.searchTerm = '';
-    this.categorySearchTerm = ''; // Reiniciar el término de búsqueda de categorías
-    this.citySearchTerm = ''; // Reiniciar el término de búsqueda de ciudades
-    this.selectedCategoryName = ''; // Reiniciar el nombre de la categoría seleccionada
-    this.selectedCityName = ''; // Reiniciar el nombre de la ciudad seleccionada
-    this.filteredCategories = this.categories; // Reiniciar el filtro de categorías
-    this.filteredCities = this.cities; // Reiniciar el filtro de ciudades
+    this.filteredCategories = this.categories;
+    this.filteredCities = this.cities;
     this.filteredServices = this.services;
     this.paginateServices();
   }
@@ -196,13 +192,12 @@ export class HomeClienteComponent implements OnInit {
   }
 
   goToService(serviceId: string) {
-    // Añade un retraso de 1 segundo antes de navegar
     setTimeout(() => {
       this.router.navigate(['/serviceDetail', serviceId]);
     }, 500); // 1000 ms = 1 segundo
   }
 
-  goToProfile() {
+ goToProfile() {
     this.router.navigate(['/perfil']);
   }
 

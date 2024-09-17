@@ -2,7 +2,6 @@ ion-content {
   --background: #fff;
 }
 
-/* Estilos específicos para el componente */
 .custom-toolbar {
   --background: #00243A;
   color: #FFF;
@@ -30,6 +29,10 @@ ion-icon {
   color: #FFCF00;
 }
 
+ion-input {
+  width: 100%; /* Asegura que el input también ocupe todo el ancho */
+}
+
 .custom-card {
   margin: 16px;
   border-radius: 10px;
@@ -47,11 +50,15 @@ ion-icon {
 }
 
 .custom-card-content {
-  padding: 16px;
+  display: flex;
   color: #FFF;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
 ion-item {
+  width: 100%;
   --background: #244356;
   --color: #FFF;
   --inner-background: #244356;
@@ -60,29 +67,60 @@ ion-item {
   --highlight-background: #FFCF00;
 }
 
-ion-select {
-  --color: #FFF;
-  --placeholder-color: #FFF;
-}
-
-ion-select-option {
-  --color: #00243A;
-}
-
-ion-button:hover {
-  filter: brightness(1.1);
-}
-
-.logo {
-  width: 150px;
-  height: 150px;
-  margin: 0 auto;
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-
 .winning-user {
   background-color: #20e44d; /* Verde claro */
   border: 1px solid #c3e6cb; /* Borde verde */
+}
+
+.current-winner {
+  background-color: #d4edda; /* Verde más claro para el actual ganador */
+}
+
+.current-winner-message {
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #155724;
+  background-color: #d4edda;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.paid {
+  color: #28a745; /* Verde pagado */
+}
+
+.unpaid {
+  color: #dc3545; /* Rojo no pagado */
+}
+
+.winner-message {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #FFF;
+  margin: 20px 0;
+}
+
+.payment-button {
+  --background: #00B1BF;
+  --color: #FFF;
+  margin-top: 10px;
+}
+
+.payment-button:hover {
+  filter: brightness(1.1);
+}
+
+.auction-info-wrapper {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Asegura que los elementos ocupen todo el ancho */
+}
+
+.auction-info {
+  width: 100%; /* Forzar a que cada item ocupe el 100% del ancho */
+  margin-bottom: 10px; /* Espaciado entre los items */
 }
