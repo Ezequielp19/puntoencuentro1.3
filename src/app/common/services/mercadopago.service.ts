@@ -7,7 +7,7 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firest
   providedIn: 'root'
 })
 export class MercadoPagoService {
-  private apiUrl = 'http://localhost:3333/create_preference';  // Ruta del servidor backend
+  private apiUrl = ' https://2b3gbb4p-3333.brs.devtunnels.ms/create_preference';  // Ruta del servidor backend
 
   constructor(private http: HttpClient, private firestore: AngularFirestore) {}
 
