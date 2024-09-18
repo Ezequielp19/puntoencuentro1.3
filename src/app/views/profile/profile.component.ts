@@ -6,12 +6,11 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { User } from 'src/app/common/models/users.models';
 import { IoniconsModule } from '../../common/modules/ionicons.module';
-import {MenuController} from '@ionic/angular'
 import {
   IonItem, IonButton, IonLabel, IonInput, IonContent, IonGrid, IonRow, IonCol,
   IonCard, IonCardHeader, IonCardTitle, IonList, IonCardContent, IonToolbar,
   IonTitle, IonHeader, IonBackButton, IonButtons, IonSpinner, IonSelectOption,
-  IonSelect, IonAvatar, IonMenu, IonMenuToggle, IonSplitPane, IonIcon, IonRouterOutlet, IonMenuButton,
+  IonSelect, IonAvatar, IonMenu, IonMenuToggle, IonSplitPane, IonIcon, IonRouterOutlet, IonMenuButton, MenuController
 } from '@ionic/angular/standalone';
 
 import { FirestoreService } from 'src/app/common/services/firestore.service'; // Asegúrate de importar el servicio
