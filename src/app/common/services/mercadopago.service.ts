@@ -7,7 +7,7 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firest
   providedIn: 'root'
 })
 export class MercadoPagoService {
-  private apiUrl = 'https://2b3gbb4p-3300.brs.devtunnels.ms/create_preference';  // Ruta del servidor backend
+  private apiUrl = 'https://backnodemp.onrender.com/create_preference';  // Ruta del servidor backend
 
   constructor(private http: HttpClient, private firestore: AngularFirestore) {}
 
@@ -17,8 +17,4 @@ export class MercadoPagoService {
     return this.http.post(url, paymentData);
   }
 
-  // Método para guardar el estado de pago en Firestore
-  // savePaymentStatus(userId: string, paymentData: any): Promise<DocumentReference> {
-  //   return this.firestore.collection('usuarios').doc(userId).collection('payments').add(paymentData);
-  // }
 }
