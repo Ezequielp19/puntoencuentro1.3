@@ -62,30 +62,30 @@ export class AuthService {
     }
   }
 
-  // async loginWithGoogle(): Promise<firebase.auth.UserCredential> {
-  //   const provider = new firebase.auth.GoogleAuthProvider();
-  //   const credential = await this.afAuth.signInWithPopup(provider);
-  //   await this.updateUserData(credential.user);
-  //   await this.updateUserLocation(credential.user);
-  //   return credential;
-  // }
+  async loginWithGoogle(): Promise<firebase.auth.UserCredential> {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const credential = await this.afAuth.signInWithPopup(provider);
+    await this.updateUserData(credential.user);
+    await this.updateUserLocation(credential.user);
+    return credential;
+  }
 
 
-async loginWithGoogle(): Promise<firebase.auth.UserCredential | null> {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  await this.afAuth.signInWithRedirect(provider);
-  return firebase.auth().getRedirectResult().then((result) => {
-    if (result.user) {
-      this.updateUserData(result.user);
-      this.updateUserLocation(result.user);
-      return result;
-    }
-    return null;
-  }).catch(error => {
-    console.error('Error during Google login with redirect:', error);
-    return null;
-  });
-}
+// async loginWithGoogle(): Promise<firebase.auth.UserCredential | null> {
+//   const provider = new firebase.auth.GoogleAuthProvider();
+//   await this.afAuth.signInWithRedirect(provider);
+//   return firebase.auth().getRedirectResult().then((result) => {
+//     if (result.user) {
+//       this.updateUserData(result.user);
+//       this.updateUserLocation(result.user);
+//       return result;
+//     }
+//     return null;
+//   }).catch(error => {
+//     console.error('Error during Google login with redirect:', error);
+//     return null;
+//   });
+// }
 
   async loginWithFacebook(): Promise<firebase.auth.UserCredential> {
     try {
