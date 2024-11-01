@@ -90,3 +90,44 @@ ion-button:hover {
   margin: 16px auto; /* Ajustar margen para que no sobresalga */
   width: calc(100% - 32px); /* Asegurar que el ancho sea consistente con otros componentes */
 }
+
+
+.chat-card {
+  position: fixed;
+  bottom: 70px; /* Deja espacio para el botón flotante */
+  right: 10px;
+  width: 90%;
+  max-width: 400px;
+  z-index: 1000;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  background-image: url('../../../assets/579b3134-6b60-4ba7-8a97-f7261ca6bc9c.jpeg'); /* Ruta de la imagen */
+  background-size: cover; /* Cubre todo el fondo */
+  background-repeat: no-repeat; /* Evita la repetición de la imagen */
+  background-position: center; /* Centra la imagen */
+  border-radius: 10px; /* Bordes redondeados */
+  color: black; /* Color del texto */
+  overflow: hidden; /* Oculta el desbordamiento si lo hay */
+  background-color: white; /* Fondo blanco para todo el chat */
+}
+
+.chat-card ion-card-content {
+  background-color: rgba(255, 255, 255, 0.85); /* Fondo blanco semitransparente */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 10px; /* Espaciado interior */
+}
+
+.chat-card ion-card-title {
+  color: black; /* Título del chat en negro */
+}
+
+.chat-card ion-label h3 {
+  color: #007bff; /* Color del nombre de usuario, ajustable */
+  font-weight: bold; /* Nombres en negrita */
+  font-size: 14px; /* Tamaño de texto de los nombres */
+}
+
+.chat-card ion-label p {
+  color: #333; /* Mensaje en gris oscuro */
+  font-size: 13px; /* Tamaño del texto del mensaje */
+  margin: 4px 0; /* Espaciado entre mensajes */
+}

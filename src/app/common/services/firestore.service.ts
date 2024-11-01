@@ -7,7 +7,8 @@ import {
   DocumentSnapshot, QueryDocumentSnapshot, query, where, QuerySnapshot, getFirestore,
   updateDoc,
   serverTimestamp,
-  orderBy
+  orderBy,
+  addDoc
 } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -20,6 +21,7 @@ import { Citas } from '../models/cita.model';
 import { Service } from '../models/service.models';
 import { CategoryI } from '../models/categoria.model';
 import { Auction } from '../models/subasta.model';
+import { Message } from '../models/messaje.model';
 
 // Convertidor genérico para Firestore
 const converter = <T>() => ({
@@ -581,5 +583,32 @@ async getServiceByUserId(userId: string): Promise<Service | null> {
       throw error;
     }
   }
+
+
+
+
+    // Agrega en FirestoreService:
+
+async createChat(chatId: string): Promise<void> {
+  const chatRef = doc(this.firestore, `chats/${chatId}`);
+  await setDoc(chatRef, { createdAt: serverTimestamp() });
+}
+
+async sendMessage(chatId: string, senderId: string, messageText: string): Promise<void> {
+  const messagesRef = collection(this.firestore, `chats/${chatId}/mensajes`);
+  await addDoc(messagesRef, {
+    senderId,
+    messageText,
+    timestamp: serverTimestamp()
+  });
+}
+
+getChatMessages(chatId: string): Observable<Message[]> {
+  const messagesRef = collection(this.firestore, `chats/${chatId}/mensajes`);
+  const messagesQuery = query(messagesRef, orderBy('timestamp', 'asc'));
+
+  return collectionData(messagesQuery, { idField: 'id' }) as Observable<Message[]>;
+}
+
 
 }

@@ -83,4 +83,33 @@
   <app-reviews [servicioId]="serviceId" *ngIf="!isAdmin"></app-reviews>
 
 
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button color="primary" (click)="toggleChat()">
+    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
+<ion-card *ngIf="isChatOpen" class="chat-card">
+  <ion-card-header>
+    <ion-card-title style="text-align: center; color: white;  " >CHAT</ion-card-title>
+    <ion-button fill="clear" size="small" (click)="toggleChat()">Cerrar</ion-button>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list lines="none">
+      <ion-item *ngFor="let message of messages">
+        <ion-label>
+          <h3>{{ message.senderId === userId ? 'Tú' : 'Otro usuario' }}</h3>
+          <p style="color: white;" >{{ message.messageText }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-item>
+      <ion-input [(ngModel)]="newMessageText" placeholder="Escribe tu mensaje..."></ion-input>
+      <ion-button (click)="sendMessage()" expand="block" color="primary">Enviar</ion-button>
+    </ion-item>
+  </ion-card-content>
+</ion-card>
+
+
 </ion-content>

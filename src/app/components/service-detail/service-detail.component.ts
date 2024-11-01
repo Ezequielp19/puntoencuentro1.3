@@ -7,6 +7,7 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonFabButton,
   IonCard,
   IonCardHeader,
   IonCardTitle,
@@ -22,8 +23,7 @@ import {
   IonSelect,
   IonCardSubtitle,
   IonAvatar,
-  IonIcon,
-} from '@ionic/angular/standalone';
+  IonIcon, IonFab } from '@ionic/angular/standalone';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FirestoreService } from '../../common/services/firestore.service';
@@ -33,13 +33,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReviewsComponent } from '../reviews/reviews.component';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { Message } from 'src/app/common/models/messaje.model';
+
 
 @Component({
   selector: 'app-service-detail',
   templateUrl: './service-detail.component.html',
   styleUrls: ['./service-detail.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonFab,
     IonIcon,
     IonAvatar,
     IonCardSubtitle,
@@ -53,6 +55,8 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
     IonInput,
     IonLabel,
     IonContent,
+      IonFabButton,
+
     IonGrid,
     IonRow,
     IonCol,
@@ -68,6 +72,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
     IonSelect,
     IonButton,
     ReviewsComponent,
+    IonFab
   ],
 })
 export class ServiceDetailComponent implements OnInit {
@@ -75,6 +80,14 @@ export class ServiceDetailComponent implements OnInit {
   serviceId: string | null = null;
   horarios: any[] = [];
   sortedHorarios: any[] = [];
+
+
+ userId: string | null = null;
+
+messages: any[] = [];  // Para almacenar mensajes de chat
+  newMessageText: string = '';  // Para el mensaje nuevo de entrada
+  isChatOpen: boolean = false;  // Estado de visibilidad del chat
+
 
   constructor(
     private route: ActivatedRoute,
@@ -92,6 +105,9 @@ export class ServiceDetailComponent implements OnInit {
       this.serviceId = params.get('id');
       if (this.serviceId) {
         this.loadService(this.serviceId);
+
+                 this.setupChat(this.serviceId);
+
       }
     });
 
@@ -166,4 +182,33 @@ export class ServiceDetailComponent implements OnInit {
   goToProfile() {
     this.router.navigate(['/perfil']);
   }
+
+
+
+
+    setupChat(chatId: string) {
+    // Suscribirse a los mensajes de chat en tiempo real
+    this.firestoreService.getChatMessages(chatId).subscribe((messages) => {
+      this.messages = messages;
+    });
+  }
+
+  toggleChat() {
+    this.isChatOpen = !this.isChatOpen;
+  }
+
+  sendMessage() {
+    if (this.newMessageText.trim()) {
+      const newMessage = {
+        senderId: this.userId,
+        messageText: this.newMessageText,
+        timestamp: new Date(),
+      };
+      this.messages.push(newMessage);  // Agregar el mensaje localmente
+      this.newMessageText = '';  // Limpiar el input después de enviar
+    }
+  }
+
+
+
 }
