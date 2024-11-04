@@ -587,7 +587,7 @@ async getServiceByUserId(userId: string): Promise<Service | null> {
 
 
 
-    // Agrega en FirestoreService:
+ 
 
 async createChat(chatId: string): Promise<void> {
   const chatRef = doc(this.firestore, `chats/${chatId}`);

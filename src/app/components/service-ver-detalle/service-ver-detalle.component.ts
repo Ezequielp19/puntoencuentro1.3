@@ -69,14 +69,37 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  editUser(user: User): void {
-    // Implementar lógica para editar usuario
+// Método para eliminar un usuario
+deleteUser(userId: string): void {
+  if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+    this.authService.deleteUser(userId).then(() => {
+      alert('Usuario eliminado exitosamente.');
+      this.users = this.users.filter(u => u.id !== userId);
+      this.userCount--;
+      this.totalPages = Math.ceil(this.userCount / this.pageSize);
+      this.updateDisplayedUsers();
+    }).catch(error => {
+      console.error('Error eliminando usuario:', error);
+      alert('Error al eliminar el usuario.');
+    });
   }
+}
 
-  deleteUser(user: User): void {
-    // Implementar lógica para eliminar usuario
+// Método para banear o desbanear un usuario
+banUser(userId: string, ban: boolean): void {
+  const action = ban ? 'banear' : 'desbanear';
+  if (confirm(`¿Estás seguro de que quieres ${action} a este usuario?`)) {
+    this.authService.banUser(userId, ban).then(() => {
+      alert(`Usuario ${action} exitosamente.`);
+      const user = this.users.find(u => u.id === userId);
+      if (user) user.baneado = ban;
+      this.updateDisplayedUsers();
+    }).catch(error => {
+      console.error(`Error al ${action} al usuario:`, error);
+      alert(`Error al ${action} al usuario.`);
+    });
   }
-
+}
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

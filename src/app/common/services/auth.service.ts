@@ -42,6 +42,20 @@ export class AuthService {
     return this.firestore.collection<User>('usuarios').valueChanges();
   }
 
+
+  // Método para eliminar un usuario
+deleteUser(userId: string): Promise<void> {
+  return this.firestore.collection('usuarios').doc(userId).delete();
+}
+
+
+// Método para banear o desbanear un usuario
+banUser(userId: string, ban: boolean): Promise<void> {
+  return this.firestore.collection('usuarios').doc(userId).update({ baneado: ban });
+}
+
+
+
   async login(email: string, password: string): Promise<firebase.auth.UserCredential> {
     try {
       const credential = await this.afAuth.signInWithEmailAndPassword(email, password);

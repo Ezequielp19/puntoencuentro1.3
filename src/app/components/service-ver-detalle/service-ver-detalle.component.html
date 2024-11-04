@@ -16,22 +16,36 @@
   <p class="page-info">Total de usuarios: {{ userCount }}</p>
 
   <ion-card *ngFor="let user of displayedUsers" class="custom-card">
-    <ion-card-header class="custom-card-header">
+    <!-- <ion-card-header class="custom-card-header">
       <ion-card-title class="custom-card-title">{{ user.nombre }}</ion-card-title>
     </ion-card-header>
     <ion-card-content class="custom-card-content">
       <p>Email: {{ user.correo }}</p>
       <p>Tipo de usuario: {{ user.tipo_usuario }}</p>
-      <!-- <ion-buttons slot="end">
-        <ion-button (click)="editUser(user)" class="custom-button1">
-          <ion-icon slot="icon-only" name="create" class="custom-icon"></ion-icon>
-        </ion-button>
-        <ion-button (click)="deleteUser(user)" class="custom-button1">
-          <ion-icon slot="icon-only" name="trash" class="custom-icon"></ion-icon>
-        </ion-button>
-      </ion-buttons> -->
+
     </ion-card-content>
-  </ion-card>
+  </ion-card> -->
+
+
+
+
+  <ion-card-header class="custom-card-header">
+    <ion-card-title class="custom-card-title">{{ user.nombre }}</ion-card-title>
+  </ion-card-header>
+  <ion-card-content class="custom-card-content">
+    <p>Email: {{ user.correo }}</p>
+    <p>Tipo de usuario: {{ user.tipo_usuario }}</p>
+    <p *ngIf="user.baneado">Estado: Baneado</p>
+
+    <ion-button color="primary" (click)="banUser(user.id, !user.baneado)">
+      {{ user.baneado ? 'Desbanear' : 'Banear' }}
+    </ion-button>
+    <ion-button color="danger" (click)="deleteUser(user.id)">Eliminar</ion-button>
+  </ion-card-content>
+</ion-card>
+
+
+
 
   <div class="pagination-buttons">
     <ion-button (click)="previousPage()" [disabled]="currentPage === 1" class="custom-button">
