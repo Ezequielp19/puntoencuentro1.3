@@ -37,6 +37,18 @@ export class AuthService {
     });
   }
 
+
+ // Método para verificar si el usuario está baneado
+  private async isUserBanned(userId: string): Promise<boolean> {
+    const userDoc = await this.firestore.collection('usuarios').doc(userId).get().toPromise();
+    const userData = userDoc.data() as User | undefined;
+    return userData?.baneado ?? false;
+  }
+
+
+
+
+
     // Método para obtener todos los usuarios
   getAllUsers(): Observable<User[]> {
     return this.firestore.collection<User>('usuarios').valueChanges();
@@ -59,6 +71,12 @@ banUser(userId: string, ban: boolean): Promise<void> {
   async login(email: string, password: string): Promise<firebase.auth.UserCredential> {
     try {
       const credential = await this.afAuth.signInWithEmailAndPassword(email, password);
+
+  if (await this.isUserBanned(credential.user!.uid)) {
+        throw new Error('Usuario baneado. No puede iniciar sesión.');
+      }
+
+
       await this.updateUserLocation(credential.user);
       return credential;
     } catch (error) {
@@ -79,6 +97,11 @@ banUser(userId: string, ban: boolean): Promise<void> {
   async loginWithGoogle(): Promise<firebase.auth.UserCredential> {
     const provider = new firebase.auth.GoogleAuthProvider();
     const credential = await this.afAuth.signInWithPopup(provider);
+
+ if (await this.isUserBanned(credential.user!.uid)) {
+      throw new Error('Usuario baneado. No puede iniciar sesión.');
+    }
+
     await this.updateUserData(credential.user);
     await this.updateUserLocation(credential.user);
     return credential;

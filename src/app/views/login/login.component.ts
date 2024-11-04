@@ -89,39 +89,102 @@ export class LoginComponent {
 
 
 
-  async login() {
-    try {
-      const userCredential = await this.authService.login(this.email, this.password);
-      const user = await this.firestoreService.getUserByEmail(this.email);
-      this.redirectUser(user);
-    } catch (error) {
+
+
+
+async login() {
+  try {
+    const userCredential = await this.authService.login(this.email, this.password);
+    const user = await this.firestoreService.getUserByEmail(this.email);
+
+    if (user.baneado) {
       const alert = await this.alertController.create({
         header: 'Error',
-        message: 'Password o Email incorrectos',
+        message: 'Su cuenta ha sido baneada. No puede iniciar sesión.',
         buttons: ['OK']
       });
       await alert.present();
+      return; // Salir del método si el usuario está baneado
     }
+
+    this.redirectUser(user);
+  } catch (error) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'Password o Email incorrectos',
+      buttons: ['OK']
+    });
+    await alert.present();
   }
+}
 
+async loginWithGoogle() {
+  try {
+    const userCredential = await this.authService.loginWithGoogle();
+    const user = await this.firestoreService.getUserByEmail(userCredential.user.email);
 
-
-
-  async loginWithGoogle() {
-    try {
-      const userCredential = await this.authService.loginWithGoogle();
-      const user = await this.firestoreService.getUserByEmail(userCredential.user.email);
-      this.redirectUser(user);
-      await this.showAlert('Éxito', 'Inicio de sesión con Google exitoso');
-    } catch (error) {
+    if (user.baneado) {
       const alert = await this.alertController.create({
         header: 'Error',
-        message: 'Credenciales incorrectas',
+        message: 'Su cuenta ha sido baneada. No puede iniciar sesión.',
         buttons: ['OK']
       });
       await alert.present();
+      return; // Salir del método si el usuario está baneado
     }
+
+    this.redirectUser(user);
+    await this.showAlert('Éxito', 'Inicio de sesión con Google exitoso');
+  } catch (error) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'Credenciales incorrectas',
+      buttons: ['OK']
+    });
+    await alert.present();
   }
+}
+
+
+
+
+
+
+
+
+  // async login() {
+  //   try {
+  //     const userCredential = await this.authService.login(this.email, this.password);
+  //     const user = await this.firestoreService.getUserByEmail(this.email);
+  //     this.redirectUser(user);
+  //   } catch (error) {
+  //     const alert = await this.alertController.create({
+  //       header: 'Error',
+  //       message: 'Password o Email incorrectos',
+  //       buttons: ['OK']
+  //     });
+  //     await alert.present();
+  //   }
+  // }
+
+
+
+
+  // async loginWithGoogle() {
+  //   try {
+  //     const userCredential = await this.authService.loginWithGoogle();
+  //     const user = await this.firestoreService.getUserByEmail(userCredential.user.email);
+  //     this.redirectUser(user);
+  //     await this.showAlert('Éxito', 'Inicio de sesión con Google exitoso');
+  //   } catch (error) {
+  //     const alert = await this.alertController.create({
+  //       header: 'Error',
+  //       message: 'Credenciales incorrectas',
+  //       buttons: ['OK']
+  //     });
+  //     await alert.present();
+  //   }
+  // }
 
 
 // async loginWithGoogle() {
