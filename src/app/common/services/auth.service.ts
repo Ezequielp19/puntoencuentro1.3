@@ -4,7 +4,7 @@ import firebase from 'firebase/compat/app';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { User } from '../models/users.models';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +67,20 @@ banUser(userId: string, ban: boolean): Promise<void> {
 }
 
 
+  // Método para listar usuarios baneados
+  getBannedUsers(): Observable<User[]> {
+    return this.firestore.collection<User>('usuarios', ref => ref.where('baneado', '==', true))
+      .snapshotChanges()
+      .pipe(
+        map(actions => actions.map(a => {
+          const data = a.payload.doc.data() as User; // Asegura que data sea del tipo User
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        }))
+      );
+  }
+
+
 
   async login(email: string, password: string): Promise<firebase.auth.UserCredential> {
     try {
@@ -108,21 +122,7 @@ banUser(userId: string, ban: boolean): Promise<void> {
   }
 
 
-// async loginWithGoogle(): Promise<firebase.auth.UserCredential | null> {
-//   const provider = new firebase.auth.GoogleAuthProvider();
-//   await this.afAuth.signInWithRedirect(provider);
-//   return firebase.auth().getRedirectResult().then((result) => {
-//     if (result.user) {
-//       this.updateUserData(result.user);
-//       this.updateUserLocation(result.user);
-//       return result;
-//     }
-//     return null;
-//   }).catch(error => {
-//     console.error('Error during Google login with redirect:', error);
-//     return null;
-//   });
-// }
+
 
   async loginWithFacebook(): Promise<firebase.auth.UserCredential> {
     try {

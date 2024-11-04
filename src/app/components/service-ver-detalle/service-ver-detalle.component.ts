@@ -37,6 +37,8 @@ export class UserListComponent implements OnInit {
   pageSize: number = 4; // Número de usuarios por página
   currentPage: number = 1;
   totalPages: number = 1;
+    showBannedOnly: boolean = false; // Indica si solo se muestran usuarios baneados
+
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -46,6 +48,8 @@ export class UserListComponent implements OnInit {
       this.userCount = users.length;
       this.totalPages = Math.ceil(this.userCount / this.pageSize);
       this.updateDisplayedUsers();
+      this.applyFilter();
+
     });
   }
 
@@ -104,4 +108,28 @@ banUser(userId: string, ban: boolean): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+
+
+ // Filtra los usuarios según la propiedad showBannedOnly
+  applyFilter(): void {
+    this.displayedUsers = this.showBannedOnly
+      ? this.users.filter(user => user.baneado)
+      : this.users;
+    this.userCount = this.displayedUsers.length;
+    this.totalPages = Math.ceil(this.userCount / 10); // Ejemplo de paginación (10 por página)
+  }
+
+  toggleBannedFilter(): void {
+    this.showBannedOnly = !this.showBannedOnly;
+    this.applyFilter();
+  }
+
+
+
+
+
+
+
+
 }

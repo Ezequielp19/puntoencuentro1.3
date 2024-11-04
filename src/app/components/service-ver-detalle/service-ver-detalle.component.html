@@ -15,6 +15,11 @@
 <ion-content>
   <p class="page-info">Total de usuarios: {{ userCount }}</p>
 
+   <!-- Botón para alternar entre todos los usuarios y solo los baneados -->
+  <ion-button (click)="toggleBannedFilter()" color="secondary" expand="block" class="filter-button">
+    {{ showBannedOnly ? 'Mostrar Todos los Usuarios' : 'Mostrar Usuarios Baneados' }}
+  </ion-button>
+
   <ion-card *ngFor="let user of displayedUsers" class="custom-card">
     <!-- <ion-card-header class="custom-card-header">
       <ion-card-title class="custom-card-title">{{ user.nombre }}</ion-card-title>

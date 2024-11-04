@@ -145,68 +145,6 @@ async loginWithGoogle() {
   }
 }
 
-
-
-
-
-
-
-
-  // async login() {
-  //   try {
-  //     const userCredential = await this.authService.login(this.email, this.password);
-  //     const user = await this.firestoreService.getUserByEmail(this.email);
-  //     this.redirectUser(user);
-  //   } catch (error) {
-  //     const alert = await this.alertController.create({
-  //       header: 'Error',
-  //       message: 'Password o Email incorrectos',
-  //       buttons: ['OK']
-  //     });
-  //     await alert.present();
-  //   }
-  // }
-
-
-
-
-  // async loginWithGoogle() {
-  //   try {
-  //     const userCredential = await this.authService.loginWithGoogle();
-  //     const user = await this.firestoreService.getUserByEmail(userCredential.user.email);
-  //     this.redirectUser(user);
-  //     await this.showAlert('Éxito', 'Inicio de sesión con Google exitoso');
-  //   } catch (error) {
-  //     const alert = await this.alertController.create({
-  //       header: 'Error',
-  //       message: 'Credenciales incorrectas',
-  //       buttons: ['OK']
-  //     });
-  //     await alert.present();
-  //   }
-  // }
-
-
-// async loginWithGoogle() {
-//   try {
-//     await this.authService.loginWithGoogle();
-//     const user = await this.authService.getCurrentUser().toPromise();
-//     if (user) {
-//       this.redirectUser(user);
-//       await this.showAlert('Éxito', 'Inicio de sesión con Google exitoso');
-//     } else {
-//       this.showAlert('Error', 'No se pudo obtener el usuario');
-//     }
-//   } catch (error) {
-//     const alert = await this.alertController.create({
-//       header: 'Error',
-//       message: 'Error al iniciar sesión con Google',
-//       buttons: ['OK']
-//     });
-//     await alert.present();
-//   }
-// }
-
   async loginWithFacebook() {
     try {
       const userCredential = await this.authService.loginWithFacebook();
