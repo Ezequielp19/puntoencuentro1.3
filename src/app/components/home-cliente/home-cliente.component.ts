@@ -235,4 +235,13 @@ export class HomeClienteComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+
+ showUnverifiedServices = false;
+
+  // Método para alternar la visibilidad de los servicios no verificados
+  toggleUnverifiedServices() {
+    this.showUnverifiedServices = !this.showUnverifiedServices;
+  }
+
 }

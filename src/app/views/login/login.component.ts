@@ -120,7 +120,7 @@ async login() {
 
 async loginWithGoogle() {
   try {
-    const userCredential = await this.authService.loginWithGoogle();
+    const userCredential = await this.authService.signInWithGoogle();
     const user = await this.firestoreService.getUserByEmail(userCredential.user.email);
 
     if (user.baneado) {
@@ -132,6 +132,11 @@ async loginWithGoogle() {
       await alert.present();
       return; // Salir del método si el usuario está baneado
     }
+
+
+    await this.authService.listenToNotifications();  // Aquí activamos la escucha de notificaciones
+
+
 
     this.redirectUser(user);
     await this.showAlert('Éxito', 'Inicio de sesión con Google exitoso');

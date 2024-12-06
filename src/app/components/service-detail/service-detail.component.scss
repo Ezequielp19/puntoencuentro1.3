@@ -111,7 +111,7 @@ ion-button:hover {
 }
 
 .chat-card ion-card-content {
-  background-color: rgba(255, 255, 255, 0.85); /* Fondo blanco semitransparente */
+  // background-color: rgba(255, 255, 255, 0.85);
   border-radius: 10px; /* Bordes redondeados */
   padding: 10px; /* Espaciado interior */
 }
@@ -121,13 +121,13 @@ ion-button:hover {
 }
 
 .chat-card ion-label h3 {
-  color: #007bff; /* Color del nombre de usuario, ajustable */
+  color: #fffcfe;
   font-weight: bold; /* Nombres en negrita */
   font-size: 14px; /* Tamaño de texto de los nombres */
 }
 
 .chat-card ion-label p {
-  color: #333; /* Mensaje en gris oscuro */
+  color: #f1f1f1; /* Mensaje en gris oscuro */
   font-size: 13px; /* Tamaño del texto del mensaje */
   margin: 4px 0; /* Espaciado entre mensajes */
 }

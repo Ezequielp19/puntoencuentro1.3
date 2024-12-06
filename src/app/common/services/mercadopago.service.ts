@@ -11,7 +11,6 @@ export class MercadoPagoService {
 
   constructor(private http: HttpClient, private firestore: AngularFirestore) {}
 
-  // Método para enviar la orden de pago al servidor backend
   sendPaymentData(paymentData: any): Observable<any> {
     const url = `${this.apiUrl}`;
     return this.http.post(url, paymentData);

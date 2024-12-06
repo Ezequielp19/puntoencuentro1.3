@@ -77,13 +77,28 @@
     <!-- Mostrar subastas donde el usuario es ganador -->
 <ng-container *ngFor="let service of pagedServices[currentPage]">
   <ng-container *ngIf="service.subastaWinner === true">
-    <ion-card class="service-card verified-card" (click)="goToService(service.id)">
+    <ion-card
+      class="service-card verified-card animated-card winner-card"
+
+
+      (click)="goToService(service.id)">
+
+
       <ion-card-header color="primary" class="verified-header">
         <div class="header-content">
-          <span style="color: #FFCF00;">{{ service.nombreEmpresa }}</span>
-          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span style="color: #03ec16;">{{ service.nombreEmpresa }}
+           </span>
+
+
         </div>
+
+<div class="header-content">
+<span style="color: #03ec16;">¡Servicio Verificado!</span>
+
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+</div>
       </ion-card-header>
+
       <ion-card-content class="custom-card-content">
         <div class="image-container">
           <ion-avatar>
@@ -100,8 +115,42 @@
   </ng-container>
 </ng-container>
 
+
+
+<!-- Botón para mostrar los servicios no verificados -->
+<ion-button (click)="toggleUnverifiedServices()" style=" display: block;
+  margin: 0 auto;" >
+  Servicios no verificados
+</ion-button>
+
 <!-- Mostrar subastas donde el usuario no es ganador -->
-<ng-container *ngFor="let service of pagedServices[currentPage]">
+<ng-container *ngIf="showUnverifiedServices">
+  <ng-container *ngFor="let service of pagedServices[currentPage]">
+    <ng-container *ngIf="service.subastaWinner === false || !service.subastaWinner">
+      <ion-card class="service-card" (click)="goToService(service.id)">
+        <ion-card-content class="custom-card-content">
+          <div class="image-container">
+            <ion-avatar>
+              <img [src]="service.imageUrl" alt="{{ service.nombreEmpresa }}" />
+            </ion-avatar>
+          </div>
+          <div class="details-container">
+            <h2 class="service-title">{{ service.nombreEmpresa }}</h2>
+            <p class="service-price">{{ service.price | currency }}</p>
+            <p class="service-info">{{ service.servicio }}</p>
+            <p class="service-description">{{ service.description }}</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+
+
+
+<!-- Mostrar subastas donde el usuario no es ganador -->
+<!-- <ng-container *ngFor="let service of pagedServices[currentPage]">
   <ng-container *ngIf="service.subastaWinner === false || !service.subastaWinner">
     <ion-card class="service-card" (click)="goToService(service.id)">
       <ion-card-content class="custom-card-content">
@@ -119,7 +168,7 @@
       </ion-card-content>
     </ion-card>
   </ng-container>
-</ng-container>
+</ng-container> -->
 
   </ion-list>
 

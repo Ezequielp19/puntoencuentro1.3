@@ -90,7 +90,7 @@
 </ion-fab>
 
 
-<ion-card *ngIf="isChatOpen" class="chat-card">
+<!-- <ion-card *ngIf="isChatOpen" class="chat-card">
   <ion-card-header>
     <ion-card-title style="text-align: center; color: white;  " >CHAT</ion-card-title>
     <ion-button fill="clear" size="small" (click)="toggleChat()">Cerrar</ion-button>
@@ -109,7 +109,30 @@
       <ion-button (click)="sendMessage()" expand="block" color="primary">Enviar</ion-button>
     </ion-item>
   </ion-card-content>
+</ion-card> -->
+
+
+
+<ion-card *ngIf="isChatOpen" class="chat-card">
+  <ion-card-header>
+    <ion-button fill="clear" size="small" (click)="toggleChat()">Cerrar</ion-button>
+  </ion-card-header>
+  <ion-card-content class="chat-content">
+    <ion-list lines="none" class="message-list">
+      <ion-item *ngFor="let message of messages">
+        <ion-label>
+          <h3>{{ message.senderId === userId ? 'Tú' : 'Otro usuario' }}</h3>
+          <p>{{ message.messageText }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    <ion-item class="input-item">
+      <ion-input [(ngModel)]="newMessageText" placeholder="Escribe tu mensaje..." clear-input></ion-input>
+      <ion-button (click)="sendMessage()" color="primary" fill="solid">Enviar</ion-button>
+    </ion-item>
+  </ion-card-content>
 </ion-card>
+
 
 
 </ion-content>

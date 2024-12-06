@@ -300,3 +300,44 @@ ion-card.service-card:active {
   font-weight: bold;
   color: #3880ff;
 }
+
+
+/* Borde o fondo diferente para el ganador */
+.winner-card {
+  border: 3px solid #FFD700; /* Dorado para resaltar el ganador */
+  background-color: #fff8e1;  /* Fondo suave para destacar */
+  position: relative;  /* Necesario para posicionar el banner */
+}
+
+/* Banner que aparece en la parte superior de la tarjeta */
+.winner-banner {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  background-color: #0066ff; /* Dorado */
+  color: white;
+  text-align: center;
+  padding: 5px;
+  font-weight: bold;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Animación para la tarjeta del ganador */
+.animated-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
