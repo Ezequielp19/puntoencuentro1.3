@@ -8,12 +8,16 @@ import { AngularFirestore, DocumentReference } from '@angular/fire/compat/firest
 })
 export class MercadoPagoService {
   private apiUrl = 'https://backnodemp.onrender.com/create_preference';  // Ruta del servidor backend
-
+  private subscriptionApiUrl = 'http://localhost:3333/create_subscription'; // Ruta para suscripciones
   constructor(private http: HttpClient, private firestore: AngularFirestore) {}
 
   sendPaymentData(paymentData: any): Observable<any> {
     const url = `${this.apiUrl}`;
     return this.http.post(url, paymentData);
+  }
+
+  createSubscription(subscriptionData: any): Observable<any> {
+    return this.http.post(this.subscriptionApiUrl, subscriptionData);
   }
 
 }

@@ -31,6 +31,7 @@
     "@capacitor/status-bar": "5.0.7",
     "@codetrix-studio/capacitor-google-auth": "^3.4.0-rc.4",
     "@ionic/angular": "^7.5.0",
+    "@mercadopago/sdk-js": "^0.0.3",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "ionicons": "^7.2.1",

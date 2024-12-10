@@ -26,6 +26,12 @@
             <ion-label>Configurar Horario</ion-label>
           </ion-item>
 
+          <!-- Configurar Horario: Solo para Proveedores -->
+          <ion-item *ngIf="user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/subscription']" (click)="selectOption('subscription')">
+            <ion-icon name="time-outline" slot="start"></ion-icon>
+            <ion-label>Subscripción</ion-label>
+          </ion-item>
+
           <!-- Historial de Citas: Para Cliente y Proveedor -->
           <ion-item *ngIf="user?.tipo_usuario === 'cliente' || user?.tipo_usuario === 'proveedor'" [routerLink]="['/perfil/historial-citas']" (click)="selectOption('historial-citas')">
             <ion-icon name="calendar-outline" slot="start"></ion-icon>
