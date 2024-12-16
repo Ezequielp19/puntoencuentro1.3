@@ -1,15 +1,14 @@
 export const environment = {
   production: true,
   firebase: {
-    apiKey: "AIzaSyD8ap67gSGEXf2uuPFXeIX7unWMoGnnMC4",
-    authDomain: "encuentro-8913c.firebaseapp.com",
-    databaseURL: "https://encuentro-8913c-default-rtdb.firebaseio.com",
-    projectId: "encuentro-8913c",
-    storageBucket: "encuentro-8913c.appspot.com",
-    messagingSenderId: "435048641453",
-    appId: "1:435048641453:web:245f9cac9826f5c19a6724",
-    measurementId: "G-XGXFGRB3F4"
-    
+    apiKey: "AIzaSyDtcg_xQXLi0IX9C3B0D7k5AznagrOLMk0",
+    authDomain: "punto-encuentro-aa7a2.firebaseapp.com",
+    projectId: "punto-encuentro-aa7a2",
+    storageBucket: "punto-encuentro-aa7a2.firebasestorage.app",
+    messagingSenderId: "1053356946867",
+    appId: "1:1053356946867:web:98e2802eab8bd3055887c6",
+    measurementId: "G-BGYRMEQQZB"
+
   }
 };
 
