@@ -26,13 +26,6 @@ import { User } from 'src/app/common/models/users.models';
 import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
 
 
-
-
-
-
-
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

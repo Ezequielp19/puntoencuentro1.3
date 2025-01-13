@@ -38,7 +38,7 @@ export class SubcripcionesComponent implements OnInit {
     }
 
     try {
-      const response = await fetch('http://localhost:3333/create_subscription', {
+      const response = await fetch('https://backnodemp.onrender.com/create_subscription', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
