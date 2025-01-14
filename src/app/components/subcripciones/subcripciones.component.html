@@ -1,0 +1,22 @@
+<div class="subscription-container">
+  <form (submit)="suscribe(); $event.preventDefault()" class="subscription-form">
+    <label for="email">Correo Electrónico</label>
+    <input
+      id="email"
+      type="email"
+      [(ngModel)]="email"
+      name="email"
+      placeholder="Ingresa tu correo"
+      required
+      class="email-input"
+    />
+
+    <button type="submit" class="subscribe-button">
+      Suscribirse
+    </button>
+  </form>
+
+  <!-- Mensajes de error o éxito -->
+  <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+  <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+</div>

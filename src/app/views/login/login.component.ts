@@ -26,13 +26,6 @@ import { User } from 'src/app/common/models/users.models';
 import { IoniconsModule } from 'src/app/common/modules/ionicons.module';
 
 
-
-
-
-
-
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -118,6 +111,8 @@ async login() {
   }
 }
 
+
+
 async loginWithGoogle() {
   try {
     const userCredential = await this.authService.signInWithGoogle();
@@ -130,11 +125,11 @@ async loginWithGoogle() {
         buttons: ['OK']
       });
       await alert.present();
-      return; // Salir del método si el usuario está baneado
+      return;
     }
 
 
-    await this.authService.listenToNotifications();  // Aquí activamos la escucha de notificaciones
+    await this.authService.listenToNotifications();
 
 
 

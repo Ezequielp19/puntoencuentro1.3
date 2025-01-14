@@ -23,6 +23,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
       {
+        path: 'subscription',
+        loadComponent: () => import('./components/subcripciones/subcripciones.component').then((m) => m.SubcripcionesComponent),
+      },
+      {
         path: 'historial-citas',
         loadComponent: () => import('./components/historial-citas/historial-citas.component').then((m) => m.HistorialCitasComponent),
       },

@@ -203,59 +203,49 @@ export class AuthService {
   //     await this.updateUserLocation(credential.user);
   //     return credential;
   //   }
+          async signInWithGoogle() {
+            try {
+              console.log('Inicializando GoogleAuth...');
+              // Asegúrate de que el clientId esté en el archivo google-services.json y concuerde con el de Firebase
+              await GoogleAuth.initialize({
+                clientId:   '1053356946867-csuhba1oi576o54fh554t9qv0jgtt0c0.apps.googleusercontent.com',
+                scopes: ['profile', 'email'],
+              });
+              console.log('GoogleAuth inicializado correctamente.');
 
-  async signInWithGoogle() {
-    try {
-      console.log('Inicializando GoogleAuth...');
-      // Asegúrate de que el clientId esté en el archivo google-services.json y concuerde con el de Firebase
-      await GoogleAuth.initialize({
-        clientId:
-          '435048641453-msg3cnfsbtc3tbuotttagqmv4lek4pge.apps.googleusercontent.com',
-        scopes: ['profile', 'email'],
-      });
-      console.log('GoogleAuth inicializado correctamente.');
+              console.log('Intentando iniciar sesión con Google...');
+              const googleUser = await GoogleAuth.signIn();
+              console.log('Respuesta de Google sign-in:', googleUser);
 
-      console.log('Intentando iniciar sesión con Google...');
-      const googleUser = await GoogleAuth.signIn();
-      console.log('Respuesta de Google sign-in:', googleUser);
+              // Verifica si se obtuvo un usuario y la autenticación
+              if (!googleUser || !googleUser.authentication) {
+                throw new Error('No se obtuvo la autenticación completa del usuario de Google.');
+              }
 
-      // Verifica si se obtuvo un usuario y la autenticación
-      if (!googleUser || !googleUser.authentication) {
-        throw new Error(
-          'No se obtuvo la autenticación completa del usuario de Google.'
-        );
-      }
+              // Usar idToken o accessToken según lo que devuelva GoogleAuth
+              const token = googleUser.authentication.idToken || googleUser.authentication.accessToken;
+              if (!token) {
+                throw new Error('No se obtuvo un token de autenticación válido de Google.');
+              }
 
-      // Usar idToken o accessToken según lo que devuelva GoogleAuth
-      const token =
-        googleUser.authentication.idToken ||
-        googleUser.authentication.accessToken;
-      if (!token) {
-        throw new Error(
-          'No se obtuvo un token de autenticación válido de Google.'
-        );
-      }
+              console.log('Creando credencial de Firebase con el token de Google...');
+              const credential = firebase.auth.GoogleAuthProvider.credential(token);
 
-      console.log('Creando credencial de Firebase con el token de Google...');
-      const credential = firebase.auth.GoogleAuthProvider.credential(token);
+              console.log('Iniciando sesión en Firebase con la credencial...');
+              const userCredential = await this.afAuth.signInWithCredential(credential);
+              console.log('Respuesta de Firebase sign-in:', userCredential);
 
-      console.log('Iniciando sesión en Firebase con la credencial...');
-      const userCredential = await this.afAuth.signInWithCredential(credential);
-      console.log('Respuesta de Firebase sign-in:', userCredential);
+              console.log('Actualizando los datos del usuario en Firestore...');
+              await this.updateUserData(userCredential.user);
 
-      console.log('Actualizando los datos del usuario en Firestore...');
-      await this.updateUserData(userCredential.user);
+              console.log('Usuario inició sesión correctamente con Google:', userCredential);
+              return userCredential;
+            } catch (error) {
+              console.error('Error al iniciar sesión con Google:', error);
+              throw error;
+            }
+          }
 
-      console.log(
-        'Usuario inició sesión correctamente con Google:',
-        userCredential
-      );
-      return userCredential;
-    } catch (error) {
-      console.error('Error al iniciar sesión con Google:', error);
-      throw error;
-    }
-  }
 
   async loginWithFacebook(): Promise<firebase.auth.UserCredential> {
     try {
