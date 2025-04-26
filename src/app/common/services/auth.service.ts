@@ -8,6 +8,8 @@ import { map, switchMap } from 'rxjs/operators';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
+import { FirebaseError } from 'firebase/app';
+import { Capacitor } from '@capacitor/core';
 
 @Injectable({
   providedIn: 'root',
@@ -203,48 +205,64 @@ export class AuthService {
   //     await this.updateUserLocation(credential.user);
   //     return credential;
   //   }
-          async signInWithGoogle() {
-            try {
-              console.log('Inicializando GoogleAuth...');
-              // Asegúrate de que el clientId esté en el archivo google-services.json y concuerde con el de Firebase
-              await GoogleAuth.initialize({
-                clientId:   '1053356946867-csuhba1oi576o54fh554t9qv0jgtt0c0.apps.googleusercontent.com',
-                scopes: ['profile', 'email'],
-              });
-              console.log('GoogleAuth inicializado correctamente.');
 
-              console.log('Intentando iniciar sesión con Google...');
-              const googleUser = await GoogleAuth.signIn();
-              console.log('Respuesta de Google sign-in:', googleUser);
 
-              // Verifica si se obtuvo un usuario y la autenticación
-              if (!googleUser || !googleUser.authentication) {
-                throw new Error('No se obtuvo la autenticación completa del usuario de Google.');
-              }
+async signInWithGoogle() {
+  try {
+    const isNative = Capacitor.isNativePlatform();
 
-              // Usar idToken o accessToken según lo que devuelva GoogleAuth
-              const token = googleUser.authentication.idToken || googleUser.authentication.accessToken;
-              if (!token) {
-                throw new Error('No se obtuvo un token de autenticación válido de Google.');
-              }
+    if (!isNative) {
+      // WEB (Angular en navegador)
+      console.log('Web detected: Using Firebase signInWithPopup.');
 
-              console.log('Creando credencial de Firebase con el token de Google...');
-              const credential = firebase.auth.GoogleAuthProvider.credential(token);
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const credential = await this.afAuth.signInWithPopup(provider);
 
-              console.log('Iniciando sesión en Firebase con la credencial...');
-              const userCredential = await this.afAuth.signInWithCredential(credential);
-              console.log('Respuesta de Firebase sign-in:', userCredential);
+      if (await this.isUserBanned(credential.user!.uid)) {
+        throw new Error('Usuario baneado. No puede iniciar sesión.');
+      }
 
-              console.log('Actualizando los datos del usuario en Firestore...');
-              await this.updateUserData(userCredential.user);
+      await this.updateUserData(credential.user);
+      await this.updateUserLocation(credential.user);
+      return credential;
+    } else {
+      // MÓVIL NATIVO (Ionic + Capacitor app instalada)
+      console.log('Native device detected: Using Capacitor GoogleAuth.');
 
-              console.log('Usuario inició sesión correctamente con Google:', userCredential);
-              return userCredential;
-            } catch (error) {
-              console.error('Error al iniciar sesión con Google:', error);
-              throw error;
-            }
-          }
+      await GoogleAuth.initialize({
+        clientId: '670473542620-omae1mc9s9nh17l3it99v58iduqqsrjq.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+      });
+
+      const googleUser = await GoogleAuth.signIn();
+
+      if (!googleUser || !googleUser.authentication) {
+        throw new Error('No se pudo obtener autenticación de Google.');
+      }
+
+      const token = googleUser.authentication.idToken || googleUser.authentication.accessToken;
+      if (!token) {
+        throw new Error('No se obtuvo un token válido de Google.');
+      }
+
+      const credential = firebase.auth.GoogleAuthProvider.credential(token);
+
+      const userCredential = await this.afAuth.signInWithCredential(credential);
+
+      if (await this.isUserBanned(userCredential.user!.uid)) {
+        throw new Error('Usuario baneado. No puede iniciar sesión.');
+      }
+
+      await this.updateUserData(userCredential.user);
+      await this.updateUserLocation(userCredential.user);
+      return userCredential;
+    }
+  } catch (error) {
+    console.error('Error en signInWithGoogle:', error);
+    throw error;
+  }
+}
+
 
 
   async loginWithFacebook(): Promise<firebase.auth.UserCredential> {

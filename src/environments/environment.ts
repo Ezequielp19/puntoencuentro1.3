@@ -6,15 +6,14 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: "AIzaSyDtcg_xQXLi0IX9C3B0D7k5AznagrOLMk0",
-    authDomain: "punto-encuentro-aa7a2.firebaseapp.com",
-    projectId: "punto-encuentro-aa7a2",
-    storageBucket: "punto-encuentro-aa7a2.firebasestorage.app",
-    messagingSenderId: "1053356946867",
-    appId: "1:1053356946867:web:98e2802eab8bd3055887c6",
-    measurementId: "G-BGYRMEQQZB"
+   apiKey: "AIzaSyBsjB3ynQuvXNIBGv0eyd955BU7M4eUWMI",
+  authDomain: "product-admin-app-4ef4f.firebaseapp.com",
+  projectId: "product-admin-app-4ef4f",
+  storageBucket: "product-admin-app-4ef4f.appspot.com",
+  messagingSenderId: "670473542620",
+  appId: "1:670473542620:web:c3b7e1d61ce4f887bb8d19",
+  measurementId: "G-HKKMYXVK0T"
   },
-  jwtSecret: "6gUjaumz67K/ItWGODOqJR83JMdOUMIGQN9D/y1Ms9Yt8UIFy3oU8mG+KNwFywC6ngwEtHFjhejBsU/Dntm3ll0rrL2oNywrFZmR33QLtH/NjV1pxc4wDV8dpfEp7iwISGTBBvhh0khSCdpPgY6hg3docSqxqCSteXgiwvroBTQk88z61yEPcVTZ1SguM2eQuquxycRcHr6NZivhmnQQ/Z5YU+gpV0aquOotNG/YGyR51sG0MtxGI6o6cjU28/S1kmv/n0LJr00q/yoQPtbq7m7lwwMr2+8iOPEtOi+FpqXCNfgfIhwXr8vZUo2hdZPBrietcJzQ+WJ917Sd5Z0OUw=="
 };
 
 /*

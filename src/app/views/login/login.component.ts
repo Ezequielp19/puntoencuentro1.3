@@ -145,21 +145,21 @@ async loginWithGoogle() {
   }
 }
 
-  async loginWithFacebook() {
-    try {
-      const userCredential = await this.authService.loginWithFacebook();
-      const user = await this.firestoreService.getUserByEmail(userCredential.user.email);
-      this.redirectUser(user);
-      await this.showAlert('Éxito', 'Inicio de sesión con Facebook exitoso');
-    } catch (error) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Credenciales incorrectas',
-        buttons: ['OK']
-      });
-      await alert.present();
-    }
-  }
+  // async loginWithFacebook() {
+  //   try {
+  //     const userCredential = await this.authService.loginWithFacebook();
+  //     const user = await this.firestoreService.getUserByEmail(userCredential.user.email);
+  //     this.redirectUser(user);
+  //     await this.showAlert('Éxito', 'Inicio de sesión con Facebook exitoso');
+  //   } catch (error) {
+  //     const alert = await this.alertController.create({
+  //       header: 'Error',
+  //       message: 'Credenciales incorrectas',
+  //       buttons: ['OK']
+  //     });
+  //     await alert.present();
+  //   }
+  // }
 
   redirectUser(user: User) {
     if (user) {
