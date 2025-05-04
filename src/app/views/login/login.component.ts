@@ -113,37 +113,37 @@ async login() {
 
 
 
-async loginWithGoogle() {
-  try {
-    const userCredential = await this.authService.signInWithGoogle();
-    const user = await this.firestoreService.getUserByEmail(userCredential.user.email);
+// async loginWithGoogle() {
+//   try {
+//     const userCredential = await this.authService.signInWithGoogle();
+//     const user = await this.firestoreService.getUserByEmail(userCredential.user.email);
 
-    if (user.baneado) {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Su cuenta ha sido baneada. No puede iniciar sesión.',
-        buttons: ['OK']
-      });
-      await alert.present();
-      return;
-    }
-
-
-    await this.authService.listenToNotifications();
+//     if (user.baneado) {
+//       const alert = await this.alertController.create({
+//         header: 'Error',
+//         message: 'Su cuenta ha sido baneada. No puede iniciar sesión.',
+//         buttons: ['OK']
+//       });
+//       await alert.present();
+//       return;
+//     }
 
 
+//     await this.authService.listenToNotifications();
 
-    this.redirectUser(user);
-    await this.showAlert('Éxito', 'Inicio de sesión con Google exitoso');
-  } catch (error) {
-    const alert = await this.alertController.create({
-      header: 'Error',
-      message: 'Credenciales incorrectas',
-      buttons: ['OK']
-    });
-    await alert.present();
-  }
-}
+
+
+//     this.redirectUser(user);
+//     await this.showAlert('Éxito', 'Inicio de sesión con Google exitoso');
+//   } catch (error) {
+//     const alert = await this.alertController.create({
+//       header: 'Error',
+//       message: 'Credenciales incorrectas',
+//       buttons: ['OK']
+//     });
+//     await alert.present();
+//   }
+// }
 
   // async loginWithFacebook() {
   //   try {

@@ -29,51 +29,38 @@ export class AuthService {
     this.userSubject = new BehaviorSubject<User | null>(null);
     this.user$ = this.userSubject.asObservable();
 
-    this.afAuth
-      .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(() => {
-        this.afAuth.authState
-          .pipe(
-            switchMap((user) => {
-              if (user) {
-                return this.firestore
-                  .collection<User>('usuarios')
-                  .doc(user.uid)
-                  .valueChanges();
-              } else {
-                return new Observable<User | null>((observer) =>
-                  observer.next(null)
-                );
-              }
-            })
-          )
-          .subscribe((userData) => {
-            this.userSubject.next(userData);
-            if (userData) {
-              localStorage.setItem('currentUser', JSON.stringify(userData));
-
-              this.requestPermission(userData.id); // Request notification permission for this user
-
-
-            } else {
-              localStorage.removeItem('currentUser');
-            }
-          });
+    this.afAuth.authState
+      .pipe(
+        switchMap((user) => {
+          if (user) {
+            return this.firestore
+              .collection<User>('usuarios')
+              .doc(user.uid)
+              .valueChanges();
+          } else {
+            return new Observable<User | null>((observer) =>
+              observer.next(null)
+            );
+          }
+        })
+      )
+      .subscribe((userData) => {
+        this.userSubject.next(userData);
+        if (userData) {
+          localStorage.setItem('currentUser', JSON.stringify(userData));
+          this.requestPermission(userData.id);
+        } else {
+          localStorage.removeItem('currentUser');
+        }
       });
   }
 
+  // ------------------ NOTIFICACIONES ------------------
 
-
-
-
-// ----------------
-
-// Request permission for push notifications
   async requestPermission(userId: string) {
     try {
       const token = await this.afMessaging.requestToken.toPromise();
       if (token) {
-        console.log('Notification permission granted! Token:', token);
         this.currentToken = token;
         await this.saveTokenToFirestore(userId, token);
       }
@@ -82,7 +69,6 @@ export class AuthService {
     }
   }
 
-  // Save the token to Firestore
   private async saveTokenToFirestore(userId: string, token: string) {
     const userRef = this.firestore.collection('usuarios').doc(userId);
     try {
@@ -94,30 +80,14 @@ export class AuthService {
     }
   }
 
-  // Listen to incoming notifications
   listenToNotifications() {
     this.afMessaging.messages.subscribe((message) => {
-      console.log('Notification received:', message);
       this.notificationMessage.next(message);
     });
   }
 
+  // ------------------ USUARIOS ------------------
 
-  // ----------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // Método para verificar si el usuario está baneado
   private async isUserBanned(userId: string): Promise<boolean> {
     const userDoc = await this.firestore
       .collection('usuarios')
@@ -128,17 +98,14 @@ export class AuthService {
     return userData?.baneado ?? false;
   }
 
-  // Método para obtener todos los usuarios
   getAllUsers(): Observable<User[]> {
     return this.firestore.collection<User>('usuarios').valueChanges();
   }
 
-  // Método para eliminar un usuario
   deleteUser(userId: string): Promise<void> {
     return this.firestore.collection('usuarios').doc(userId).delete();
   }
 
-  // Método para banear o desbanear un usuario
   banUser(userId: string, ban: boolean): Promise<void> {
     return this.firestore
       .collection('usuarios')
@@ -146,7 +113,6 @@ export class AuthService {
       .update({ baneado: ban });
   }
 
-  // Método para listar usuarios baneados
   getBannedUsers(): Observable<User[]> {
     return this.firestore
       .collection<User>('usuarios', (ref) => ref.where('baneado', '==', true))
@@ -154,7 +120,7 @@ export class AuthService {
       .pipe(
         map((actions) =>
           actions.map((a) => {
-            const data = a.payload.doc.data() as User; // Asegura que data sea del tipo User
+            const data = a.payload.doc.data() as User;
             const id = a.payload.doc.id;
             return { id, ...data };
           })
@@ -162,11 +128,15 @@ export class AuthService {
       );
   }
 
+  // ------------------ LOGIN/REGISTRO ------------------
+
   async login(
     email: string,
     password: string
   ): Promise<firebase.auth.UserCredential> {
     try {
+      await this.afAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
       const credential = await this.afAuth.signInWithEmailAndPassword(
         email,
         password
@@ -193,26 +163,104 @@ export class AuthService {
     }
   }
 
-  //   async loginWithGoogle(): Promise<firebase.auth.UserCredential> {
-  //     const provider = new firebase.auth.GoogleAuthProvider();
-  //     const credential = await this.afAuth.signInWithPopup(provider);
+  async register(
+    email: string,
+    password: string,
+    nombre: string,
+    tipo_usuario: string
+  ): Promise<void> {
+    try {
+      const userCredential = await this.afAuth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+      const uid = userCredential.user?.uid;
+      if (uid) {
+        await this.firestore.collection('usuarios').doc(uid).set({
+          id: uid,
+          nombre: nombre,
+          correo: email,
+          tipo_usuario: tipo_usuario,
+          fecha_registro: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        await this.updateUserLocation(userCredential.user);
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      throw error;
+    }
+  }
 
-  //  if (await this.isUserBanned(credential.user!.uid)) {
-  //       throw new Error('Usuario baneado. No puede iniciar sesión.');
-  //     }
+  async resetPassword(email: string): Promise<void> {
+    try {
+      await this.afAuth.sendPasswordResetEmail(email);
+    } catch (error) {
+      console.error('Error during password reset:', error);
+      throw error;
+    }
+  }
 
-  //     await this.updateUserData(credential.user);
-  //     await this.updateUserLocation(credential.user);
-  //     return credential;
-  //   }
+  getCurrentUser(): Observable<User | null> {
+    return this.user$;
+  }
 
+  // ------------------ ACTUALIZACIONES ------------------
 
-async signInWithGoogle() {
+  private async updateUserLocation(user: firebase.User | null): Promise<void> {
+    if (user) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const userRef = this.firestore.collection('usuarios').doc(user.uid);
+            const location = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+            try {
+              await userRef.update({ location });
+            } catch (error) {
+              console.error('Error updating user location:', error);
+            }
+          },
+          (error) => {
+            console.error('Error obtaining location:', error);
+          }
+        );
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+      }
+    }
+  }
+
+  private async updateUserData(user: firebase.User | null): Promise<void> {
+    if (user) {
+      const userRef = this.firestore.collection('usuarios').doc(user.uid);
+      const userDoc = await userRef.get().toPromise();
+
+      if (!userDoc.exists) {
+        const data: User = {
+          id: user.uid,
+          nombre: user.displayName || 'Sin Nombre',
+          correo: user.email || 'Sin Correo',
+          fecha_registro:
+            firebase.firestore.FieldValue.serverTimestamp() as any,
+        };
+        try {
+          await userRef.set(data);
+        } catch (error) {
+          console.error('Error setting new user data:', error);
+        }
+      }
+    }
+  }
+
+  async signInWithGoogle() {
   try {
     const isNative = Capacitor.isNativePlatform();
 
     if (!isNative) {
-      // WEB (Angular en navegador)
+
       console.log('Web detected: Using Firebase signInWithPopup.');
 
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -264,108 +312,4 @@ async signInWithGoogle() {
 }
 
 
-
-  async loginWithFacebook(): Promise<firebase.auth.UserCredential> {
-    try {
-      const provider = new firebase.auth.FacebookAuthProvider();
-      const credential = await this.afAuth.signInWithPopup(provider);
-      await this.updateUserData(credential.user);
-      await this.updateUserLocation(credential.user);
-      return credential;
-    } catch (error) {
-      console.error('Error during Facebook login:', error);
-      throw error;
-    }
-  }
-
-  private async updateUserLocation(user: firebase.User | null): Promise<void> {
-    if (user) {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const userRef = this.firestore.collection('usuarios').doc(user.uid);
-            const location = {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            };
-            try {
-              await userRef.update({ location });
-            } catch (error) {
-              console.error('Error updating user location:', error);
-            }
-          },
-          (error) => {
-            console.error('Error obtaining location:', error);
-          }
-        );
-      } else {
-        console.error('Geolocation is not supported by this browser.');
-      }
-    }
-  }
-
-  private async updateUserData(user: firebase.User | null): Promise<void> {
-    if (user) {
-      const userRef = this.firestore.collection('usuarios').doc(user.uid);
-      const userDoc = await userRef.get().toPromise();
-
-      if (!userDoc.exists) {
-        const data: User = {
-          id: user.uid,
-          nombre: user.displayName || 'Sin Nombre',
-          correo: user.email || 'Sin Correo',
-          fecha_registro:
-            firebase.firestore.FieldValue.serverTimestamp() as any,
-        };
-        try {
-          // console.log('Setting new user data:', data);
-          await userRef.set(data);
-        } catch (error) {
-          console.error('Error setting new user data:', error);
-        }
-      }
-    }
-  }
-
-  async register(
-    email: string,
-    password: string,
-    nombre: string,
-    tipo_usuario: string
-  ): Promise<void> {
-    try {
-      const userCredential = await this.afAuth.createUserWithEmailAndPassword(
-        email,
-        password
-      );
-      const uid = userCredential.user?.uid;
-      if (uid) {
-        await this.firestore.collection('usuarios').doc(uid).set({
-          id: uid,
-          nombre: nombre,
-          correo: email,
-          tipo_usuario: tipo_usuario,
-          fecha_registro: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-        await this.updateUserLocation(userCredential.user);
-      }
-    } catch (error) {
-      console.error('Error during registration:', error);
-      throw error;
-    }
-  }
-
-  async resetPassword(email: string): Promise<void> {
-    try {
-      await this.afAuth.sendPasswordResetEmail(email);
-    } catch (error) {
-      console.error('Error during password reset:', error);
-      throw error;
-    }
-  }
-
-  getCurrentUser(): Observable<User | null> {
-    return this.user$;
-  }
 }
