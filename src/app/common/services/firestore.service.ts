@@ -202,7 +202,7 @@ export class FirestoreService {
     });
     return services;
   }
-
+// get user por email
   async getUserByEmail(email: string): Promise<User | undefined> {
     try {
       const usersRef = collection(this.firestore, 'usuarios') as CollectionReference<User>;
@@ -587,7 +587,7 @@ async getServiceByUserId(userId: string): Promise<Service | null> {
 
 
 
- 
+
 
 async createChat(chatId: string): Promise<void> {
   const chatRef = doc(this.firestore, `chats/${chatId}`);
