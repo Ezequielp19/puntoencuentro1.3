@@ -8,12 +8,12 @@ const config: CapacitorConfig = {
     },
     GoogleAuth: {
       scopes: ["profile", "email"],
-      serverClientId: "670473542620-omae1mc9s9nh17l3it99v58iduqqsrjq.apps.googleusercontent.com",
+      serverClientId: "670473542620-km8omco3g4gd6enh0vd26bl5q51ukcvv.apps.googleusercontent.com",
       forceCodeForRefreshToken: false
     }
   },
 
-  appId: 'com.demoapp',
+  appId: 'com.encuentro',
   appName: 'Punto Encuentro',
   webDir: 'www',
   server: {

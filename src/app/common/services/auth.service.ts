@@ -278,7 +278,7 @@ export class AuthService {
       console.log('Native device detected: Using Capacitor GoogleAuth.');
 
       await GoogleAuth.initialize({
-        clientId: '670473542620-omae1mc9s9nh17l3it99v58iduqqsrjq.apps.googleusercontent.com',
+        clientId: '670473542620-km8omco3g4gd6enh0vd26bl5q51ukcvv.apps.googleusercontent.com',
         scopes: ['profile', 'email'],
       });
 
